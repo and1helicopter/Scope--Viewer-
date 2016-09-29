@@ -15,7 +15,7 @@ namespace WpfApplication4
         public MainViewModel()
         {
             this.Title = "Example 2";
-            this.Points = new List<DataPoint>
+            this.Points1 = new List<DataPoint>
                               {
                                   new DataPoint(0, 4),
                                   new DataPoint(10, 13),
@@ -24,10 +24,25 @@ namespace WpfApplication4
                                   new DataPoint(40, 12),
                                   new DataPoint(50, 12)
                               };
+            this.Points2 = new List<DataPoint>
+                              {
+                                  new DataPoint(0, 14),
+                                  new DataPoint(10, 3),
+                                  new DataPoint(20, 5),
+                                  new DataPoint(30, 6),
+                                  new DataPoint(40, 2),
+                                  new DataPoint(50, 2)
+                              };
+            this.Points3 = new List<DataPoint>
+                               {
+
+                               };
         }
 
         public string Title { get; private set; }
 
-        public IList<DataPoint> Points { get; private set; }
+        public IList<DataPoint> Points1 { get; private set; }
+        public IList<DataPoint> Points2 { get; private set; }
+        public IList<DataPoint> Points3 { get; private set; }
     }
 }
