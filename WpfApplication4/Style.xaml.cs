@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace WpfApplication4
 {
     /// <summary>
@@ -23,6 +24,11 @@ namespace WpfApplication4
         public Style()
         {
             InitializeComponent();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            // GraphPanel.XMinorGRIDAxisChange(,true);
         }
     }
 }
