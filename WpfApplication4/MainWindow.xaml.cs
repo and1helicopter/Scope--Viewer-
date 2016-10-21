@@ -38,7 +38,6 @@ namespace WpfApplication4
         bool styleButtonStatus = false;
         bool analysisButtonStatus = false;
 
-
         private void OpenAnimation()
         {
             DoubleAnimation OpenAnimation = new DoubleAnimation();
@@ -92,8 +91,6 @@ namespace WpfApplication4
             analysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
             analysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
-
-
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
         {
@@ -182,7 +179,6 @@ namespace WpfApplication4
             }
         }
 
-
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -195,18 +191,18 @@ namespace WpfApplication4
                 {
 
                 }
-                catch
+                catch (Exception ex)
                 {
                     return;
                 }
-
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        public static WpfApplication4.GraphPanel graph; //= new WpfApplication4.GraphPanel();
+
+        public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WpfApplication4.GraphPanel graph = new WpfApplication4.GraphPanel();
-            graph.EnableZoom = false;
+            graph = new WpfApplication4.GraphPanel();
             GrPanel.Child = graph;
         }
     }

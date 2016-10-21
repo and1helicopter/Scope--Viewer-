@@ -12,109 +12,62 @@ namespace WpfApplication4
 {
     public partial class GraphPanel : UserControl
     {
-
+        GraphPane pane;
 
         public GraphPanel()
         {
             InitializeComponent();
-            CreateGraph(zedGraph);
-            SetSize();
+            InitDrawGraph();
         }
 
-        public new int Width
+        public void InitDrawGraph()
         {
-            get { return zedGraph.Width; }
-            set { zedGraph.Width = value; }
+            pane = zedGraph.GraphPane;
+
+            pane.Legend.IsVisible = false;
+            pane.XAxis.Title.IsVisible = false;
+            pane.YAxis.Title.IsVisible = false;
+            pane.Title.IsVisible = false;
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
-        public new int Height
+        public void XMinorGRIDAxisChange(bool statusChecked)
         {
-            get { return zedGraph.Height; }
-            set { zedGraph.Height = value; }
+            pane = zedGraph.GraphPane;
+            if (statusChecked == true) { pane.XAxis.MinorGrid.IsVisible = true; }
+            else pane.XAxis.MinorGrid.IsVisible = false;
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
-        private bool enableZoom = true;
-        public bool EnableZoom
+        public void XMajorGRIDAxisChange(bool statusChecked)
         {
-            get { return enableZoom; }
-            set
-            {
-                if (value != enableZoom)
-                {
-                    enableZoom = value;
-                    zedGraph.IsEnableHZoom = enableZoom;
-                    zedGraph.IsEnableVZoom = enableZoom;
-                }
-            }
+            pane = zedGraph.GraphPane;
+            if (statusChecked == true) { pane.XAxis.MajorGrid.IsVisible = true; }
+            else pane.XAxis.MajorGrid.IsVisible = false;
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
-
-        private void CreateGraph(ZedGraphControl zgc)
+        public void YMinorGRIDAxisChange(bool statusChecked)
         {
-            // get a reference to the GraphPane
-
-            GraphPane myPane = zgc.GraphPane;
-
-            // Set the Titles
-            myPane.Legend.IsVisible = false;
-            myPane.XAxis.Title.IsVisible = false;
-            myPane.XAxis.MajorGrid.IsVisible = true;
-            //myPane.XAxis.MinorGrid.IsVisible = true;
-            myPane.YAxis.Title.IsVisible = false;
-            myPane.YAxis.MajorGrid.IsVisible = true;
-            myPane.Title.IsVisible = false;
-            // Make up some data arrays based on the Sine function
-
-            double x, y1, y2;
-            PointPairList list1 = new PointPairList();
-            PointPairList list2 = new PointPairList();
-            for (int i = 0; i < 36; i++)
-            {
-                x = (double)i + 5;
-                y1 = 1.5 + Math.Sin((double)i * 0.2);
-                y2 = 3.0 * (1.5 + Math.Sin((double)i * 0.2));
-                list1.Add(x, y1);
-                list2.Add(x, y2);
-            }
-
-            // Generate a red curve with diamond
-
-            // symbols, and "Porsche" in the legend
-
-            LineItem myCurve = myPane.AddCurve("Porsche",
-                  list1, System.Drawing.Color.Red, SymbolType.Diamond);
-
-            // Generate a blue curve with circle
-
-            // symbols, and "Piper" in the legend
-
-            LineItem myCurve2 = myPane.AddCurve("Piper",
-                  list2, System.Drawing.Color.Blue, SymbolType.Circle);
-
-            // Tell ZedGraph to refigure the
-
-            // axes since the data have changed
-
-            zgc.AxisChange();
+            pane = zedGraph.GraphPane;
+            if (statusChecked == true) { pane.YAxis.MinorGrid.IsVisible = true; }
+            else pane.YAxis.MinorGrid.IsVisible = false;
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
-        private void SetSize()
+        public void YMajorGRIDAxisChange(bool statusChecked)
         {
-            zedGraph.Location = new System.Drawing.Point(0, 0);
-            // Leave a small margin around the outside of the control
-            zedGraph.Size = new System.Drawing.Size((int)this.Width, (int)this.Height);
-        }
-
-        public void XMinorGRIDAxisChange(ZedGraphControl zgc, bool statusChecked)
-        {   
-            GraphPane myPane = zgc.GraphPane;
-
-            if (statusChecked == true) { myPane.XAxis.MinorGrid.IsVisible = true; }
-            else myPane.XAxis.MinorGrid.IsVisible = false;
-            
-            zgc.AxisChange();
+            pane = zedGraph.GraphPane;
+            if (statusChecked == true) { pane.YAxis.MajorGrid.IsVisible = true; }
+            else pane.YAxis.MajorGrid.IsVisible = false;
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
     }
-
 }
 

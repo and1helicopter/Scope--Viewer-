@@ -138,6 +138,7 @@
                           Grid.Row="1"
                           Grid.Column="4"
                           Margin="0"
+                          x:FieldModifier="public"
                           Background="{x:Null}" />
     </Grid>
 </Window>

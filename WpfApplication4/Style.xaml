@@ -24,10 +24,26 @@
                   Header="Grid"
                   ToolTip="Настройка сетки">
             <StackPanel>
-                <CheckBox>Y Major</CheckBox>
-                <CheckBox>Y Minor</CheckBox>
-                <CheckBox>X Major</CheckBox>
-                <CheckBox Checked="CheckBox_Checked">X Minor</CheckBox>
+                <CheckBox x:Name="YMajor"
+                          Checked="YMajor_Checked"
+                          Unchecked="YMajor_Checked">
+                    Y Major
+                </CheckBox>
+                <CheckBox x:Name="YMinor"
+                          Checked="YMinor_Checked"
+                          Unchecked="YMinor_Checked">
+                    Y Minor
+                </CheckBox>
+                <CheckBox x:Name="XMajor"
+                          Checked="XMajor_Checked"
+                          Unchecked="XMajor_Checked">
+                    X Major
+                </CheckBox>
+                <CheckBox x:Name="XMinor"
+                          Checked="XMinor_Checked"
+                          Unchecked="XMinor_Checked">
+                    X Minor
+                </CheckBox>
             </StackPanel>
         </Expander>
         <Expander Grid.Row="1"
@@ -38,7 +54,7 @@
                 <CheckBox Content="Y Major" />
                 <CheckBox Content="Y Minor" />
                 <CheckBox Content="X Major" />
-                <CheckBox Checked="CheckBox_Checked" Content="X Minor" />
+                <CheckBox Content="X Minor" />
             </StackPanel>
         </Expander>
 
