@@ -26,8 +26,11 @@ namespace WpfApplication4
 
             pane.Legend.IsVisible = false;
             pane.XAxis.Title.IsVisible = false;
+            pane.XAxis.Scale.FontSpec.Size = 10;
             pane.YAxis.Title.IsVisible = false;
+            pane.YAxis.Scale.FontSpec.Size = 10;
             pane.Title.IsVisible = false;
+            pane.XAxis.Scale.FontSpec.Size = 10;
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
