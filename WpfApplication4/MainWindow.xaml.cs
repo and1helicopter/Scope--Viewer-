@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.Win32;
 using ZedGraph;
 using System.Windows.Forms.Integration;
+using System.Text.RegularExpressions;
 
 namespace WpfApplication4
 {
@@ -181,24 +182,64 @@ namespace WpfApplication4
 
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
+            string[] NameChannel = new string[32];
+            string patern = @"(\w*)\t";
+            string str;
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.DefaultExt = ".txt"; // Default file extension
             ofd.Filter = "Текстовый файл|*.txt|Comtrade|*.cfg|All files (*.*)|*.*"; // Filter files by extension
             if (ofd.ShowDialog() == true)
             {
-                MessageBox.Show("OK");
-                try
-                {
+                Oscil.ChannelNames.Clear();
+                //Oscil.Dimension.Clear();
 
-                }
-                catch (Exception ex)
+                Oscil.StampDateStart.Clear();
+                Oscil.StampDateTrigger.Clear();
+                Oscil.StampDateEnd.Clear();
+
+                 Oscil.Data.Clear();
+
+                //Чтение .txt
+                if (ofd.FilterIndex == 1)
                 {
-                    return;
+                    try
+                    {
+                        StreamReader sr = new StreamReader(ofd.FileName);
+                        Oscil.StampDateTrigger.Add(DateTime.Parse(sr.ReadLine()));
+                        Oscil.SampleRate = Convert.ToUInt32(sr.ReadLine());
+                        str = sr.ReadLine();
+                        string[] str1 = str.Split('\t');
+                        for(int i = 1; i < str1.Length - 1; i++) Oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                        for(int i = 0; i < 8; i++) sr.ReadLine();
+                        for(int j = 0; !sr.EndOfStream; j++) 
+                        {
+                            str = sr.ReadLine();
+                            string[] str2 = str.Split('\t');
+                            Oscil.Data.Add(new List<double>());
+                            for (int i = 1; i < str2.Length - 1; i++)
+                            {
+                                Oscil.Data[j].Add(Convert.ToDouble(str2[i]));
+                            }   
+                        }
+                        Oscil.NumCount = Convert.ToUInt32(Oscil.Data.Count);
+                        for(int i = 0; i < Oscil.Data[0].Count; i++)
+                        {
+                            Oscil.TypeChannel[i] = false;
+                            Oscil.Dimension[i] = "NONE";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
+
             }
         }
 
-        public static WpfApplication4.GraphPanel graph; //= new WpfApplication4.GraphPanel();
+        public static WpfApplication4.GraphPanel graph; 
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {

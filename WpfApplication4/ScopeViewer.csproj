@@ -77,6 +77,7 @@
     <Compile Include="GraphPanel.Designer.cs">
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Oscil.cs" />
     <Compile Include="Style.xaml.cs">
       <DependentUpon>Style.xaml</DependentUpon>
     </Compile>
