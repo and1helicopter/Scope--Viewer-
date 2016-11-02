@@ -183,34 +183,34 @@ namespace WpfApplication4
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
             string[] NameChannel = new string[32];
-            string patern = @"(\w*)\t";
-            string str;
+            string str, namefile, pathfile;
 
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.DefaultExt = ".txt"; // Default file extension
             ofd.Filter = "Текстовый файл|*.txt|Comtrade|*.cfg|All files (*.*)|*.*"; // Filter files by extension
             if (ofd.ShowDialog() == true)
             {
+                graph.removeGraph();
+
+
                 Oscil.ChannelNames.Clear();
-                //Oscil.Dimension.Clear();
+                Oscil.Dimension.Clear();
+                Oscil.TypeChannel.Clear();
+                Oscil.Data.Clear();
 
-                Oscil.StampDateStart.Clear();
-                Oscil.StampDateTrigger.Clear();
-                Oscil.StampDateEnd.Clear();
-
-                 Oscil.Data.Clear();
 
                 //Чтение .txt
                 if (ofd.FilterIndex == 1)
                 {
                     try
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName);
-                        Oscil.StampDateTrigger.Add(DateTime.Parse(sr.ReadLine()));
+                        StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.Default);
+                        Oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
                         Oscil.SampleRate = Convert.ToUInt32(sr.ReadLine());
                         str = sr.ReadLine();
                         string[] str1 = str.Split('\t');
                         for(int i = 1; i < str1.Length - 1; i++) Oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                        Oscil.ChannelCount = Convert.ToUInt16(Oscil.ChannelNames.Count);
                         for(int i = 0; i < 8; i++) sr.ReadLine();
                         for(int j = 0; !sr.EndOfStream; j++) 
                         {
@@ -223,11 +223,12 @@ namespace WpfApplication4
                             }   
                         }
                         Oscil.NumCount = Convert.ToUInt32(Oscil.Data.Count);
-                        for(int i = 0; i < Oscil.Data[0].Count; i++)
+                        for(int i = 0; i < Oscil.ChannelCount; i++)
                         {
-                            Oscil.TypeChannel[i] = false;
-                            Oscil.Dimension[i] = "NONE";
+                            Oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
+                            Oscil.Dimension.Add("NONE");
                         }
+                        sr.Close();
                     }
                     catch (Exception ex)
                     {
@@ -236,6 +237,74 @@ namespace WpfApplication4
                     }
                 }
 
+                //Чтение .comtrade
+                if (ofd.FilterIndex == 2)
+                {
+                    try
+                    {
+                        StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.Default);
+                        sr.ReadLine();
+                        str = sr.ReadLine();
+                        Regex regex = new Regex(@"\d");
+                        MatchCollection matches = regex.Matches(str);
+                        Oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
+                        for(int i = 0; i < Oscil.ChannelCount; i++)
+                        {
+                            if (i < Convert.ToInt32(matches[1].Value)) Oscil.TypeChannel.Add(false);
+                            else Oscil.TypeChannel.Add(true);
+                        }
+                        //Аналоговые каналы
+                        for (int i = 0; i < Convert.ToInt32(matches[1].Value); i++)
+                        {
+                            str = sr.ReadLine();
+                            string[] str1 = str.Split(',');
+                            Oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                            Oscil.Dimension.Add(Convert.ToString(str1[4]));
+                        }
+                        for (int i = 0; i < Convert.ToInt32(matches[2].Value); i++)
+                        {
+                            str = sr.ReadLine();
+                            string[] str1 = str.Split(',');
+                            Oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                            Oscil.Dimension.Add("NONE");
+                        }
+                        sr.ReadLine();
+                        sr.ReadLine();
+                        str = sr.ReadLine();
+                        string[] str2 = str.Split(',');
+                        Oscil.SampleRate = Convert.ToUInt32(str2[0]);
+                        Oscil.NumCount = Convert.ToUInt32(str2[1]);
+                        Oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
+                        Oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine()); 
+                        sr.Close();
+
+                        namefile = System.IO.Path.GetFileNameWithoutExtension(ofd.FileName);
+                        pathfile = System.IO.Path.GetDirectoryName(ofd.FileName);
+
+                        string pathDateFile = pathfile + "\\" + namefile + ".dat";
+
+                        StreamReader srd = new StreamReader(pathDateFile, System.Text.Encoding.Default);
+                        for (int j = 0; !srd.EndOfStream; j++)
+                        {
+                            str = srd.ReadLine();
+                            string[] str3= str.Split(',');
+                            Oscil.Data.Add(new List<double>());
+                            for (int i = 2; i < str3.Length; i++)
+                            {
+                                str3[i] = str3[i].Replace(".",",");
+                                Oscil.Data[j].Add(Convert.ToDouble(str3[i]));
+                            }
+                        }
+                        srd.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+
+                for (int i = 0; i < Oscil.ChannelCount; i++) graph.addGraph(i);
             }
         }
 

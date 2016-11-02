@@ -2,6 +2,7 @@
 {
     public partial class GraphPanel
     {
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -58,7 +59,6 @@
         #endregion
 
         public ZedGraph.ZedGraphControl zedGraph;
-        private System.ComponentModel.IContainer components;
     }
 }
 
