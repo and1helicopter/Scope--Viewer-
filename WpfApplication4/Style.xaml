@@ -1,64 +1,19 @@
-﻿<UserControl x:Class="WpfApplication4.Style"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:WpfApplication4"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Width="Auto"
-             Height="715"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch"
-             d:DesignWidth="170"
-             UseLayoutRounding="True"
-             mc:Ignorable="d">
-    <Grid x:Name="StyleGrid"
-          Width="auto"
-          HorizontalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Expander Grid.Row="0"
-                  Height="auto"
-                  FontSize="10"
-                  Header="Grid"
-                  ToolTip="Настройка сетки">
-            <StackPanel>
-                <CheckBox x:Name="YMajor"
-                          Checked="YMajor_Checked"
-                          Unchecked="YMajor_Checked">
-                    Y Major
-                </CheckBox>
-                <CheckBox x:Name="YMinor"
-                          Checked="YMinor_Checked"
-                          Unchecked="YMinor_Checked">
-                    Y Minor
-                </CheckBox>
-                <CheckBox x:Name="XMajor"
-                          Checked="XMajor_Checked"
-                          Unchecked="XMajor_Checked">
-                    X Major
-                </CheckBox>
-                <CheckBox x:Name="XMinor"
-                          Checked="XMinor_Checked"
-                          Unchecked="XMinor_Checked">
-                    X Minor
-                </CheckBox>
-            </StackPanel>
-        </Expander>
-        <Expander Grid.Row="1"
-                  Height="auto"
-                  FontSize="10"
-                  Header="Grid">
-            <StackPanel>
-                <CheckBox Content="Y Major" />
-                <CheckBox Content="Y Minor" />
-                <CheckBox Content="X Major" />
-                <CheckBox Content="X Minor" />
-            </StackPanel>
-        </Expander>
-
-
+﻿<UserControl
+    x:Class="WpfApplication4.Style"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WpfApplication4"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    UseLayoutRounding="True"
+    mc:Ignorable="d">
+    <Grid
+        x:Name="StyleGrid"
+        Width="Auto "
+        Height="Auto"
+        HorizontalAlignment="Stretch">
+        <StackPanel x:Name="StyleStackPanel" />
     </Grid>
-
 </UserControl>

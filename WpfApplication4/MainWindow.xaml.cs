@@ -29,7 +29,6 @@ namespace WpfApplication4
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         Graph graphObj = new Graph();
@@ -43,16 +42,16 @@ namespace WpfApplication4
         {
             DoubleAnimation OpenAnimation = new DoubleAnimation();
             OpenAnimation.From = 0;
-            OpenAnimation.To = 170;
-            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            OpenAnimation.To = 200;
+            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.01));
             configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, OpenAnimation);
         }
         private void CloseAnimation()
         {
             DoubleAnimation CloseAnimation = new DoubleAnimation();
-            CloseAnimation.From = 170;
+            CloseAnimation.From = 200;
             CloseAnimation.To = 0;
-            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.01));
             configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, CloseAnimation);
         }
 
@@ -109,6 +108,7 @@ namespace WpfApplication4
                 OpenAnimation();
                 //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
                 configStackPanel.Children.Add(graphObj);
+
                 return;
             }
             if (graphButtonStatus == true)
@@ -204,9 +204,9 @@ namespace WpfApplication4
                 {
                     try
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.Default);
+                        StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.UTF8);
                         Oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
-                        Oscil.SampleRate = Convert.ToUInt32(sr.ReadLine());
+                        Oscil.SampleRate = Convert.ToDouble(sr.ReadLine());
                         str = sr.ReadLine();
                         string[] str1 = str.Split('\t');
                         for(int i = 1; i < str1.Length - 1; i++) Oscil.ChannelNames.Add(Convert.ToString(str1[i]));
@@ -230,7 +230,7 @@ namespace WpfApplication4
                         }
                         sr.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
@@ -272,7 +272,7 @@ namespace WpfApplication4
                         sr.ReadLine();
                         str = sr.ReadLine();
                         string[] str2 = str.Split(',');
-                        Oscil.SampleRate = Convert.ToUInt32(str2[0]);
+                        Oscil.SampleRate = Convert.ToDouble(str2[0]);
                         Oscil.NumCount = Convert.ToUInt32(str2[1]);
                         Oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
                         Oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine()); 
@@ -297,14 +297,23 @@ namespace WpfApplication4
                         }
                         srd.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 }
 
-                for (int i = 0; i < Oscil.ChannelCount; i++) graph.addGraph(i);
+                for(int i = 0; i < Oscil.ChannelCount; i++)
+                {
+                    graphObj.GraphConfigClear();
+                }
+
+                for (int i = 0; i < Oscil.ChannelCount; i++)
+                {
+                    graph.addGraph(i);
+                    graphObj.GraphConfigAdd(Oscil.ChannelNames[i], Oscil.Dimension[i]);
+                }
             }
         }
 
@@ -314,6 +323,11 @@ namespace WpfApplication4
         {
             graph = new WpfApplication4.GraphPanel();
             GrPanel.Child = graph;
+        }
+
+        private void cursor_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

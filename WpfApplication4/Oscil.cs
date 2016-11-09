@@ -14,7 +14,7 @@ namespace WpfApplication4
         public static DateTime StampDateStart;
         public static DateTime StampDateTrigger;
         public static DateTime StampDateEnd;
-        public static uint SampleRate;
+        public static double SampleRate;
 
         public static ushort ChannelCount;
         public static uint NumCount;
