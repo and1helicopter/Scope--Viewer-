@@ -44,6 +44,8 @@
             this.zedGraph.Size = new System.Drawing.Size(592, 471);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
+            this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
+            this.zedGraph.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseMove);
             // 
             // GraphPanel
             // 

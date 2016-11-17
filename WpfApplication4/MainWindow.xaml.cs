@@ -33,7 +33,8 @@ namespace WpfApplication4
 
         Graph graphObj = new Graph();
         Style styleObj = new Style();
-        Analysis analysisObj = new Analysis();
+        public static Analysis analysisObj = new Analysis();
+        bool openWindow = false;
         bool graphButtonStatus = false;
         bool styleButtonStatus = false;
         bool analysisButtonStatus = false;
@@ -42,16 +43,16 @@ namespace WpfApplication4
         {
             DoubleAnimation OpenAnimation = new DoubleAnimation();
             OpenAnimation.From = 0;
-            OpenAnimation.To = 200;
-            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.01));
+            OpenAnimation.To = 250;
+            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
             configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, OpenAnimation);
         }
         private void CloseAnimation()
         {
             DoubleAnimation CloseAnimation = new DoubleAnimation();
-            CloseAnimation.From = 200;
+            CloseAnimation.From = 250;
             CloseAnimation.To = 0;
-            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.01));
+            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
             configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, CloseAnimation);
         }
 
@@ -92,8 +93,15 @@ namespace WpfApplication4
             analysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
+        private void OpenWindow()
+        {
+            if (graphButtonStatus == false && styleButtonStatus == false && analysisButtonStatus == false) openWindow = false;
+        }
+
         private void graphButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenWindow();
+
             styleButtonStatus = false;
             analysisButtonStatus = false;
             configStackPanel.Children.Remove(styleObj);
@@ -105,7 +113,9 @@ namespace WpfApplication4
             {
                 graphButtonStatus = true;
                 setColorGraphButton();
-                OpenAnimation();
+                if(openWindow == false) OpenAnimation();
+                openWindow = true;
+                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
                 configStackPanel.Children.Add(graphObj);
 
@@ -116,7 +126,7 @@ namespace WpfApplication4
                 graphButtonStatus = false;
                 resetColorGraphButton();
                 CloseAnimation();
-                //configPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
                 configStackPanel.Children.Remove(graphObj);
                 return;
             }
@@ -124,6 +134,8 @@ namespace WpfApplication4
 
         private void styleButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenWindow();
+
             graphButtonStatus = false;
             analysisButtonStatus = false;
             configStackPanel.Children.Remove(graphObj);
@@ -135,8 +147,9 @@ namespace WpfApplication4
             {
                 styleButtonStatus = true;
                 setColorStyleButton();
-                OpenAnimation();
-                //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
+                if(openWindow == false)  OpenAnimation();
+                openWindow = true;
+                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 configStackPanel.Children.Add(styleObj);
                 return;
             }
@@ -145,7 +158,7 @@ namespace WpfApplication4
                 styleButtonStatus = false;
                 resetColorStyleButton();
                 CloseAnimation();
-                //configPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
                 configStackPanel.Children.Remove(styleObj);
                 return;
             }
@@ -153,6 +166,8 @@ namespace WpfApplication4
 
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenWindow();
+
             graphButtonStatus = false;
             styleButtonStatus = false;
             configStackPanel.Children.Remove(graphObj);
@@ -164,8 +179,9 @@ namespace WpfApplication4
             {
                 analysisButtonStatus = true;
                 setColorrAnalysisButton();
-                OpenAnimation();
-                //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
+                if (openWindow == false) OpenAnimation();
+                openWindow = true;
+                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 configStackPanel.Children.Add(analysisObj);
                 return;
             }
@@ -174,7 +190,7 @@ namespace WpfApplication4
                 analysisButtonStatus = false;
                 resetColorAnalysisButton();
                 CloseAnimation();
-                //configPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
                 configStackPanel.Children.Remove(analysisObj);
                 return;
             }
@@ -197,7 +213,11 @@ namespace WpfApplication4
                 Oscil.Dimension.Clear();
                 Oscil.TypeChannel.Clear();
                 Oscil.Data.Clear();
-
+                graph.clearListTemp();
+                graph.StampTriggerClear();
+                graph.CursorClear();
+                analysisObj.AnalysisCursorClear();
+                CursorCreate = false;
 
                 //Чтение .txt
                 if (ofd.FilterIndex == 1)
@@ -206,7 +226,9 @@ namespace WpfApplication4
                     {
                         StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.UTF8);
                         Oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
-                        Oscil.SampleRate = Convert.ToDouble(sr.ReadLine());
+                        Oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
+                        Oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
+                        Oscil.StampDateStart = Oscil.StampDateTrigger.AddMilliseconds(-(100 * Oscil.HistotyCount / Oscil.SampleRate));
                         str = sr.ReadLine();
                         string[] str1 = str.Split('\t');
                         for(int i = 1; i < str1.Length - 1; i++) Oscil.ChannelNames.Add(Convert.ToString(str1[i]));
@@ -325,9 +347,46 @@ namespace WpfApplication4
             GrPanel.Child = graph;
         }
 
+        bool CursorCreate = false;
+
         private void cursor_Click(object sender, RoutedEventArgs e)
         {
-            
+            //graph.Cursor1;
+            if (CursorCreate == false)
+            {
+                graph.CursorClear();
+                graph.CursorAdd();
+                analysisObj.AnalysisCursorAdd();
+                CursorCreate = true;
+            }
+            else
+            {
+                graph.CursorClear();
+                analysisObj.AnalysisCursorClear();
+                CursorCreate = false;
+            }
+        }
+
+        private void changescale_Click(object sender, RoutedEventArgs e)
+        {
+            graph.changeScale();
+        }
+
+        bool StampTriggerCreate = false;
+
+        private void StampTrigger_Click(object sender, RoutedEventArgs e)
+        {
+            if (StampTriggerCreate == false)
+            {
+                graph.StampTriggerClear();
+                graph.lineStampTrigger();
+                StampTriggerCreate = true;
+            }
+            else
+            {
+                graph.StampTriggerClear();
+                StampTriggerCreate = false;
+            }
         }
     }
 }

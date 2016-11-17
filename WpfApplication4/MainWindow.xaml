@@ -23,7 +23,7 @@
                 MinWidth="32 px"
                 MaxWidth="64" />
             <ColumnDefinition Width="7 px" />
-            <ColumnDefinition />
+            <ColumnDefinition x:Name="PanelForGraph" />
         </Grid.ColumnDefinitions>
         <Menu
             Grid.Row="0"
@@ -74,7 +74,7 @@
             Content="Style"
             FontSize="14"
             Foreground="#FF2196F3"
-            ToolTip="Настройка графика" />
+            ToolTip="Настройка внешнего вида" />
         <Button
             x:Name="analysisButton"
             Grid.Row="1"
@@ -114,7 +114,8 @@
                 VerticalAlignment="Top"
                 Background="{x:Null}"
                 Click="cursor_Click"
-                Content="1" />
+                Content="1"
+                ToolTip="Добавить курсоры" />
             <Button
                 x:Name="toolButton_2"
                 Width="28"
@@ -132,6 +133,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="{x:Null}"
+                Click="StampTrigger_Click"
                 Content="3" />
             <Button
                 x:Name="toolButton_4"
@@ -141,7 +143,9 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="{x:Null}"
-                Content="4" />
+                Click="changescale_Click"
+                Content="4"
+                ToolTip="Маштабирование по осиY" />
         </StackPanel>
         <GridSplitter
             Grid.Row="1"

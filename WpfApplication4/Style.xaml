@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch"
-    UseLayoutRounding="True"
+    UseLayoutRounding="false"
     mc:Ignorable="d">
     <Grid
         x:Name="StyleGrid"

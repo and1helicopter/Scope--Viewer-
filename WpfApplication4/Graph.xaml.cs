@@ -48,6 +48,8 @@ namespace WpfApplication4
             "RearwardStep"
         };
 
+       // internal static object pane;
+
         public Graph()
         {
             InitializeComponent();
@@ -98,10 +100,10 @@ namespace WpfApplication4
             i = panelBorder.Count - 1;
             panelBorder[i].BorderBrush = Brushes.DarkGray;
             panelBorder[i].BorderThickness = new Thickness(1.0);
-            panelBorder[i].Margin = new Thickness(-175, 0, 0, 0);
+            panelBorder[i].Margin = new Thickness(-190, 0, 0, 0);
 
             LayoutPanel.Add(new DockPanel());
-            LayoutPanel[i].Width = 175;
+            LayoutPanel[i].Width = 190;
             LayoutPanel[i].Height = 30;
             LayoutPanel[i].Margin = new Thickness(2, 5, 2, 0);
             LayoutPanel[i].Background = Brushes.White;

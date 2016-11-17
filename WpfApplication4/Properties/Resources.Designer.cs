@@ -63,6 +63,16 @@ namespace WpfApplication4.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Line_28 {
+            get {
+                object obj = ResourceManager.GetObject("Line_28", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Line_48 {
             get {
                 object obj = ResourceManager.GetObject("Line_48", resourceCulture);
