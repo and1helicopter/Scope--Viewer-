@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="96 px" />
-            <ColumnDefinition x:Name="configPanel" Width="0*" />
+            <ColumnDefinition x:Name="ConfigPanel" Width="0*" />
             <ColumnDefinition
                 Width="32"
                 MinWidth="32 px"
@@ -36,17 +36,19 @@
                 Width="90"
                 Height="28"
                 Margin="1,1,1,1"
-                Click="openButton_Click"
                 FontStretch="Condensed"
-                Header="Open" />
+                Header="Открыть">
+                <MenuItem Click="openButton_Click" Header="Открыть" />
+            </MenuItem>
             <MenuItem
                 Width="90"
                 Height="28"
                 Margin="1,1,1,1"
-                Header="Exit" />
+                Header="Настройки" 
+                Click="settings_Click"/>
         </Menu>
         <Button
-            x:Name="graphButton"
+            x:Name="GraphButton"
             Grid.Row="1"
             Width="88"
             Height="36"
@@ -61,7 +63,7 @@
             Foreground="#FF2196F3"
             ToolTip="Настройка графика" />
         <Button
-            x:Name="styleButton"
+            x:Name="StyleButton"
             Grid.Row="1"
             Width="88"
             Height="36"
@@ -76,7 +78,7 @@
             Foreground="#FF2196F3"
             ToolTip="Настройка внешнего вида" />
         <Button
-            x:Name="analysisButton"
+            x:Name="AnalysisButton"
             Grid.Row="1"
             Width="88"
             Height="36"
@@ -97,7 +99,7 @@
             VerticalContentAlignment="Stretch"
             VerticalScrollBarVisibility="Auto">
             <StackPanel
-                x:Name="configStackPanel"
+                x:Name="ConfigStackPanel"
                 Grid.Row="1"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
@@ -106,7 +108,7 @@
         </ScrollViewer>
         <StackPanel Grid.Row="1" Grid.Column="2">
             <Button
-                x:Name="toolButton_1"
+                x:Name="ToolButton1"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
@@ -117,7 +119,7 @@
                 Content="1"
                 ToolTip="Добавить курсоры" />
             <Button
-                x:Name="toolButton_2"
+                x:Name="ToolButton2"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
@@ -126,7 +128,7 @@
                 Background="{x:Null}"
                 Content="2" />
             <Button
-                x:Name="toolButton_3"
+                x:Name="ToolButton3"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
@@ -136,7 +138,7 @@
                 Click="StampTrigger_Click"
                 Content="3" />
             <Button
-                x:Name="toolButton_4"
+                x:Name="ToolButton4"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"

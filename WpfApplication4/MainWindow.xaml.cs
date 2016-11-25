@@ -31,103 +31,103 @@ namespace WpfApplication4
             InitializeComponent();
         }
 
-        Graph graphObj = new Graph();
-        Style styleObj = new Style();
-        public static Analysis analysisObj = new Analysis();
-        bool openWindow = false;
-        bool graphButtonStatus = false;
-        bool styleButtonStatus = false;
-        bool analysisButtonStatus = false;
+        Graph _graphObj = new Graph();
+        Style _styleObj = new Style();
+        public static Analysis AnalysisObj = new Analysis();
+        bool _openWindow = false;
+        bool _graphButtonStatus = false;
+        bool _styleButtonStatus = false;
+        bool _analysisButtonStatus = false;
 
         private void OpenAnimation()
         {
-            DoubleAnimation OpenAnimation = new DoubleAnimation();
-            OpenAnimation.From = 0;
-            OpenAnimation.To = 250;
-            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
-            configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, OpenAnimation);
+            DoubleAnimation openAnimation = new DoubleAnimation();
+            openAnimation.From = 0;
+            openAnimation.To = 250;
+            openAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
+            ConfigPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, openAnimation);
         }
         private void CloseAnimation()
         {
-            DoubleAnimation CloseAnimation = new DoubleAnimation();
-            CloseAnimation.From = 250;
-            CloseAnimation.To = 0;
-            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
-            configPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, CloseAnimation);
+            DoubleAnimation closeAnimation = new DoubleAnimation();
+            closeAnimation.From = 250;
+            closeAnimation.To = 0;
+            closeAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.0025));
+            ConfigPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, closeAnimation);
         }
 
-        private void resetColorGraphButton()
+        private void ResetColorGraphButton()
         {
-            graphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            graphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            graphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            GraphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            GraphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            GraphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
         }
-        private void setColorGraphButton()
+        private void SetColorGraphButton()
         {
-            graphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            graphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            graphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            GraphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            GraphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            GraphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
-        private void resetColorStyleButton()
+        private void ResetColorStyleButton()
         {
-            styleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            styleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            styleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            StyleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            StyleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            StyleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
         }
-        private void setColorStyleButton()
+        private void SetColorStyleButton()
         {
-            styleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            styleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            styleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            StyleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            StyleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            StyleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
-        private void resetColorAnalysisButton()
+        private void ResetColorAnalysisButton()
         {
-            analysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            analysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            analysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            AnalysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            AnalysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            AnalysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
         }
-        private void setColorrAnalysisButton()
+        private void SetColorrAnalysisButton()
         {
-            analysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            analysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            analysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            AnalysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            AnalysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
+            AnalysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
         private void OpenWindow()
         {
-            if (graphButtonStatus == false && styleButtonStatus == false && analysisButtonStatus == false) openWindow = false;
+            if (_graphButtonStatus == false && _styleButtonStatus == false && _analysisButtonStatus == false) _openWindow = false;
         }
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
         {
             OpenWindow();
 
-            styleButtonStatus = false;
-            analysisButtonStatus = false;
-            configStackPanel.Children.Remove(styleObj);
-            configStackPanel.Children.Remove(analysisObj);
-            resetColorStyleButton();
-            resetColorAnalysisButton();
+            _styleButtonStatus = false;
+            _analysisButtonStatus = false;
+            ConfigStackPanel.Children.Remove(_styleObj);
+            ConfigStackPanel.Children.Remove(AnalysisObj);
+            ResetColorStyleButton();
+            ResetColorAnalysisButton();
 
-            if (graphButtonStatus == false)
+            if (_graphButtonStatus == false)
             {
-                graphButtonStatus = true;
-                setColorGraphButton();
-                if(openWindow == false) OpenAnimation();
-                openWindow = true;
-                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
+                _graphButtonStatus = true;
+                SetColorGraphButton();
+                if(_openWindow == false) OpenAnimation();
+                _openWindow = true;
+                ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
-                configStackPanel.Children.Add(graphObj);
+                ConfigStackPanel.Children.Add(_graphObj);
 
                 return;
             }
-            if (graphButtonStatus == true)
+            if (_graphButtonStatus == true)
             {
-                graphButtonStatus = false;
-                resetColorGraphButton();
+                _graphButtonStatus = false;
+                ResetColorGraphButton();
                 CloseAnimation();
-                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
-                configStackPanel.Children.Remove(graphObj);
+                ConfigPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                ConfigStackPanel.Children.Remove(_graphObj);
                 return;
             }
         }
@@ -136,30 +136,30 @@ namespace WpfApplication4
         {
             OpenWindow();
 
-            graphButtonStatus = false;
-            analysisButtonStatus = false;
-            configStackPanel.Children.Remove(graphObj);
-            configStackPanel.Children.Remove(analysisObj);
-            resetColorGraphButton();
-            resetColorAnalysisButton();
+            _graphButtonStatus = false;
+            _analysisButtonStatus = false;
+            ConfigStackPanel.Children.Remove(_graphObj);
+            ConfigStackPanel.Children.Remove(AnalysisObj);
+            ResetColorGraphButton();
+            ResetColorAnalysisButton();
 
-            if (styleButtonStatus == false)
+            if (_styleButtonStatus == false)
             {
-                styleButtonStatus = true;
-                setColorStyleButton();
-                if(openWindow == false)  OpenAnimation();
-                openWindow = true;
-                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
-                configStackPanel.Children.Add(styleObj);
+                _styleButtonStatus = true;
+                SetColorStyleButton();
+                if(_openWindow == false)  OpenAnimation();
+                _openWindow = true;
+                ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
+                ConfigStackPanel.Children.Add(_styleObj);
                 return;
             }
-            if (styleButtonStatus == true)
+            if (_styleButtonStatus == true)
             {
-                styleButtonStatus = false;
-                resetColorStyleButton();
+                _styleButtonStatus = false;
+                ResetColorStyleButton();
                 CloseAnimation();
-                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
-                configStackPanel.Children.Remove(styleObj);
+                ConfigPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                ConfigStackPanel.Children.Remove(_styleObj);
                 return;
             }
         }
@@ -168,37 +168,37 @@ namespace WpfApplication4
         {
             OpenWindow();
 
-            graphButtonStatus = false;
-            styleButtonStatus = false;
-            configStackPanel.Children.Remove(graphObj);
-            configStackPanel.Children.Remove(styleObj);
-            resetColorGraphButton();
-            resetColorStyleButton();
+            _graphButtonStatus = false;
+            _styleButtonStatus = false;
+            ConfigStackPanel.Children.Remove(_graphObj);
+            ConfigStackPanel.Children.Remove(_styleObj);
+            ResetColorGraphButton();
+            ResetColorStyleButton();
 
-            if (analysisButtonStatus == false)
+            if (_analysisButtonStatus == false)
             {
-                analysisButtonStatus = true;
-                setColorrAnalysisButton();
-                if (openWindow == false) OpenAnimation();
-                openWindow = true;
-                configPanel.Width = new GridLength(250, GridUnitType.Pixel);
-                configStackPanel.Children.Add(analysisObj);
+                _analysisButtonStatus = true;
+                SetColorrAnalysisButton();
+                if (_openWindow == false) OpenAnimation();
+                _openWindow = true;
+                ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
+                ConfigStackPanel.Children.Add(AnalysisObj);
                 return;
             }
-            if (analysisButtonStatus == true)
+            if (_analysisButtonStatus == true)
             {
-                analysisButtonStatus = false;
-                resetColorAnalysisButton();
+                _analysisButtonStatus = false;
+                ResetColorAnalysisButton();
                 CloseAnimation();
-                configPanel.Width = new GridLength(0, GridUnitType.Pixel);
-                configStackPanel.Children.Remove(analysisObj);
+                ConfigPanel.Width = new GridLength(0, GridUnitType.Pixel);
+                ConfigStackPanel.Children.Remove(AnalysisObj);
                 return;
             }
         }
 
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
-            string[] NameChannel = new string[32];
+            string[] nameChannel = new string[32];
             string str, namefile, pathfile;
 
             OpenFileDialog ofd = new OpenFileDialog();
@@ -206,18 +206,18 @@ namespace WpfApplication4
             ofd.Filter = "Текстовый файл|*.txt|Comtrade|*.cfg|All files (*.*)|*.*"; // Filter files by extension
             if (ofd.ShowDialog() == true)
             {
-                graph.removeGraph();
+                Graph.RemoveGraph();
 
 
                 Oscil.ChannelNames.Clear();
                 Oscil.Dimension.Clear();
                 Oscil.TypeChannel.Clear();
                 Oscil.Data.Clear();
-                graph.clearListTemp();
-                graph.StampTriggerClear();
-                graph.CursorClear();
-                analysisObj.AnalysisCursorClear();
-                CursorCreate = false;
+                Graph.ClearListTemp();
+                Graph.StampTriggerClear();
+                Graph.CursorClear();
+                AnalysisObj.AnalysisCursorClear();
+                _cursorCreate = false;
 
                 //Чтение .txt
                 if (ofd.FilterIndex == 1)
@@ -233,7 +233,6 @@ namespace WpfApplication4
                         string[] str1 = str.Split('\t');
                         for(int i = 1; i < str1.Length - 1; i++) Oscil.ChannelNames.Add(Convert.ToString(str1[i]));
                         Oscil.ChannelCount = Convert.ToUInt16(Oscil.ChannelNames.Count);
-                        for(int i = 0; i < 8; i++) sr.ReadLine();
                         for(int j = 0; !sr.EndOfStream; j++) 
                         {
                             str = sr.ReadLine();
@@ -328,65 +327,74 @@ namespace WpfApplication4
 
                 for(int i = 0; i < Oscil.ChannelCount; i++)
                 {
-                    graphObj.GraphConfigClear();
+                    _graphObj.GraphConfigClear();
                 }
 
                 for (int i = 0; i < Oscil.ChannelCount; i++)
                 {
-                    graph.addGraph(i);
-                    graphObj.GraphConfigAdd(Oscil.ChannelNames[i], Oscil.Dimension[i]);
+                    Graph.AddGraph(i);
+                    _graphObj.GraphConfigAdd(Oscil.ChannelNames[i], Oscil.Dimension[i]);
                 }
             }
         }
 
-        public static WpfApplication4.GraphPanel graph; 
+        public static WpfApplication4.GraphPanel Graph; 
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            graph = new WpfApplication4.GraphPanel();
-            GrPanel.Child = graph;
+            Graph = new WpfApplication4.GraphPanel();
+            GrPanel.Child = Graph;
         }
 
-        bool CursorCreate = false;
+        bool _cursorCreate = false;
 
         private void cursor_Click(object sender, RoutedEventArgs e)
         {
             //graph.Cursor1;
-            if (CursorCreate == false)
+            if (_cursorCreate == false)
             {
-                graph.CursorClear();
-                graph.CursorAdd();
-                analysisObj.AnalysisCursorAdd();
-                CursorCreate = true;
+                Graph.CursorClear();
+                Graph.CursorAdd();
+                AnalysisObj.AnalysisCursorAdd();
+                _cursorCreate = true;
             }
             else
             {
-                graph.CursorClear();
-                analysisObj.AnalysisCursorClear();
-                CursorCreate = false;
+                Graph.CursorClear();
+                AnalysisObj.AnalysisCursorClear();
+                _cursorCreate = false;
             }
         }
 
         private void changescale_Click(object sender, RoutedEventArgs e)
         {
-            graph.changeScale();
+            Graph.ChangeScale();
         }
 
-        bool StampTriggerCreate = false;
+        bool _stampTriggerCreate = false;
 
         private void StampTrigger_Click(object sender, RoutedEventArgs e)
         {
-            if (StampTriggerCreate == false)
+            if (_stampTriggerCreate == false)
             {
-                graph.StampTriggerClear();
-                graph.lineStampTrigger();
-                StampTriggerCreate = true;
+                Graph.StampTriggerClear();
+                Graph.LineStampTrigger();
+                _stampTriggerCreate = true;
             }
             else
             {
-                graph.StampTriggerClear();
-                StampTriggerCreate = false;
+                Graph.StampTriggerClear();
+                _stampTriggerCreate = false;
             }
+        }
+
+        Settings _settingsObj; 
+
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            _settingsObj = new Settings();
+            _settingsObj.UpdatePointPerChannelTextBox();
+            _settingsObj.Show();
         }
     }
 }

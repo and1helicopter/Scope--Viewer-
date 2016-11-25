@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace WpfApplication4
@@ -21,18 +14,18 @@ namespace WpfApplication4
     /// </summary>
     public partial class Graph : UserControl
     {
-        List<DockPanel> LayoutPanel = new List<DockPanel>();
-        List<Label> nameLabel = new List<Label>();
-        List<CheckBox> visibleCheckBox = new List<CheckBox>();
-        List<Ellipse> colorEllipse = new List<Ellipse>();
-        List<ComboBox> typeComboBox = new List<ComboBox>();
-        List<CheckBox> smoothCheckBox = new List<CheckBox>();
-        List<Border> panelBorder = new List<Border>();
-        List<bool> OpenClose = new List<bool>();
-        List<ComboBox> stepTypeComboBox = new List<ComboBox>();
-        List<CheckBox> widthCheckBox = new List<CheckBox>();
+        List<DockPanel> _layoutPanel = new List<DockPanel>();
+        List<Label> _nameLabel = new List<Label>();
+        List<CheckBox> _visibleCheckBox = new List<CheckBox>();
+        List<Ellipse> _colorEllipse = new List<Ellipse>();
+        List<ComboBox> _typeComboBox = new List<ComboBox>();
+        List<CheckBox> _smoothCheckBox = new List<CheckBox>();
+        List<Border> _panelBorder = new List<Border>();
+        List<bool> _openClose = new List<bool>();
+        List<ComboBox> _stepTypeComboBox = new List<ComboBox>();
+        List<CheckBox> _widthCheckBox = new List<CheckBox>();
 
-        string[] StyleType = new string[] {
+        string[] _styleType = new string[] {
             "Solid",
             "Dash",
             "DashDot",
@@ -40,7 +33,7 @@ namespace WpfApplication4
             "Dot"
         };
 
-        string[] StepType = new string[] {
+        string[] _stepType = new string[] {
             "NonStep",
             "ForwardSegment",
             "ForwardStep",
@@ -57,227 +50,225 @@ namespace WpfApplication4
 
         public void GraphConfigClear()
         {
-            for(int i = LayoutPanel.Count - 1; i >= 0 ; i--)
+            for(int i = _layoutPanel.Count - 1; i >= 0 ; i--)
             {
-                LayoutPanel[i].Children.Remove(nameLabel[i]);
-                LayoutPanel[i].Children.Remove(visibleCheckBox[i]);
-                LayoutPanel[i].Children.Remove(colorEllipse[i]);
-                LayoutPanel[i].Children.Remove(typeComboBox[i]);
-                LayoutPanel[i].Children.Remove(smoothCheckBox[i]);
-                LayoutPanel[i].Children.Remove(panelBorder[i]);
-                LayoutPanel[i].Children.Remove(stepTypeComboBox[i]);
-                LayoutPanel[i].Children.Remove(widthCheckBox[i]);
-                GraphStackPanel.Children.Remove(LayoutPanel[i]);
+                _layoutPanel[i].Children.Remove(_nameLabel[i]);
+                _layoutPanel[i].Children.Remove(_visibleCheckBox[i]);
+                _layoutPanel[i].Children.Remove(_colorEllipse[i]);
+                _layoutPanel[i].Children.Remove(_typeComboBox[i]);
+                _layoutPanel[i].Children.Remove(_smoothCheckBox[i]);
+                _layoutPanel[i].Children.Remove(_panelBorder[i]);
+                _layoutPanel[i].Children.Remove(_stepTypeComboBox[i]);
+                _layoutPanel[i].Children.Remove(_widthCheckBox[i]);
+                GraphStackPanel.Children.Remove(_layoutPanel[i]);
 
-                nameLabel.Remove(nameLabel[i]);
-                visibleCheckBox.Remove(visibleCheckBox[i]);
-                colorEllipse.Remove(colorEllipse[i]);
-                typeComboBox.Remove(typeComboBox[i]);
-                smoothCheckBox.Remove(smoothCheckBox[i]);
-                panelBorder.Remove(panelBorder[i]);
-                stepTypeComboBox.Remove(stepTypeComboBox[i]);
-                widthCheckBox.Remove(widthCheckBox[i]);
+                _nameLabel.Remove(_nameLabel[i]);
+                _visibleCheckBox.Remove(_visibleCheckBox[i]);
+                _colorEllipse.Remove(_colorEllipse[i]);
+                _typeComboBox.Remove(_typeComboBox[i]);
+                _smoothCheckBox.Remove(_smoothCheckBox[i]);
+                _panelBorder.Remove(_panelBorder[i]);
+                _stepTypeComboBox.Remove(_stepTypeComboBox[i]);
+                _widthCheckBox.Remove(_widthCheckBox[i]);
             }
 
-            nameLabel.Clear();
-            visibleCheckBox.Clear();
-            colorEllipse.Clear();
-            typeComboBox.Clear();
-            smoothCheckBox.Clear();
-            panelBorder.Clear();
-            OpenClose.Clear();
-            stepTypeComboBox.Clear();
-            widthCheckBox.Clear();
+            _nameLabel.Clear();
+            _visibleCheckBox.Clear();
+            _colorEllipse.Clear();
+            _typeComboBox.Clear();
+            _smoothCheckBox.Clear();
+            _panelBorder.Clear();
+            _openClose.Clear();
+            _stepTypeComboBox.Clear();
+            _widthCheckBox.Clear();
 
-            LayoutPanel.Clear();
+            _layoutPanel.Clear();
         }
 
         public void GraphConfigAdd(string nameChannel, string dimensionChannel)
         {
-            int i;
+            _panelBorder.Add(new Border());
+            int i = _panelBorder.Count - 1;
+            _panelBorder[i].BorderBrush = Brushes.DarkGray;
+            _panelBorder[i].BorderThickness = new Thickness(1.0);
+            _panelBorder[i].Margin = new Thickness(-190, 0, 0, 0);
 
-            panelBorder.Add(new Border());
-            i = panelBorder.Count - 1;
-            panelBorder[i].BorderBrush = Brushes.DarkGray;
-            panelBorder[i].BorderThickness = new Thickness(1.0);
-            panelBorder[i].Margin = new Thickness(-190, 0, 0, 0);
+            _layoutPanel.Add(new DockPanel());
+            _layoutPanel[i].Width = 190;
+            _layoutPanel[i].Height = 30;
+            _layoutPanel[i].Margin = new Thickness(2, 5, 2, 0);
+            _layoutPanel[i].Background = Brushes.White;
+            _layoutPanel[i].MouseDown += new MouseButtonEventHandler(click_LayoutPanel);
 
-            LayoutPanel.Add(new DockPanel());
-            LayoutPanel[i].Width = 190;
-            LayoutPanel[i].Height = 30;
-            LayoutPanel[i].Margin = new Thickness(2, 5, 2, 0);
-            LayoutPanel[i].Background = Brushes.White;
-            LayoutPanel[i].MouseDown += new MouseButtonEventHandler(click_LayoutPanel);
+            _nameLabel.Add(new Label());
+            _nameLabel[i].Content = nameChannel + ", " + dimensionChannel;
+            _nameLabel[i].VerticalAlignment = VerticalAlignment.Top;
+            _nameLabel[i].FontSize = 12;
+            _nameLabel[i].Height = 25;
+            _nameLabel[i].Width = 155;
+            _nameLabel[i].ToolTip = "Название канала";
+            _nameLabel[i].Margin = new Thickness(0,0,0,0);
 
-            nameLabel.Add(new Label());
-            nameLabel[i].Content = nameChannel + ", " + dimensionChannel;
-            nameLabel[i].VerticalAlignment = VerticalAlignment.Top;
-            nameLabel[i].FontSize = 12;
-            nameLabel[i].Height = 25;
-            nameLabel[i].Width = 155;
-            nameLabel[i].ToolTip = "Название канала";
-            nameLabel[i].Margin = new Thickness(0,0,0,0);
+            _visibleCheckBox.Add(new CheckBox());
+            _visibleCheckBox[i].IsChecked = true;
+            _visibleCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _visibleCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
+            _visibleCheckBox[i].Margin = new Thickness(0, 5, 0, 0);
+            _visibleCheckBox[i].ToolTip = "Отображать";
+            _visibleCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
 
-            visibleCheckBox.Add(new CheckBox());
-            visibleCheckBox[i].IsChecked = true;
-            visibleCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
-            visibleCheckBox[i].Height = visibleCheckBox[i].Width = 16;
-            visibleCheckBox[i].Margin = new Thickness(0, 5, 0, 0);
-            visibleCheckBox[i].ToolTip = "Отображать";
-            visibleCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _colorEllipse.Add(new Ellipse());
+            _colorEllipse[i].Width = _colorEllipse[i].Height = 25;
+            _colorEllipse[i].VerticalAlignment = VerticalAlignment.Top;
+            _colorEllipse[i].Margin = new Thickness(-275, 25, 0, 0);
+            _colorEllipse[i].Fill = new SolidColorBrush(Color.FromArgb(GraphPanel.Pane.CurveList[i].Color.A, GraphPanel.Pane.CurveList[i].Color.R, GraphPanel.Pane.CurveList[i].Color.G, GraphPanel.Pane.CurveList[i].Color.B));
+            _colorEllipse[i].Visibility = Visibility.Hidden;
+            _colorEllipse[i].ToolTip = "Цвет";
+            _colorEllipse[i].MouseDown += new MouseButtonEventHandler(click_ColorEllipse);
 
-            colorEllipse.Add(new Ellipse());
-            colorEllipse[i].Width = colorEllipse[i].Height = 25;
-            colorEllipse[i].VerticalAlignment = VerticalAlignment.Top;
-            colorEllipse[i].Margin = new Thickness(-275, 25, 0, 0);
-            colorEllipse[i].Fill = new SolidColorBrush(Color.FromArgb(GraphPanel.pane.CurveList[i].Color.A, GraphPanel.pane.CurveList[i].Color.R, GraphPanel.pane.CurveList[i].Color.G, GraphPanel.pane.CurveList[i].Color.B));
-            colorEllipse[i].Visibility = Visibility.Hidden;
-            colorEllipse[i].ToolTip = "Цвет";
-            colorEllipse[i].MouseDown += new MouseButtonEventHandler(click_ColorEllipse);
-
-            typeComboBox.Add(new ComboBox());
-            typeComboBox[i].Width = 100;
-            typeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
-            typeComboBox[i].Margin = new Thickness(-170, 20, 0, 0);
-            typeComboBox[i].ToolTip = "Тип линии";
-            typeComboBox[i].ItemsSource = StyleType;
-            typeComboBox[i].SelectedIndex = 0;
-            typeComboBox[i].Visibility = Visibility.Hidden;
-            typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (change_index);
+            _typeComboBox.Add(new ComboBox());
+            _typeComboBox[i].Width = 100;
+            _typeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _typeComboBox[i].Margin = new Thickness(-170, 20, 0, 0);
+            _typeComboBox[i].ToolTip = "Тип линии";
+            _typeComboBox[i].ItemsSource = _styleType;
+            _typeComboBox[i].SelectedIndex = 0;
+            _typeComboBox[i].Visibility = Visibility.Hidden;
+            _typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (change_index);
 
 
-            smoothCheckBox.Add(new CheckBox());
-            smoothCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
-            smoothCheckBox[i].Height = visibleCheckBox[i].Width = 16;
-            smoothCheckBox[i].Margin = new Thickness(-16, 30, 0, 0);
-            smoothCheckBox[i].ToolTip = "Сглаживание";
-            smoothCheckBox[i].Visibility = Visibility.Hidden;
-            smoothCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _smoothCheckBox.Add(new CheckBox());
+            _smoothCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _smoothCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
+            _smoothCheckBox[i].Margin = new Thickness(-16, 30, 0, 0);
+            _smoothCheckBox[i].ToolTip = "Сглаживание";
+            _smoothCheckBox[i].Visibility = Visibility.Hidden;
+            _smoothCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
 
-            stepTypeComboBox.Add(new ComboBox());
-            stepTypeComboBox[i].Width = 100;
-            stepTypeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
-            stepTypeComboBox[i].Margin = new Thickness(-175, 50, 0, 0);
-            stepTypeComboBox[i].ToolTip = "Type step";
-            stepTypeComboBox[i].ItemsSource = StepType;
-            stepTypeComboBox[i].SelectedIndex = 0;
-            stepTypeComboBox[i].Visibility = Visibility.Hidden;
-            stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(change_index);
+            _stepTypeComboBox.Add(new ComboBox());
+            _stepTypeComboBox[i].Width = 100;
+            _stepTypeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _stepTypeComboBox[i].Margin = new Thickness(-175, 50, 0, 0);
+            _stepTypeComboBox[i].ToolTip = "Type step";
+            _stepTypeComboBox[i].ItemsSource = _stepType;
+            _stepTypeComboBox[i].SelectedIndex = 0;
+            _stepTypeComboBox[i].Visibility = Visibility.Hidden;
+            _stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(change_index);
 
-            widthCheckBox.Add(new CheckBox());
-            widthCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
-            widthCheckBox[i].Height = visibleCheckBox[i].Width = 16;
-            widthCheckBox[i].Margin = new Thickness(-18, 60, 0, 0);
-            widthCheckBox[i].ToolTip = "Толщина";
-            widthCheckBox[i].Visibility = Visibility.Hidden;
-            widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _widthCheckBox.Add(new CheckBox());
+            _widthCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _widthCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
+            _widthCheckBox[i].Margin = new Thickness(-18, 60, 0, 0);
+            _widthCheckBox[i].ToolTip = "Толщина";
+            _widthCheckBox[i].Visibility = Visibility.Hidden;
+            _widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
 
-            OpenClose.Add(new bool());
-            OpenClose[i] = false;
+            _openClose.Add(new bool());
+            _openClose[i] = false;
 
-            LayoutPanel[i].Children.Add(nameLabel[i]);
-            LayoutPanel[i].Children.Add(colorEllipse[i]);
-            LayoutPanel[i].Children.Add(visibleCheckBox[i]);
-            LayoutPanel[i].Children.Add(typeComboBox[i]);
-            LayoutPanel[i].Children.Add(smoothCheckBox[i]);
-            LayoutPanel[i].Children.Add(stepTypeComboBox[i]);
-            LayoutPanel[i].Children.Add(widthCheckBox[i]);
-            LayoutPanel[i].Children.Add(panelBorder[i]);
+            _layoutPanel[i].Children.Add(_nameLabel[i]);
+            _layoutPanel[i].Children.Add(_colorEllipse[i]);
+            _layoutPanel[i].Children.Add(_visibleCheckBox[i]);
+            _layoutPanel[i].Children.Add(_typeComboBox[i]);
+            _layoutPanel[i].Children.Add(_smoothCheckBox[i]);
+            _layoutPanel[i].Children.Add(_stepTypeComboBox[i]);
+            _layoutPanel[i].Children.Add(_widthCheckBox[i]);
+            _layoutPanel[i].Children.Add(_panelBorder[i]);
 
 
-            GraphStackPanel.Children.Add(LayoutPanel[i]);
+            GraphStackPanel.Children.Add(_layoutPanel[i]);
         }
 
         private void change_index(object sender, SelectionChangedEventArgs e)
         {
             int j = 0;
-            for (int i = 0; i < colorEllipse.Count; i++)
+            for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (typeComboBox[i].IsMouseOver == true || stepTypeComboBox[i].IsMouseOver == true) { j = i; break; }
+                if (_typeComboBox[i].IsMouseOver == true || _stepTypeComboBox[i].IsMouseOver == true) { j = i; break; }
             }
-            ChangeSomething(j, typeComboBox[j].SelectedIndex, stepTypeComboBox[j].SelectedIndex, GraphPanel.pane.CurveList[j].Color);
+            ChangeSomething(j, _typeComboBox[j].SelectedIndex, _stepTypeComboBox[j].SelectedIndex, GraphPanel.Pane.CurveList[j].Color);
         }
         
         private void click_checkedButton(object sender, EventArgs e)
         {
             int j = 0;
-            for (int i = 0; i < colorEllipse.Count; i++)
+            for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (visibleCheckBox[i].IsMouseOver == true || smoothCheckBox[i].IsMouseOver == true || widthCheckBox[i].IsMouseOver == true) { j = i; break; }
+                if (_visibleCheckBox[i].IsMouseOver == true || _smoothCheckBox[i].IsMouseOver == true || _widthCheckBox[i].IsMouseOver == true) { j = i; break; }
             }
-            ChangeSomething(j, typeComboBox[j].SelectedIndex, stepTypeComboBox[j].SelectedIndex, GraphPanel.pane.CurveList[j].Color);
+            ChangeSomething(j, _typeComboBox[j].SelectedIndex, _stepTypeComboBox[j].SelectedIndex, GraphPanel.Pane.CurveList[j].Color);
         }
 
         private void click_ColorEllipse(object sender, EventArgs e)
         {
             int j = 0;
-            for (int i = 0; i < colorEllipse.Count; i++)
+            for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (colorEllipse[i].IsMouseOver == true) { j = i; break; } 
+                if (_colorEllipse[i].IsMouseOver == true) { j = i; break; } 
             }
             var dialog = new System.Windows.Forms.ColorDialog();
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                var color_colorEllipse = Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B);
-                var brush_colorEllipse = new SolidColorBrush(color_colorEllipse);
-                colorEllipse[j].Fill = brush_colorEllipse;
-                System.Drawing.Color color = System.Drawing.Color.FromArgb(brush_colorEllipse.Color.A, brush_colorEllipse.Color.R, brush_colorEllipse.Color.G, brush_colorEllipse.Color.B);
-                ChangeSomething(j, typeComboBox[j].SelectedIndex, stepTypeComboBox[j].SelectedIndex, color);
+                var colorColorEllipse = Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B);
+                var brushColorEllipse = new SolidColorBrush(colorColorEllipse);
+                _colorEllipse[j].Fill = brushColorEllipse;
+                System.Drawing.Color color = System.Drawing.Color.FromArgb(brushColorEllipse.Color.A, brushColorEllipse.Color.R, brushColorEllipse.Color.G, brushColorEllipse.Color.B);
+                ChangeSomething(j, _typeComboBox[j].SelectedIndex, _stepTypeComboBox[j].SelectedIndex, color);
             }
         }
 
         private void click_LayoutPanel(object sender, MouseButtonEventArgs e)
         {
-            for (int i = 0; i < OpenClose.Count; i++)
+            for (int i = 0; i < _openClose.Count; i++)
             {
-                if (LayoutPanel[i].IsMouseOver == true && OpenClose[i] == false) OpenAnimation(i);
-                else if (LayoutPanel[i].IsMouseOver == true && OpenClose[i] == true) CloseAnimation(i);
+                if (_layoutPanel[i].IsMouseOver == true && _openClose[i] == false) OpenAnimation(i);
+                else if (_layoutPanel[i].IsMouseOver == true && _openClose[i] == true) CloseAnimation(i);
             }
         }
 
         private void OpenAnimation(int i)
         {
-            DoubleAnimation OpenAnimation = new DoubleAnimation();
-            OpenAnimation.From = 30;
-            OpenAnimation.To = 90;
+            DoubleAnimation openAnimation = new DoubleAnimation();
+            openAnimation.From = 30;
+            openAnimation.To = 90;
 
-            OpenAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
-            LayoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, OpenAnimation);
-            OpenClose[i] = true;
+            openAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, openAnimation);
+            _openClose[i] = true;
 
             {
-                colorEllipse[i].Visibility = Visibility.Visible;
-                typeComboBox[i].Visibility = Visibility.Visible;
-                smoothCheckBox[i].Visibility = Visibility.Visible;
-                stepTypeComboBox[i].Visibility = Visibility.Visible;
-                widthCheckBox[i].Visibility = Visibility.Visible;
+                _colorEllipse[i].Visibility = Visibility.Visible;
+                _typeComboBox[i].Visibility = Visibility.Visible;
+                _smoothCheckBox[i].Visibility = Visibility.Visible;
+                _stepTypeComboBox[i].Visibility = Visibility.Visible;
+                _widthCheckBox[i].Visibility = Visibility.Visible;
             }
         }
         private void CloseAnimation(int i)
         {
-            DoubleAnimation CloseAnimation = new DoubleAnimation();
-            CloseAnimation.From = 90;
-            CloseAnimation.To = 30;
-            CloseAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            DoubleAnimation closeAnimation = new DoubleAnimation();
+            closeAnimation.From = 90;
+            closeAnimation.To = 30;
+            closeAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
 
-            LayoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, CloseAnimation);
-            OpenClose[i] = false;
+            _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, closeAnimation);
+            _openClose[i] = false;
 
             {
-                colorEllipse[i].Visibility = Visibility.Hidden;
-                typeComboBox[i].Visibility = Visibility.Hidden;
-                smoothCheckBox[i].Visibility = Visibility.Hidden;
-                stepTypeComboBox[i].Visibility = Visibility.Hidden;
-                widthCheckBox[i].Visibility = Visibility.Hidden;
+                _colorEllipse[i].Visibility = Visibility.Hidden;
+                _typeComboBox[i].Visibility = Visibility.Hidden;
+                _smoothCheckBox[i].Visibility = Visibility.Hidden;
+                _stepTypeComboBox[i].Visibility = Visibility.Hidden;
+                _widthCheckBox[i].Visibility = Visibility.Hidden;
             }
         }
 
         private void ChangeSomething(int num, int line, int typeStep, System.Drawing.Color color) {
-            bool Show = true, Smooth = false, width = false;
-            if (visibleCheckBox[num].IsChecked == false) Show = false;
-            if (smoothCheckBox[num].IsChecked == true) Smooth = true;
-            if (widthCheckBox[num].IsChecked == true) width = true;
-            MainWindow.graph.ChangeLine(num, line, typeStep, width, Show, Smooth, color);
+            bool show = true, smooth = false, width = false;
+            if (_visibleCheckBox[num].IsChecked == false) show = false;
+            if (_smoothCheckBox[num].IsChecked == true) smooth = true;
+            if (_widthCheckBox[num].IsChecked == true) width = true;
+            MainWindow.Graph.ChangeLine(num, line, typeStep, width, show, smooth, color);
         }
     }
 }
