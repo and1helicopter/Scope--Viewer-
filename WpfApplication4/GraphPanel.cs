@@ -45,14 +45,6 @@ namespace WpfApplication4
 
         private void ScrollEvent()
         {            
-         //   
-
-            // Для простоты примера будем ограничивать масштабирование 
-            // только в сторону уменьшения размера графика
-
-            // Проверим интервал для каждой оси и 
-            // при необходимости скорректируем его
-
             if (Pane.XAxis.Scale.Min <= _minXAxis)
             {
                 Pane.XAxis.Scale.Min = _minXAxis;
@@ -157,23 +149,23 @@ namespace WpfApplication4
             string nameCh = "";
 
             // Заполняем список точек. Приращение по оси X 
-            int sum = Convert.ToInt32((double)(Oscil.NumCount / PointCashCount));
+            int sum = Convert.ToInt32((double)(MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount / PointCashCount));
             if (sum == 0) sum = 1;
             DateTime tempTime;
 
-            for (int i = 0; i < Oscil.NumCount; i+= sum)
+            for (int i = 0; i < MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount; i+= sum)
             {
-                tempTime = Oscil.StampDateStart;
+                tempTime = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                list.Add(new XDate (tempTime.AddMilliseconds((i * 100) / Oscil.SampleRate)), Oscil.Data[i][j]);
-                nameCh = Oscil.ChannelNames[j];
+                list.Add(new XDate (tempTime.AddMilliseconds((i * 100) / MainWindow._oscilList[MainWindow._oscilList.Count - 1].SampleRate)), MainWindow._oscilList[MainWindow._oscilList.Count - 1].Data[i][j]);
+                nameCh = MainWindow._oscilList[MainWindow._oscilList.Count - 1].ChannelNames[j];
             }
 
-            for (int i = 0; i < Oscil.NumCount; i++)   
+            for (int i = 0; i < MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount; i++)   
             {
-                tempTime = Oscil.StampDateStart;
+                tempTime = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                ListTemp[j].Add(new XDate(tempTime.AddMilliseconds((i * 100) / Oscil.SampleRate)), Oscil.Data[i][j]);
+                ListTemp[j].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow._oscilList[MainWindow._oscilList.Count - 1].SampleRate)), MainWindow._oscilList[MainWindow._oscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
@@ -392,7 +384,7 @@ namespace WpfApplication4
         LineObj _stampTrigger;
         public void LineStampTrigger()
         {
-            XDate timeStamp = Oscil.StampDateTrigger;
+            XDate timeStamp = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateTrigger;
             _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max);
             // Стиль линии - пунктирная
             _stampTrigger.Line.Style = System.Drawing.Drawing2D.DashStyle.DashDot;

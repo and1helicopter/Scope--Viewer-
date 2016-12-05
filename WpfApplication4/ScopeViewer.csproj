@@ -187,6 +187,15 @@
   <ItemGroup>
     <None Include="Resources\Line-28.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close Window-18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close Window-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close Window_20.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

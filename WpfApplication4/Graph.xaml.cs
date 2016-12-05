@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 
 namespace WpfApplication4
@@ -14,16 +16,33 @@ namespace WpfApplication4
     /// </summary>
     public partial class Graph : UserControl
     {
+        //Заголовки осциллограммы
+        //       List<DockPanel> _layoutPanel = new List<DockPanel>();
+        List<Border> _oscilBorder = new List<Border>();
+        List<Label> _oscilName = new List<Label>();
+        List<CheckBox> _showAllCheckBox = new List<CheckBox>();
+        List<CheckBox> _selectAllCheckBox = new List<CheckBox>();
+        List<Rectangle> _closeButton = new List<Rectangle>();
+        List<DockPanel> _layoutOscilPanel = new List<DockPanel>();
+
+
         List<DockPanel> _layoutPanel = new List<DockPanel>();
         List<Label> _nameLabel = new List<Label>();
-        List<CheckBox> _visibleCheckBox = new List<CheckBox>();
         List<Ellipse> _colorEllipse = new List<Ellipse>();
+        List<CheckBox> _visibleCheckBox = new List<CheckBox>();
+        List<CheckBox> _selectCheckBox = new List<CheckBox>();
+
         List<ComboBox> _typeComboBox = new List<ComboBox>();
         List<CheckBox> _smoothCheckBox = new List<CheckBox>();
         List<Border> _panelBorder = new List<Border>();
         List<bool> _openClose = new List<bool>();
         List<ComboBox> _stepTypeComboBox = new List<ComboBox>();
         List<CheckBox> _widthCheckBox = new List<CheckBox>();
+
+        string[] _typeType = new string[] {
+            "Analog",
+            "Digital"
+        };
 
         string[] _styleType = new string[] {
             "Solid",
@@ -46,6 +65,43 @@ namespace WpfApplication4
         public Graph()
         {
             InitializeComponent();
+        }
+
+        public void OscilConfigAdd(string oscilName)
+        {
+            _layoutOscilPanel.Add(new DockPanel());
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Width = 210;
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Height = 30;
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Margin = new Thickness(-20, 10, 0, 0);
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Background = Brushes.WhiteSmoke;
+
+            _oscilName.Add(new Label());
+            _oscilName[_layoutOscilPanel.Count - 1].Content = "Осциллограмма №" + (_layoutOscilPanel.Count);
+            _oscilName[_layoutOscilPanel.Count - 1].ToolTip = oscilName;
+            _oscilName[_layoutOscilPanel.Count - 1].Width = 150;
+            _oscilName[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 3, 0, 0);
+
+            _selectAllCheckBox.Add(new CheckBox());
+            _selectAllCheckBox[_layoutOscilPanel.Count - 1].ToolTip = "Выбрать все каналы";
+            _selectAllCheckBox[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 8, 0, 0);
+
+            _showAllCheckBox.Add(new CheckBox());
+            _showAllCheckBox[_layoutOscilPanel.Count - 1].ToolTip = "Отображать все каналы";
+            _showAllCheckBox[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 8, 0, 0);
+            _showAllCheckBox[_layoutOscilPanel.Count - 1].IsChecked = true;
+
+            _closeButton.Add(new Rectangle());
+            _closeButton[_layoutOscilPanel.Count - 1].ToolTip = "Закрыть осциллограмму";
+            _closeButton[_layoutOscilPanel.Count - 1].Width = _closeButton[_layoutOscilPanel.Count - 1].Height = 16;
+            _closeButton[_layoutOscilPanel.Count - 1].Fill  = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window_20.png")));
+            _closeButton[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 0, 0, 0);
+
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_oscilName[_layoutOscilPanel.Count - 1]);
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_showAllCheckBox[_layoutOscilPanel.Count - 1]);
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_selectAllCheckBox[_layoutOscilPanel.Count - 1]);
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_closeButton[_layoutOscilPanel.Count - 1]); 
+
+            GraphStackPanel.Children.Add(_layoutOscilPanel[_layoutOscilPanel.Count - 1]);
         }
 
         public void GraphConfigClear()
@@ -91,23 +147,31 @@ namespace WpfApplication4
             int i = _panelBorder.Count - 1;
             _panelBorder[i].BorderBrush = Brushes.DarkGray;
             _panelBorder[i].BorderThickness = new Thickness(1.0);
-            _panelBorder[i].Margin = new Thickness(-190, 0, 0, 0);
+            _panelBorder[i].Margin = new Thickness(-200, 0, 0, 0);
 
             _layoutPanel.Add(new DockPanel());
-            _layoutPanel[i].Width = 190;
-            _layoutPanel[i].Height = 30;
-            _layoutPanel[i].Margin = new Thickness(2, 5, 2, 0);
+            _layoutPanel[i].Width = 200;
+            _layoutPanel[i].Height = 25;
+            _layoutPanel[i].Margin = new Thickness(-10, 2, 1, 0);
             _layoutPanel[i].Background = Brushes.White;
             _layoutPanel[i].MouseDown += new MouseButtonEventHandler(click_LayoutPanel);
 
             _nameLabel.Add(new Label());
-            _nameLabel[i].Content = nameChannel + ", " + dimensionChannel;
+            _nameLabel[i].Content = nameChannel;
             _nameLabel[i].VerticalAlignment = VerticalAlignment.Top;
             _nameLabel[i].FontSize = 12;
             _nameLabel[i].Height = 25;
-            _nameLabel[i].Width = 155;
-            _nameLabel[i].ToolTip = "Название канала";
+            _nameLabel[i].Width = 140;
+            _nameLabel[i].ToolTip = "Название канала:\n" + nameChannel + ", " + dimensionChannel; ;
             _nameLabel[i].Margin = new Thickness(0,0,0,0);
+
+            _colorEllipse.Add(new Ellipse());
+            _colorEllipse[i].Width = _colorEllipse[i].Height = 20;
+            _colorEllipse[i].VerticalAlignment = VerticalAlignment.Top;
+            _colorEllipse[i].Margin = new Thickness(0, 2, 0, 0);
+            _colorEllipse[i].Fill = new SolidColorBrush(Color.FromArgb(GraphPanel.Pane.CurveList[i].Color.A, GraphPanel.Pane.CurveList[i].Color.R, GraphPanel.Pane.CurveList[i].Color.G, GraphPanel.Pane.CurveList[i].Color.B));
+            _colorEllipse[i].ToolTip = "Цвет";
+            _colorEllipse[i].MouseDown += new MouseButtonEventHandler(click_ColorEllipse);
 
             _visibleCheckBox.Add(new CheckBox());
             _visibleCheckBox[i].IsChecked = true;
@@ -117,15 +181,14 @@ namespace WpfApplication4
             _visibleCheckBox[i].ToolTip = "Отображать";
             _visibleCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
 
-            _colorEllipse.Add(new Ellipse());
-            _colorEllipse[i].Width = _colorEllipse[i].Height = 25;
-            _colorEllipse[i].VerticalAlignment = VerticalAlignment.Top;
-            _colorEllipse[i].Margin = new Thickness(-275, 25, 0, 0);
-            _colorEllipse[i].Fill = new SolidColorBrush(Color.FromArgb(GraphPanel.Pane.CurveList[i].Color.A, GraphPanel.Pane.CurveList[i].Color.R, GraphPanel.Pane.CurveList[i].Color.G, GraphPanel.Pane.CurveList[i].Color.B));
-            _colorEllipse[i].Visibility = Visibility.Hidden;
-            _colorEllipse[i].ToolTip = "Цвет";
-            _colorEllipse[i].MouseDown += new MouseButtonEventHandler(click_ColorEllipse);
+            _selectCheckBox.Add(new CheckBox());
+            _selectCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _selectCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
+            _selectCheckBox[i].Margin = new Thickness(0, 5, 0, 0);
+            _selectCheckBox[i].ToolTip = "Выбрать";
 
+
+            /*
             _typeComboBox.Add(new ComboBox());
             _typeComboBox[i].Width = 100;
             _typeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
@@ -162,17 +225,20 @@ namespace WpfApplication4
             _widthCheckBox[i].ToolTip = "Толщина";
             _widthCheckBox[i].Visibility = Visibility.Hidden;
             _widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
-
+            */
             _openClose.Add(new bool());
             _openClose[i] = false;
 
             _layoutPanel[i].Children.Add(_nameLabel[i]);
             _layoutPanel[i].Children.Add(_colorEllipse[i]);
             _layoutPanel[i].Children.Add(_visibleCheckBox[i]);
+            _layoutPanel[i].Children.Add(_selectCheckBox[i]);
+            /*
             _layoutPanel[i].Children.Add(_typeComboBox[i]);
             _layoutPanel[i].Children.Add(_smoothCheckBox[i]);
             _layoutPanel[i].Children.Add(_stepTypeComboBox[i]);
             _layoutPanel[i].Children.Add(_widthCheckBox[i]);
+            */
             _layoutPanel[i].Children.Add(_panelBorder[i]);
 
 
@@ -229,7 +295,7 @@ namespace WpfApplication4
         private void OpenAnimation(int i)
         {
             DoubleAnimation openAnimation = new DoubleAnimation();
-            openAnimation.From = 30;
+            openAnimation.From = 25;
             openAnimation.To = 90;
 
             openAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
@@ -237,29 +303,27 @@ namespace WpfApplication4
             _openClose[i] = true;
 
             {
-                _colorEllipse[i].Visibility = Visibility.Visible;
-                _typeComboBox[i].Visibility = Visibility.Visible;
-                _smoothCheckBox[i].Visibility = Visibility.Visible;
-                _stepTypeComboBox[i].Visibility = Visibility.Visible;
-                _widthCheckBox[i].Visibility = Visibility.Visible;
+                //_typeComboBox[i].Visibility = Visibility.Visible;
+              //  _smoothCheckBox[i].Visibility = Visibility.Visible;
+             //   _stepTypeComboBox[i].Visibility = Visibility.Visible;
+             //   _widthCheckBox[i].Visibility = Visibility.Visible;
             }
         }
         private void CloseAnimation(int i)
         {
             DoubleAnimation closeAnimation = new DoubleAnimation();
             closeAnimation.From = 90;
-            closeAnimation.To = 30;
+            closeAnimation.To = 25;
             closeAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
 
             _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, closeAnimation);
             _openClose[i] = false;
 
             {
-                _colorEllipse[i].Visibility = Visibility.Hidden;
-                _typeComboBox[i].Visibility = Visibility.Hidden;
-                _smoothCheckBox[i].Visibility = Visibility.Hidden;
-                _stepTypeComboBox[i].Visibility = Visibility.Hidden;
-                _widthCheckBox[i].Visibility = Visibility.Hidden;
+           //   _typeComboBox[i].Visibility = Visibility.Hidden;
+          //      _smoothCheckBox[i].Visibility = Visibility.Hidden;
+          //      _stepTypeComboBox[i].Visibility = Visibility.Hidden;
+          //      _widthCheckBox[i].Visibility = Visibility.Hidden;
             }
         }
 

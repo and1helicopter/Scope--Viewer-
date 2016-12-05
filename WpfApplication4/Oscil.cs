@@ -6,21 +6,23 @@ using System.Threading.Tasks;
 
 namespace WpfApplication4
 {
-    public static class Oscil
+    public class Oscil
     {
-        public static List<string> ChannelNames = new List<string>();
-        public static List<string> Dimension = new List<string>();
+        public string OscilNames;
 
-        public static DateTime StampDateStart;
-        public static DateTime StampDateTrigger;
-        public static DateTime StampDateEnd;
-        public static double SampleRate;
-        public static double HistotyCount;
+        public List<string> ChannelNames = new List<string>();
+        public List<string> Dimension = new List<string>();
 
-        public static ushort ChannelCount;
-        public static uint NumCount;
-        public static List <bool> TypeChannel = new List <bool>();
+        public DateTime StampDateStart;
+        public DateTime StampDateTrigger;
+        public DateTime StampDateEnd;
+        public double SampleRate;
+        public double HistotyCount;
 
-        public static List<List<double>> Data = new List<List<double>>();
+        public ushort ChannelCount;
+        public uint NumCount;
+        public List <bool> TypeChannel = new List <bool>();
+
+        public List<List<double>> Data = new List<List<double>>();
     }
 }

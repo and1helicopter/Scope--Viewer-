@@ -114,10 +114,13 @@
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Background="{x:Null}"
                 Click="cursor_Click"
                 Content="1"
-                ToolTip="Добавить курсоры" />
+                ToolTip="Добавить курсоры" >
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/Close Window-18.png" Stretch="None"/>
+                </Button.Background>
+            </Button>
             <Button
                 x:Name="ToolButton2"
                 Width="28"
