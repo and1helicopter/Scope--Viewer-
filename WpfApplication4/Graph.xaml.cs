@@ -32,6 +32,7 @@ namespace WpfApplication4
         List<CheckBox> _visibleCheckBox = new List<CheckBox>();
         List<CheckBox> _selectCheckBox = new List<CheckBox>();
 
+        List<ComboBox> _typeTypeComboBox = new List<ComboBox>();
         List<ComboBox> _typeComboBox = new List<ComboBox>();
         List<CheckBox> _smoothCheckBox = new List<CheckBox>();
         List<Border> _panelBorder = new List<Border>();
@@ -187,45 +188,46 @@ namespace WpfApplication4
             _selectCheckBox[i].Margin = new Thickness(0, 5, 0, 0);
             _selectCheckBox[i].ToolTip = "Выбрать";
 
-
-            /*
+            _typeTypeComboBox.Add(new ComboBox());
+            _typeTypeComboBox[i].Width = 100;
+            _typeTypeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
+            _typeTypeComboBox[i].Margin = new Thickness(-270, 25, 0, 0);
+            _typeTypeComboBox[i].ToolTip = "Тип канала";
+            _typeTypeComboBox[i].ItemsSource = _typeType;
+            _typeTypeComboBox[i].SelectedIndex = 0;
+            
             _typeComboBox.Add(new ComboBox());
             _typeComboBox[i].Width = 100;
             _typeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
-            _typeComboBox[i].Margin = new Thickness(-170, 20, 0, 0);
+            _typeComboBox[i].Margin = new Thickness(-270, 50, 0, 0);
             _typeComboBox[i].ToolTip = "Тип линии";
             _typeComboBox[i].ItemsSource = _styleType;
             _typeComboBox[i].SelectedIndex = 0;
-            _typeComboBox[i].Visibility = Visibility.Hidden;
             _typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (change_index);
-
-
+            
             _smoothCheckBox.Add(new CheckBox());
             _smoothCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
             _smoothCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
-            _smoothCheckBox[i].Margin = new Thickness(-16, 30, 0, 0);
+            _smoothCheckBox[i].Margin = new Thickness(-50, 53, 0, 0);
             _smoothCheckBox[i].ToolTip = "Сглаживание";
-            _smoothCheckBox[i].Visibility = Visibility.Hidden;
             _smoothCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
 
             _stepTypeComboBox.Add(new ComboBox());
             _stepTypeComboBox[i].Width = 100;
             _stepTypeComboBox[i].VerticalAlignment = VerticalAlignment.Top;
-            _stepTypeComboBox[i].Margin = new Thickness(-175, 50, 0, 0);
-            _stepTypeComboBox[i].ToolTip = "Type step";
+            _stepTypeComboBox[i].Margin = new Thickness(-270, 75, 0, 0);
+            _stepTypeComboBox[i].ToolTip = "Ступенчатость";
             _stepTypeComboBox[i].ItemsSource = _stepType;
             _stepTypeComboBox[i].SelectedIndex = 0;
-            _stepTypeComboBox[i].Visibility = Visibility.Hidden;
             _stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(change_index);
 
             _widthCheckBox.Add(new CheckBox());
             _widthCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
             _widthCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
-            _widthCheckBox[i].Margin = new Thickness(-18, 60, 0, 0);
+            _widthCheckBox[i].Margin = new Thickness(-50, 78, 0, 0);
             _widthCheckBox[i].ToolTip = "Толщина";
-            _widthCheckBox[i].Visibility = Visibility.Hidden;
             _widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
-            */
+
             _openClose.Add(new bool());
             _openClose[i] = false;
 
@@ -233,12 +235,11 @@ namespace WpfApplication4
             _layoutPanel[i].Children.Add(_colorEllipse[i]);
             _layoutPanel[i].Children.Add(_visibleCheckBox[i]);
             _layoutPanel[i].Children.Add(_selectCheckBox[i]);
-            /*
+            _layoutPanel[i].Children.Add(_typeTypeComboBox[i]);    
             _layoutPanel[i].Children.Add(_typeComboBox[i]);
             _layoutPanel[i].Children.Add(_smoothCheckBox[i]);
             _layoutPanel[i].Children.Add(_stepTypeComboBox[i]);
             _layoutPanel[i].Children.Add(_widthCheckBox[i]);
-            */
             _layoutPanel[i].Children.Add(_panelBorder[i]);
 
 
@@ -296,35 +297,22 @@ namespace WpfApplication4
         {
             DoubleAnimation openAnimation = new DoubleAnimation();
             openAnimation.From = 25;
-            openAnimation.To = 90;
+            openAnimation.To = 100;
 
             openAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
             _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, openAnimation);
             _openClose[i] = true;
-
-            {
-                //_typeComboBox[i].Visibility = Visibility.Visible;
-              //  _smoothCheckBox[i].Visibility = Visibility.Visible;
-             //   _stepTypeComboBox[i].Visibility = Visibility.Visible;
-             //   _widthCheckBox[i].Visibility = Visibility.Visible;
-            }
         }
         private void CloseAnimation(int i)
         {
             DoubleAnimation closeAnimation = new DoubleAnimation();
-            closeAnimation.From = 90;
+            closeAnimation.From = 100;
             closeAnimation.To = 25;
             closeAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
 
             _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, closeAnimation);
             _openClose[i] = false;
 
-            {
-           //   _typeComboBox[i].Visibility = Visibility.Hidden;
-          //      _smoothCheckBox[i].Visibility = Visibility.Hidden;
-          //      _stepTypeComboBox[i].Visibility = Visibility.Hidden;
-          //      _widthCheckBox[i].Visibility = Visibility.Hidden;
-            }
         }
 
         private void ChangeSomething(int num, int line, int typeStep, System.Drawing.Color color) {
