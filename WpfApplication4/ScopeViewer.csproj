@@ -170,9 +170,6 @@
     <Resource Include="License-LGPL.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Line-48.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.1 %28x86 and x64%29</ProductName>
@@ -185,19 +182,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Line-28.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Close Window-18.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Close Window_20.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Close Window-48%281%29.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Close Window-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Chromatography-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Chromatography-48.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

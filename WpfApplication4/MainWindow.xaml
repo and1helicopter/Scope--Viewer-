@@ -16,10 +16,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="96 px" />
+            <ColumnDefinition Width="76" />
             <ColumnDefinition x:Name="ConfigPanel" Width="0*" />
             <ColumnDefinition
-                Width="32"
+                Width="52"
                 MinWidth="32 px"
                 MaxWidth="64" />
             <ColumnDefinition Width="7 px" />
@@ -50,7 +50,7 @@
         <Button
             x:Name="GraphButton"
             Grid.Row="1"
-            Width="88"
+            Width="70"
             Height="36"
             Margin="3,5,0,0"
             HorizontalAlignment="Left"
@@ -58,14 +58,14 @@
             Background="White"
             BorderBrush="White"
             Click="graphButton_Click"
-            Content="Graph"
+            Content="Каналы"
             FontSize="14"
             Foreground="#FF2196F3"
-            ToolTip="Настройка графика" />
+            ToolTip="Настройка графика" RenderTransformOrigin="1,1" />
         <Button
             x:Name="StyleButton"
             Grid.Row="1"
-            Width="88"
+            Width="70"
             Height="36"
             Margin="3,45,0,0"
             HorizontalAlignment="Left"
@@ -80,7 +80,7 @@
         <Button
             x:Name="AnalysisButton"
             Grid.Row="1"
-            Width="88"
+            Width="70"
             Height="36"
             Margin="3,85,0,0"
             HorizontalAlignment="Left"
@@ -97,7 +97,7 @@
             Grid.Column="1"
             Height="Auto"
             VerticalContentAlignment="Stretch"
-            VerticalScrollBarVisibility="Auto">
+            VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Margin="0,0,52,0">
             <StackPanel
                 x:Name="ConfigStackPanel"
                 Grid.Row="1"
@@ -107,6 +107,21 @@
                 ScrollViewer.CanContentScroll="True" />
         </ScrollViewer>
         <StackPanel Grid.Row="1" Grid.Column="2">
+            <Rectangle
+                x:Name="AddGraph"
+                Width="28"
+                Height="28"
+                Margin="2,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                ToolTip="Добавить новый график" 
+                MouseDown ="AddGraph_MouseDown" 
+                MouseEnter="AddGraph_MouseEnter"
+                MouseLeave="AddGraph_MouseLeave">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Chromatography-48.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
             <Button
                 x:Name="ToolButton1"
                 Width="28"
@@ -116,11 +131,7 @@
                 VerticalAlignment="Top"
                 Click="cursor_Click"
                 Content="1"
-                ToolTip="Добавить курсоры" >
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/Close Window-18.png" Stretch="None"/>
-                </Button.Background>
-            </Button>
+                ToolTip="Добавить курсоры" Background="{x:Null}" />
             <Button
                 x:Name="ToolButton2"
                 Width="28"

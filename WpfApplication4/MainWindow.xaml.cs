@@ -404,5 +404,20 @@ namespace WpfApplication4
             _settingsObj.UpdatePointPerChannelTextBox();
             _settingsObj.Show();
         }
+
+        private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void AddGraph_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48(1).png")));
+        }
+
+        private void AddGraph_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48.png")));
+        }
     }
 }

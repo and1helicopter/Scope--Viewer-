@@ -25,7 +25,6 @@ namespace WpfApplication4
         List<DockPanel> _layoutOscilPanel = new List<DockPanel>();
         List <List<int>> _clearChannel = new List <List<int>>();
 
-
         List<DockPanel> _layoutPanel = new List<DockPanel>();
         List<Label> _nameLabel = new List<Label>();
         List<Ellipse> _colorEllipse = new List<Ellipse>();
@@ -61,8 +60,6 @@ namespace WpfApplication4
             "RearwardStep"
         };
 
-       // internal static object pane;
-
         public Graph()
         {
             InitializeComponent();
@@ -85,11 +82,15 @@ namespace WpfApplication4
             _selectAllCheckBox.Add(new CheckBox());
             _selectAllCheckBox[_layoutOscilPanel.Count - 1].ToolTip = "Выбрать все каналы";
             _selectAllCheckBox[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 8, 0, 0);
+            _selectAllCheckBox[_layoutOscilPanel.Count - 1].Checked += Graph_Checked;
+            _selectAllCheckBox[_layoutOscilPanel.Count - 1].Unchecked += Graph_Checked;
 
             _showAllCheckBox.Add(new CheckBox());
             _showAllCheckBox[_layoutOscilPanel.Count - 1].ToolTip = "Отображать все каналы";
             _showAllCheckBox[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 8, 0, 0);
             _showAllCheckBox[_layoutOscilPanel.Count - 1].IsChecked = true;
+            _showAllCheckBox[_layoutOscilPanel.Count - 1].Checked += Graph_Checked1;
+            _showAllCheckBox[_layoutOscilPanel.Count - 1].Unchecked += Graph_Checked1;
 
             _closeButton.Add(new Rectangle());
             _closeButton[_layoutOscilPanel.Count - 1].ToolTip = "Закрыть осциллограмму";
@@ -109,6 +110,52 @@ namespace WpfApplication4
             _clearChannel.Add(new List<int>());
 
             GraphStackPanel.Children.Add(_layoutOscilPanel[_layoutOscilPanel.Count - 1]);
+        }
+
+        private void Graph_Checked1(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < _showAllCheckBox.Count; i++)
+            {
+                if (_showAllCheckBox[i].IsChecked == true)
+                {
+                    for (int j = 0; j < _clearChannel[i].Count; j++)
+                    {
+                        int k = _clearChannel[i][j];
+                        _visibleCheckBox[k].IsChecked = true;
+                        ChangeSomething(k, _typeComboBox[k].SelectedIndex, _stepTypeComboBox[k].SelectedIndex, GraphPanel.Pane.CurveList[k].Color);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < _clearChannel[i].Count; j++)
+                    {
+                        int k = _clearChannel[i][j];
+                        _visibleCheckBox[_clearChannel[i][j]].IsChecked = false;
+                        ChangeSomething(k, _typeComboBox[k].SelectedIndex, _stepTypeComboBox[k].SelectedIndex, GraphPanel.Pane.CurveList[k].Color);
+                    }
+                }
+            }
+        }
+
+        private void Graph_Checked(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < _selectAllCheckBox.Count; i++)
+            {
+                if (_selectAllCheckBox[i].IsChecked == true)
+                {
+                    for (int j = 0; j < _clearChannel[i].Count; j++)
+                    {
+                        _selectCheckBox[_clearChannel[i][j]].IsChecked = true;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < _clearChannel[i].Count; j++)
+                    {
+                        _selectCheckBox[_clearChannel[i][j]].IsChecked = false;
+                    }
+                }
+            }
         }
 
         private void Graph_MouseDown(object sender, MouseEventArgs e)
@@ -135,9 +182,8 @@ namespace WpfApplication4
                     _clearChannel[k][j] -= count;
                 }
                 _closeButton[k].Tag = (int)(_closeButton[k].Tag) - 1;
+                _oscilName[k].Content = "Осциллограмма №" + ((int)(_closeButton[k].Tag) + 1);
             }
-            
-
         }
         private void Graph_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -235,7 +281,7 @@ namespace WpfApplication4
             _visibleCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
             _visibleCheckBox[i].Margin = new Thickness(0, 5, 0, 0);
             _visibleCheckBox[i].ToolTip = "Отображать";
-            _visibleCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _visibleCheckBox[i].Click += click_checkedButton;
 
             _selectCheckBox.Add(new CheckBox());
             _selectCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
