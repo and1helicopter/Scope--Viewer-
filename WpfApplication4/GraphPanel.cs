@@ -198,10 +198,14 @@ namespace WpfApplication4
         }
 
 
-        public void RemoveGraph()
+        public void RemoveGraph(int i)
         {
-            Pane.CurveList.Clear();
-            _myCurve.Clear();
+            _myCurve.Remove(_myCurve[i]);
+            Pane.CurveList.Remove(Pane.CurveList[i]);
+
+            // Обновим график
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
         public void InitDrawGraph()

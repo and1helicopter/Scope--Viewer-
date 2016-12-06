@@ -17,13 +17,13 @@ namespace WpfApplication4
     public partial class Graph : UserControl
     {
         //Заголовки осциллограммы
-        //       List<DockPanel> _layoutPanel = new List<DockPanel>();
         List<Border> _oscilBorder = new List<Border>();
         List<Label> _oscilName = new List<Label>();
         List<CheckBox> _showAllCheckBox = new List<CheckBox>();
         List<CheckBox> _selectAllCheckBox = new List<CheckBox>();
         List<Rectangle> _closeButton = new List<Rectangle>();
         List<DockPanel> _layoutOscilPanel = new List<DockPanel>();
+        List <List<int>> _clearChannel = new List <List<int>>();
 
 
         List<DockPanel> _layoutPanel = new List<DockPanel>();
@@ -94,55 +94,110 @@ namespace WpfApplication4
             _closeButton.Add(new Rectangle());
             _closeButton[_layoutOscilPanel.Count - 1].ToolTip = "Закрыть осциллограмму";
             _closeButton[_layoutOscilPanel.Count - 1].Width = _closeButton[_layoutOscilPanel.Count - 1].Height = 16;
-            _closeButton[_layoutOscilPanel.Count - 1].Fill  = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window_20.png")));
+            _closeButton[_layoutOscilPanel.Count - 1].Fill  = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window-48(1).png")));
             _closeButton[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 0, 0, 0);
-
+            _closeButton[_layoutOscilPanel.Count - 1].Tag = _layoutOscilPanel.Count - 1;
+            _closeButton[_layoutOscilPanel.Count - 1].MouseEnter += Graph_MouseEnter;
+            _closeButton[_layoutOscilPanel.Count - 1].MouseLeave += Graph_MouseLeave;
+            _closeButton[_layoutOscilPanel.Count - 1].MouseDown += Graph_MouseDown;
+         
             _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_oscilName[_layoutOscilPanel.Count - 1]);
             _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_showAllCheckBox[_layoutOscilPanel.Count - 1]);
             _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_selectAllCheckBox[_layoutOscilPanel.Count - 1]);
-            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_closeButton[_layoutOscilPanel.Count - 1]); 
+            _layoutOscilPanel[_layoutOscilPanel.Count - 1].Children.Add(_closeButton[_layoutOscilPanel.Count - 1]);
+
+            _clearChannel.Add(new List<int>());
 
             GraphStackPanel.Children.Add(_layoutOscilPanel[_layoutOscilPanel.Count - 1]);
         }
 
-        public void GraphConfigClear()
+        private void Graph_MouseDown(object sender, MouseEventArgs e)
         {
-            for(int i = _layoutPanel.Count - 1; i >= 0 ; i--)
+            int i  = Convert.ToInt32(((Rectangle)sender).Tag);
+            int count = _clearChannel[i].Count;
+            for (int j = _clearChannel[i][(_clearChannel[i].Count - 1)]; j >= _clearChannel[i][0]; j--)
             {
-                _layoutPanel[i].Children.Remove(_nameLabel[i]);
-                _layoutPanel[i].Children.Remove(_visibleCheckBox[i]);
-                _layoutPanel[i].Children.Remove(_colorEllipse[i]);
-                _layoutPanel[i].Children.Remove(_typeComboBox[i]);
-                _layoutPanel[i].Children.Remove(_smoothCheckBox[i]);
-                _layoutPanel[i].Children.Remove(_panelBorder[i]);
-                _layoutPanel[i].Children.Remove(_stepTypeComboBox[i]);
-                _layoutPanel[i].Children.Remove(_widthCheckBox[i]);
-                GraphStackPanel.Children.Remove(_layoutPanel[i]);
-
-                _nameLabel.Remove(_nameLabel[i]);
-                _visibleCheckBox.Remove(_visibleCheckBox[i]);
-                _colorEllipse.Remove(_colorEllipse[i]);
-                _typeComboBox.Remove(_typeComboBox[i]);
-                _smoothCheckBox.Remove(_smoothCheckBox[i]);
-                _panelBorder.Remove(_panelBorder[i]);
-                _stepTypeComboBox.Remove(_stepTypeComboBox[i]);
-                _widthCheckBox.Remove(_widthCheckBox[i]);
+                //Удаляем панели 
+                GraphConfigClear(j);
+                //Удаляем графики
+                MainWindow.Graph.RemoveGraph(j);
             }
+            //Удаляем заголовок
+            OscilConfigClear(i);
+            _clearChannel[i].Clear();
+            _clearChannel.Remove(_clearChannel[i]);
+            //Удаляем экземляр объекта осциллограммы 
+            MainWindow._oscilList.Remove(MainWindow._oscilList[i]);
+            for (int k = _layoutOscilPanel.Count - 1; k >= i; k--)
+            {
+                for (int j = _clearChannel[k].Count - 1; j >= 0; j--)
+                {
+                    _clearChannel[k][j] -= count;
+                }
+                _closeButton[k].Tag = (int)(_closeButton[k].Tag) - 1;
+            }
+            
 
-            _nameLabel.Clear();
-            _visibleCheckBox.Clear();
-            _colorEllipse.Clear();
-            _typeComboBox.Clear();
-            _smoothCheckBox.Clear();
-            _panelBorder.Clear();
-            _openClose.Clear();
-            _stepTypeComboBox.Clear();
-            _widthCheckBox.Clear();
-
-            _layoutPanel.Clear();
+        }
+        private void Graph_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ((Rectangle)sender).Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window-48(1).png")));
         }
 
-        public void GraphConfigAdd(string nameChannel, string dimensionChannel)
+        private void Graph_MouseEnter(object sender, MouseEventArgs e)
+        {
+          ((Rectangle)sender).Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window-48.png")));
+        }
+
+        private void OscilConfigClear(int i)
+        {
+            _layoutOscilPanel[i].Children.Remove(_oscilName[i]);
+            _layoutOscilPanel[i].Children.Remove(_showAllCheckBox[i]);
+            _layoutOscilPanel[i].Children.Remove(_selectAllCheckBox[i]);
+            _layoutOscilPanel[i].Children.Remove(_closeButton[i]);
+
+            GraphStackPanel.Children.Remove(_layoutOscilPanel[i]);
+
+            _oscilName.Remove(_oscilName[i]);
+            _showAllCheckBox.Remove(_showAllCheckBox[i]);
+            _selectAllCheckBox.Remove(_selectAllCheckBox[i]);
+            _closeButton.Remove(_closeButton[i]);
+            _layoutOscilPanel.Remove(_layoutOscilPanel[i]);
+        }
+
+        private void GraphConfigClear(int i)
+        {
+
+            _layoutPanel[i].Children.Remove(_nameLabel[i]);
+            _layoutPanel[i].Children.Remove(_colorEllipse[i]);
+            _layoutPanel[i].Children.Remove(_visibleCheckBox[i]);
+            _layoutPanel[i].Children.Remove(_selectCheckBox[i]);
+            _layoutPanel[i].Children.Remove(_typeTypeComboBox[i]);
+            _layoutPanel[i].Children.Remove(_typeComboBox[i]);
+            _layoutPanel[i].Children.Remove(_smoothCheckBox[i]);
+            _layoutPanel[i].Children.Remove(_stepTypeComboBox[i]);
+            _layoutPanel[i].Children.Remove(_panelBorder[i]);
+            _layoutPanel[i].Children.Remove(_widthCheckBox[i]);
+
+            GraphStackPanel.Children.Remove(_layoutPanel[i]);
+
+            _openClose.Remove(_openClose[i]);
+
+            _nameLabel.Remove(_nameLabel[i]);
+            _colorEllipse.Remove(_colorEllipse[i]);
+            _visibleCheckBox.Remove(_visibleCheckBox[i]);
+            _selectCheckBox.Remove(_selectCheckBox[i]);
+            _typeTypeComboBox.Remove(_typeTypeComboBox[i]);
+            _typeComboBox.Remove(_typeComboBox[i]);
+            _smoothCheckBox.Remove(_smoothCheckBox[i]);
+            _stepTypeComboBox.Remove(_stepTypeComboBox[i]);
+            _widthCheckBox.Remove(_widthCheckBox[i]);
+            _panelBorder.Remove(_panelBorder[i]);
+            _layoutPanel.Remove(_layoutPanel[i]);
+
+        }
+
+        public void GraphConfigAdd(string nameChannel, string dimensionChannel, int oscilNum)
         {
             _panelBorder.Add(new Border());
             int i = _panelBorder.Count - 1;
@@ -203,7 +258,7 @@ namespace WpfApplication4
             _typeComboBox[i].ToolTip = "Тип линии";
             _typeComboBox[i].ItemsSource = _styleType;
             _typeComboBox[i].SelectedIndex = 0;
-            _typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (change_index);
+            _typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (Change_index);
             
             _smoothCheckBox.Add(new CheckBox());
             _smoothCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
@@ -219,7 +274,7 @@ namespace WpfApplication4
             _stepTypeComboBox[i].ToolTip = "Ступенчатость";
             _stepTypeComboBox[i].ItemsSource = _stepType;
             _stepTypeComboBox[i].SelectedIndex = 0;
-            _stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(change_index);
+            _stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(Change_index);
 
             _widthCheckBox.Add(new CheckBox());
             _widthCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
@@ -227,6 +282,8 @@ namespace WpfApplication4
             _widthCheckBox[i].Margin = new Thickness(-50, 78, 0, 0);
             _widthCheckBox[i].ToolTip = "Толщина";
             _widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            
+            _clearChannel[oscilNum].Add(i);
 
             _openClose.Add(new bool());
             _openClose[i] = false;
@@ -246,7 +303,7 @@ namespace WpfApplication4
             GraphStackPanel.Children.Add(_layoutPanel[i]);
         }
 
-        private void change_index(object sender, SelectionChangedEventArgs e)
+        private void Change_index(object sender, SelectionChangedEventArgs e)
         {
             int j = 0;
             for (int i = 0; i < _colorEllipse.Count; i++)

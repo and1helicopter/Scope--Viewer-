@@ -191,10 +191,13 @@
     <Resource Include="Resources\Close Window-18.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Close Window-48.png" />
+    <Resource Include="Resources\Close Window_20.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Close Window_20.png" />
+    <Resource Include="Resources\Close Window-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close Window-48.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

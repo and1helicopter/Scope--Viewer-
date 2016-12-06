@@ -312,7 +312,7 @@ namespace WpfApplication4
 
                         string pathDateFile = pathfile + "\\" + namefile + ".dat";
 
-                        StreamReader srd = new StreamReader(pathDateFile, System.Text.Encoding.Default);
+                        StreamReader srd = new StreamReader(pathDateFile, Encoding.Default);
                         for (int j = 0; !srd.EndOfStream; j++)
                         {
                             str = srd.ReadLine();
@@ -335,16 +335,13 @@ namespace WpfApplication4
 
                 _oscilList.Add(oscil);
 
-                for (int i = 0; i < oscil.ChannelCount; i++)
-                {
-                   // _graphObj.GraphConfigClear();
-                }
+
 
                 _graphObj.OscilConfigAdd(oscil.OscilNames);
                 for (int i = 0; i < oscil.ChannelCount; i++)
                 {
                     Graph.AddGraph(i);
-                    _graphObj.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i]);
+                    _graphObj.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], _oscilList.Count - 1);
                 }
             }
         }

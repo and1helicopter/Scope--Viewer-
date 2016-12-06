@@ -63,9 +63,19 @@ namespace WpfApplication4.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Close_Window_20 {
+        internal static System.Drawing.Bitmap Close_Window_48 {
             get {
-                object obj = ResourceManager.GetObject("Close_Window_20", resourceCulture);
+                object obj = ResourceManager.GetObject("Close_Window_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Close_Window_48_1_ {
+            get {
+                object obj = ResourceManager.GetObject("Close_Window_48_1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
