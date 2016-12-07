@@ -19,12 +19,34 @@ namespace WpfApplication4
     /// </summary>
     public partial class Settings : Window
     {
+
+        string[] _styleTypeMajor = new string[] {
+            "Dot",
+            "Dash",
+            "Solid"
+        };
+
+        string[] _styleTypeMinor = new string[] {
+            "Dot",
+            "Dash"
+        };
+
         public Settings()
         {
             InitializeComponent();
         }
 
-        private void PointPerChannel_Click(object sender, RoutedEventArgs e)
+        public void UpdatePointPerChannelTextBox()
+        {
+            PointPerChannelTextBox.Text = Convert.ToString(GraphPanel.PointCashCount);
+        }
+
+        private void update_Click(object sender, RoutedEventArgs e)
+        {
+            saveSetting();
+            updateSetting();
+        }
+        private void updateSetting()
         {
             try
             {
@@ -32,10 +54,19 @@ namespace WpfApplication4
             }
             catch { MessageBox.Show("Неправильно введены данные"); }
         }
-
-        public void UpdatePointPerChannelTextBox()
+        private void saveSetting()
         {
-            PointPerChannelTextBox.Text = Convert.ToString(GraphPanel.PointCashCount);
+
+        }
+
+        private void TreeViewItem_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {     
+            tavControl.SelectedIndex = ((TreeViewItem)e.NewValue).TabIndex;
         }
     }
 }

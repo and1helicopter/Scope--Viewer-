@@ -93,6 +93,7 @@
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Oscil.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>

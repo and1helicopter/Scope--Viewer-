@@ -29,6 +29,12 @@ namespace WpfApplication4
         public MainWindow()
         {
             InitializeComponent();
+            openSetting();
+        }
+
+        private void openSetting()
+        {
+
         }
 
         Oscil oscil = new Oscil();
