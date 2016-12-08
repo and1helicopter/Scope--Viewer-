@@ -98,9 +98,6 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Style.xaml.cs">
-      <DependentUpon>Style.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Analysis.xaml.cs">
       <DependentUpon>Analysis.xaml</DependentUpon>
     </Compile>
@@ -124,10 +121,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Settings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

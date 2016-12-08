@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.IO;
 using Microsoft.Win32;
-using ZedGraph;
-using System.Windows.Forms.Integration;
 using System.Text.RegularExpressions;
 
 namespace WpfApplication4
@@ -29,19 +21,15 @@ namespace WpfApplication4
         public MainWindow()
         {
             InitializeComponent();
-            openSetting();
+   
         }
 
-        private void openSetting()
-        {
 
-        }
 
-        Oscil oscil = new Oscil();
-        public static List<Oscil> _oscilList = new List<Oscil>();
+        Oscil _oscil = new Oscil();
+        public static List<Oscil> OscilList = new List<Oscil>();
 
-        Graph _graphObj = new Graph();
-        Style _styleObj = new Style();
+        public static Graph GraphObj = new Graph();
         public static Analysis AnalysisObj = new Analysis();
         bool _openWindow = false;
         bool _graphButtonStatus = false;
@@ -77,18 +65,6 @@ namespace WpfApplication4
             GraphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
             GraphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
-        private void ResetColorStyleButton()
-        {
-            StyleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            StyleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            StyleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-        }
-        private void SetColorStyleButton()
-        {
-            StyleButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            StyleButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
-            StyleButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-        }
         private void ResetColorAnalysisButton()
         {
             AnalysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
@@ -113,9 +89,7 @@ namespace WpfApplication4
 
             _styleButtonStatus = false;
             _analysisButtonStatus = false;
-            ConfigStackPanel.Children.Remove(_styleObj);
             ConfigStackPanel.Children.Remove(AnalysisObj);
-            ResetColorStyleButton();
             ResetColorAnalysisButton();
 
             if (_graphButtonStatus == false)
@@ -126,7 +100,7 @@ namespace WpfApplication4
                 _openWindow = true;
                 ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
-                ConfigStackPanel.Children.Add(_graphObj);
+                ConfigStackPanel.Children.Add(GraphObj);
 
                 return;
             }
@@ -136,42 +110,11 @@ namespace WpfApplication4
                 ResetColorGraphButton();
                 CloseAnimation();
                 ConfigPanel.Width = new GridLength(0, GridUnitType.Pixel);
-                ConfigStackPanel.Children.Remove(_graphObj);
+                ConfigStackPanel.Children.Remove(GraphObj);
                 return;
             }
         }
 
-        private void styleButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenWindow();
-
-            _graphButtonStatus = false;
-            _analysisButtonStatus = false;
-            ConfigStackPanel.Children.Remove(_graphObj);
-            ConfigStackPanel.Children.Remove(AnalysisObj);
-            ResetColorGraphButton();
-            ResetColorAnalysisButton();
-
-            if (_styleButtonStatus == false)
-            {
-                _styleButtonStatus = true;
-                SetColorStyleButton();
-                if(_openWindow == false)  OpenAnimation();
-                _openWindow = true;
-                ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
-                ConfigStackPanel.Children.Add(_styleObj);
-                return;
-            }
-            if (_styleButtonStatus == true)
-            {
-                _styleButtonStatus = false;
-                ResetColorStyleButton();
-                CloseAnimation();
-                ConfigPanel.Width = new GridLength(0, GridUnitType.Pixel);
-                ConfigStackPanel.Children.Remove(_styleObj);
-                return;
-            }
-        }
 
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
@@ -179,10 +122,8 @@ namespace WpfApplication4
 
             _graphButtonStatus = false;
             _styleButtonStatus = false;
-            ConfigStackPanel.Children.Remove(_graphObj);
-            ConfigStackPanel.Children.Remove(_styleObj);
+            ConfigStackPanel.Children.Remove(GraphObj);
             ResetColorGraphButton();
-            ResetColorStyleButton();
 
             if (_analysisButtonStatus == false)
             {
@@ -217,7 +158,7 @@ namespace WpfApplication4
             {
                 //Graph.RemoveGraph();
 
-               oscil = new Oscil();
+               _oscil = new Oscil();
 
                 /* Oscil.ChannelNames.Clear();
                  Oscil.Dimension.Clear();
@@ -238,30 +179,30 @@ namespace WpfApplication4
                     try
                     {
                         StreamReader sr = new StreamReader(ofd.FileName, System.Text.Encoding.UTF8);
-                        oscil.OscilNames = System.IO.Path.GetFileNameWithoutExtension(ofd.FileName);
-                        oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
-                        oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
-                        oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
-                        oscil.StampDateStart = oscil.StampDateTrigger.AddMilliseconds(-(100 * oscil.HistotyCount / oscil.SampleRate));
+                        _oscil.OscilNames = System.IO.Path.GetFileNameWithoutExtension(ofd.FileName);
+                        _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
+                        _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
+                        _oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
+                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
                         str = sr.ReadLine();
                         string[] str1 = str.Split('\t');
-                        for(int i = 1; i < str1.Length - 1; i++) oscil.ChannelNames.Add(Convert.ToString(str1[i]));
-                        oscil.ChannelCount = Convert.ToUInt16(oscil.ChannelNames.Count);
+                        for(int i = 1; i < str1.Length - 1; i++) _oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                        _oscil.ChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
                         for(int j = 0; !sr.EndOfStream; j++) 
                         {
                             str = sr.ReadLine();
                             string[] str2 = str.Split('\t');
-                            oscil.Data.Add(new List<double>());
+                            _oscil.Data.Add(new List<double>());
                             for (int i = 1; i < str2.Length - 1; i++)
                             {
-                                oscil.Data[j].Add(Convert.ToDouble(str2[i]));
+                                _oscil.Data[j].Add(Convert.ToDouble(str2[i]));
                             }   
                         }
-                        oscil.NumCount = Convert.ToUInt32(oscil.Data.Count);
-                        for(int i = 0; i < oscil.ChannelCount; i++)
+                        _oscil.NumCount = Convert.ToUInt32(_oscil.Data.Count);
+                        for(int i = 0; i < _oscil.ChannelCount; i++)
                         {
-                            oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
-                            oscil.Dimension.Add("NONE");
+                            _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
+                            _oscil.Dimension.Add("NONE");
                         }
                         sr.Close();
                     }
@@ -282,35 +223,35 @@ namespace WpfApplication4
                         str = sr.ReadLine();
                         Regex regex = new Regex(@"\d");
                         MatchCollection matches = regex.Matches(str);
-                        oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
-                        for(int i = 0; i < oscil.ChannelCount; i++)
+                        _oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
+                        for(int i = 0; i < _oscil.ChannelCount; i++)
                         {
-                            if (i < Convert.ToInt32(matches[1].Value)) oscil.TypeChannel.Add(false);
-                            else oscil.TypeChannel.Add(true);
+                            if (i < Convert.ToInt32(matches[1].Value)) _oscil.TypeChannel.Add(false);
+                            else _oscil.TypeChannel.Add(true);
                         }
                         //Аналоговые каналы
                         for (int i = 0; i < Convert.ToInt32(matches[1].Value); i++)
                         {
                             str = sr.ReadLine();
                             string[] str1 = str.Split(',');
-                            oscil.ChannelNames.Add(Convert.ToString(str1[1]));
-                            oscil.Dimension.Add(Convert.ToString(str1[4]));
+                            _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                            _oscil.Dimension.Add(Convert.ToString(str1[4]));
                         }
                         for (int i = 0; i < Convert.ToInt32(matches[2].Value); i++)
                         {
                             str = sr.ReadLine();
                             string[] str1 = str.Split(',');
-                            oscil.ChannelNames.Add(Convert.ToString(str1[1]));
-                            oscil.Dimension.Add("NONE");
+                            _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                            _oscil.Dimension.Add("NONE");
                         }
                         sr.ReadLine();
                         sr.ReadLine();
                         str = sr.ReadLine();
                         string[] str2 = str.Split(',');
-                        oscil.SampleRate = Convert.ToDouble(str2[0]);
-                        oscil.NumCount = Convert.ToUInt32(str2[1]);
-                        oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
-                        oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine()); 
+                        _oscil.SampleRate = Convert.ToDouble(str2[0]);
+                        _oscil.NumCount = Convert.ToUInt32(str2[1]);
+                        _oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
+                        _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine()); 
                         sr.Close();
 
                         namefile = System.IO.Path.GetFileNameWithoutExtension(ofd.FileName);
@@ -323,11 +264,11 @@ namespace WpfApplication4
                         {
                             str = srd.ReadLine();
                             string[] str3= str.Split(',');
-                            oscil.Data.Add(new List<double>());
+                            _oscil.Data.Add(new List<double>());
                             for (int i = 2; i < str3.Length; i++)
                             {
                                 str3[i] = str3[i].Replace(".",",");
-                                oscil.Data[j].Add(Convert.ToDouble(str3[i]));
+                                _oscil.Data[j].Add(Convert.ToDouble(str3[i]));
                             }
                         }
                         srd.Close();
@@ -339,25 +280,76 @@ namespace WpfApplication4
                     }
                 }
 
-                _oscilList.Add(oscil);
+                OscilList.Add(_oscil);
 
 
 
-                _graphObj.OscilConfigAdd(oscil.OscilNames);
-                for (int i = 0; i < oscil.ChannelCount; i++)
+                GraphObj.OscilConfigAdd(_oscil.OscilNames);
+                for (int i = 0; i < _oscil.ChannelCount; i++)
                 {
                     Graph.AddGraph(i);
-                    _graphObj.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], _oscilList.Count - 1);
+                    GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1);
                 }
             }
         }
 
-        public static WpfApplication4.GraphPanel Graph; 
+        public static GraphPanel Graph; 
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Graph = new WpfApplication4.GraphPanel();
+            Graph = new GraphPanel();
             GrPanel.Child = Graph;
+            OpenSetting();
+            UpdateSetting();
+        }
+
+        private void OpenSetting()
+        {
+            Setting.InitSetting();
+        }
+
+        private void UpdateSetting()
+        {
+            LegendChange();
+            AxisChange();
+            LineInChash();
+        }
+
+        private void LegendChange()
+        {
+            bool checkedLegend = false;
+            int h = 1, v = 1;
+            if (Setting.ShowLegend) checkedLegend = true;
+            if (Setting.Position == 2)
+            {
+                h = 0; v = 0;
+            }
+            if (Setting.Position == 1)
+            {
+                h = 1; v = 0;
+            }
+            if (Setting.Position == 3)
+            {
+                h = 0; v = 1;
+            }
+            if (Setting.Position == 0)
+            {
+                h = 1; v = 1;
+            }
+            Graph.LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
+        }
+
+        public void AxisChange()
+        {
+            Graph.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
+            Graph.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
+            Graph.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
+            Graph.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
+        }
+
+        private void LineInChash()
+        {
+           Graph.PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
         }
 
         bool _cursorCreate = false;

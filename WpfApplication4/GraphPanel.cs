@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ZedGraph;
 
@@ -12,23 +8,23 @@ namespace WpfApplication4
 {
     public partial class GraphPanel : UserControl
     {
-        ZedGraph.MasterPane _masterPane;
+        MasterPane _masterPane;
         public static GraphPane Pane;
-        List<LineItem> _myCurve = new List<LineItem>();
+        readonly List<LineItem> _myCurve = new List<LineItem>();
        // List<LineItem> myCurveTemp = new List<LineItem>();
-        Random _rngColor = new Random();
+        readonly Random _rngColor = new Random();
 
         double _maxXAxis = 1000;
         double _minXAxis = -1000;
         double _maxYAxis = 1000;
         double _minYAxis = -1000;
-        bool _scaleY = false;
+        bool _scaleY;
 
         public GraphPanel()
         {
             InitializeComponent();
-            zedGraph.ZoomEvent += new ZedGraphControl.ZoomEventHandler(zedGraph_ZoomEvent);
-            zedGraph.ScrollEvent += new ScrollEventHandler(zedGraph_ScrollEvent);
+            zedGraph.ZoomEvent += zedGraph_ZoomEvent;
+            zedGraph.ScrollEvent += zedGraph_ScrollEvent;
             InitDrawGraph();
         }
 
@@ -90,11 +86,11 @@ namespace WpfApplication4
 
         // Создадим список точек   
         public static List<PointPairList> ListTemp = new List<PointPairList>();
-        public static int PointCashCount = 250;
+        public static int PointInLine = 250;
 
-        public void PointPerChannel(int point)
+        public void PointInLineChange(int point, bool showDigital)
         {
-            PointCashCount = point;
+            PointInLine = point;
         }
 
         public void ClearListTemp()
@@ -126,7 +122,7 @@ namespace WpfApplication4
                         stopIndex = k; break;
                     }
                 }
-                int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointCashCount));
+                int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
                 if (sum == 0) sum = 1;
 
                 for (int i = 0; i < Pane.CurveList.Count; i++)
@@ -137,40 +133,40 @@ namespace WpfApplication4
                     }
                 }
             }
+                // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
 
     
         public void AddGraph(int j)
         {
-            PointPairList list = new PointPairList(); ;
+            PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
 
             string nameCh = "";
 
             // Заполняем список точек. Приращение по оси X 
-            int sum = Convert.ToInt32((double)(MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount / PointCashCount));
+            int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
             if (sum == 0) sum = 1;
             DateTime tempTime;
 
-            for (int i = 0; i < MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount; i+= sum)
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i+= sum)
             {
-                tempTime = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateStart;
+                tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                list.Add(new XDate (tempTime.AddMilliseconds((i * 100) / MainWindow._oscilList[MainWindow._oscilList.Count - 1].SampleRate)), MainWindow._oscilList[MainWindow._oscilList.Count - 1].Data[i][j]);
-                nameCh = MainWindow._oscilList[MainWindow._oscilList.Count - 1].ChannelNames[j];
+                list.Add(new XDate (tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                nameCh = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
             }
 
-            for (int i = 0; i < MainWindow._oscilList[MainWindow._oscilList.Count - 1].NumCount; i++)   
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)   
             {
-                tempTime = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateStart;
+                tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                ListTemp[j].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow._oscilList[MainWindow._oscilList.Count - 1].SampleRate)), MainWindow._oscilList[MainWindow._oscilList.Count - 1].Data[i][j]);
+                ListTemp[j].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
-            LineItem newCurve;
-            newCurve = Pane.AddCurve(nameCh, list, GenerateColor(_rngColor), SymbolType.None);
+            LineItem newCurve = Pane.AddCurve(nameCh, list, GenerateColor(_rngColor), SymbolType.None);
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
 
@@ -376,8 +372,7 @@ namespace WpfApplication4
             Pane.Legend.FontSpec.Size = fontSize;
 
 
-            if (show == true) Pane.Legend.IsVisible = true;
-            else Pane.Legend.IsVisible = false;
+            Pane.Legend.IsVisible = show;
 
 
             // Вызываем метод AxisChange (), чтобы обновить данные об осях.
@@ -388,7 +383,7 @@ namespace WpfApplication4
         LineObj _stampTrigger;
         public void LineStampTrigger()
         {
-            XDate timeStamp = MainWindow._oscilList[MainWindow._oscilList.Count - 1].StampDateTrigger;
+            XDate timeStamp = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateTrigger;
             _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max);
             // Стиль линии - пунктирная
             _stampTrigger.Line.Style = System.Drawing.Drawing2D.DashStyle.DashDot;

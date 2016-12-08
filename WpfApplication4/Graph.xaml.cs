@@ -6,7 +6,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
 using System.Windows.Shapes;
 
 namespace WpfApplication4
@@ -174,7 +173,7 @@ namespace WpfApplication4
             _clearChannel[i].Clear();
             _clearChannel.Remove(_clearChannel[i]);
             //Удаляем экземляр объекта осциллограммы 
-            MainWindow._oscilList.Remove(MainWindow._oscilList[i]);
+            MainWindow.OscilList.Remove(MainWindow.OscilList[i]);
             for (int k = _layoutOscilPanel.Count - 1; k >= i; k--)
             {
                 for (int j = _clearChannel[k].Count - 1; j >= 0; j--)
