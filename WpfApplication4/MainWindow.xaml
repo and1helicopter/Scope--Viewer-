@@ -7,7 +7,7 @@
     Title="MainWindow"
     Width="800"
     Height="550"
-    FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+    Icon="Resources/Line Chart-48.ico"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <Grid Margin="0,0,0,0">
@@ -34,22 +34,33 @@
             VerticalAlignment="Top">
             <MenuItem
                 Width="90"
-                Height="28"
-                Margin="1,1,1,1"
-                FontStretch="Condensed"
+                VerticalContentAlignment="Center"
+                Click="openButton_Click"
                 Header="Открыть">
-                <MenuItem Click="openButton_Click" Header="Открыть" />
+                <MenuItem.Icon>
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Source="Resources/Open Folder-48.png" />
+                </MenuItem.Icon>
             </MenuItem>
             <MenuItem
                 Width="90"
                 Height="28"
-                Margin="1,1,1,1"
                 Click="settings_Click"
-                Header="Настройки" />
+                Header="Настройки">
+                <MenuItem.Icon>
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Source="Resources/Services-48.png" />
+                </MenuItem.Icon>
+            </MenuItem>
         </Menu>
         <Button
             x:Name="GraphButton"
             Grid.Row="1"
+            Grid.Column="0"
             Width="70"
             Height="36"
             Margin="3,5,0,0"
@@ -66,6 +77,7 @@
         <Button
             x:Name="AnalysisButton"
             Grid.Row="1"
+            Grid.Column="0"
             Width="70"
             Height="36"
             Margin="3,46,0,0"
@@ -74,7 +86,7 @@
             Background="White"
             BorderBrush="White"
             Click="analysisButton_Click"
-            Content="Analysis"
+            Content="Анализ"
             FontSize="14"
             Foreground="#FF2196F3"
             ToolTip="Настройка графика" />
@@ -88,9 +100,6 @@
             VerticalScrollBarVisibility="Auto">
             <StackPanel
                 x:Name="ConfigStackPanel"
-                Grid.Row="1"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
                 Height="Auto"
                 ScrollViewer.CanContentScroll="True" />
         </ScrollViewer>
@@ -110,47 +119,52 @@
                     <ImageBrush ImageSource="Resources/Chromatography-48.png" />
                 </Rectangle.Fill>
             </Rectangle>
-            <Button
-                x:Name="ToolButton1"
+            <Rectangle
+                x:Name="AddCoursor"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Background="{x:Null}"
-                Click="cursor_Click"
-                Content="1"
-                ToolTip="Добавить курсоры" />
-            <Button
-                x:Name="ToolButton2"
+                MouseDown="AddCoursor_MouseDown"
+                MouseEnter="AddCoursor_MouseEnter"
+                MouseLeave="AddCoursor_MouseLeave"
+                ToolTip="Добавить курсоры на график">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Line-48(2).png" />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle
+                x:Name="StampTrigger"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Background="{x:Null}"
-                Content="2" />
-            <Button
-                x:Name="ToolButton3"
+                MouseDown="StampTrigger_MouseDown"
+                MouseEnter="StampTrigger_MouseEnter"
+                MouseLeave="StampTrigger_MouseLeave"
+                ToolTip="Отобразить штамп времени">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Horizontal Line-48(2).png" />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle
+                x:Name="ChangeScale"
                 Width="28"
                 Height="28"
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Background="{x:Null}"
-                Click="StampTrigger_Click"
-                Content="3" />
-            <Button
-                x:Name="ToolButton4"
-                Width="28"
-                Height="28"
-                Margin="2,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Background="{x:Null}"
-                Click="changescale_Click"
-                Content="4"
-                ToolTip="Маштабирование по осиY" />
+                MouseDown="ChangeScale_MouseDown"
+                MouseEnter="ChangeScale_MouseEnter"
+                MouseLeave="ChangeScale_MouseLeave"
+                ToolTip="Отобразить штамп времени">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Width-48.png" />
+                </Rectangle.Fill>
+            </Rectangle>
+
         </StackPanel>
         <GridSplitter
             Grid.Row="1"

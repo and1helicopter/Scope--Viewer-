@@ -187,6 +187,48 @@
   <ItemGroup>
     <Resource Include="Resources\Chromatography-48.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line-48%282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Horizontal Line-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Horizontal Line-48%282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Horizontal Line-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Open Folder-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Resize-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Services-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Width-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Expand-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Line Chart-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line Chart-48.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Services-48.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -80,7 +80,7 @@ namespace WpfApplication4
 
         public  Color GenerateColor(Random rng) {
 
-            System.Drawing.Color color = Color.FromArgb(rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
+            Color color = Color.FromArgb(rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
             return color;
         }
 
@@ -105,9 +105,9 @@ namespace WpfApplication4
                 int startIndex = 0;
                 int stopIndex = ListTemp[0].Count - 1;
 
-                for (int i = 0; i < Pane.CurveList.Count; i++)
+                foreach (var i in Pane.CurveList)
                 {
-                    for (int j = Pane.CurveList[i].NPts - 1; j >= 0; j--) Pane.CurveList[i].RemovePoint(j);
+                    for (int j = i.NPts - 1; j >= 0; j--) i.RemovePoint(j);
                 }
 
                 for (int k = 0; k < ListTemp[0].Count; k++)
@@ -122,6 +122,7 @@ namespace WpfApplication4
                         stopIndex = k; break;
                     }
                 }
+                // ReSharper disable once PossibleLossOfFraction
                 int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
                 if (sum == 0) sum = 1;
 
@@ -146,6 +147,8 @@ namespace WpfApplication4
             string nameCh = "";
 
             // Заполняем список точек. Приращение по оси X 
+
+            // ReSharper disable once PossibleLossOfFraction
             int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
             if (sum == 0) sum = 1;
             DateTime tempTime;
@@ -252,8 +255,7 @@ namespace WpfApplication4
             {
                 if (style == 0) { Pane.XAxis.MinorGrid.DashOff = 10; Pane.XAxis.MinorGrid.DashOn = 1; }
                 if (style == 1) { Pane.XAxis.MinorGrid.DashOff = 10; Pane.XAxis.MinorGrid.DashOn = 10; }
-                if (statusChecked == true) Pane.XAxis.MinorGrid.IsVisible = true;
-                else Pane.XAxis.MinorGrid.IsVisible = false;
+                Pane.XAxis.MinorGrid.IsVisible = statusChecked;
             }
 
             if (xy == 1)
@@ -261,16 +263,14 @@ namespace WpfApplication4
                 if (style == 0) { Pane.XAxis.MajorGrid.DashOff = 5; Pane.XAxis.MajorGrid.DashOn = 1; }
                 if (style == 1) { Pane.XAxis.MajorGrid.DashOff = 5; Pane.XAxis.MajorGrid.DashOn = 10; }
                 if (style == 2) { Pane.XAxis.MajorGrid.DashOff = 0; Pane.XAxis.MajorGrid.DashOn = 10; }
-                if (statusChecked == true) Pane.XAxis.MajorGrid.IsVisible = true;
-                else Pane.XAxis.MajorGrid.IsVisible = false;
+                Pane.XAxis.MajorGrid.IsVisible = statusChecked;
             }
 
             if (xy == 2)
             {
                 if (style == 0) { Pane.YAxis.MajorGrid.DashOff = 5; Pane.YAxis.MajorGrid.DashOn = 1; }
                 if (style == 1) { Pane.YAxis.MinorGrid.DashOff = 10; Pane.YAxis.MinorGrid.DashOn = 10; }
-                if (statusChecked == true) Pane.YAxis.MinorGrid.IsVisible = true;
-                else Pane.YAxis.MinorGrid.IsVisible = false;
+                Pane.YAxis.MinorGrid.IsVisible = statusChecked;
             }
 
             if (xy == 3)
@@ -278,8 +278,7 @@ namespace WpfApplication4
                 if (style == 0) { Pane.YAxis.MajorGrid.DashOff = 5; Pane.YAxis.MajorGrid.DashOn = 1; }
                 if (style == 1) { Pane.YAxis.MajorGrid.DashOff = 5; Pane.YAxis.MajorGrid.DashOn = 10; }
                 if (style == 2) { Pane.YAxis.MajorGrid.DashOff = 0; Pane.YAxis.MajorGrid.DashOn = 10; }
-                if (statusChecked == true) Pane.YAxis.MajorGrid.IsVisible = true;
-                else Pane.YAxis.MajorGrid.IsVisible = false;
+                Pane.YAxis.MajorGrid.IsVisible = statusChecked;
             }
 
             zedGraph.AxisChange();
@@ -294,8 +293,7 @@ namespace WpfApplication4
             _myCurve[numChannel].Line.IsSmooth = smooth;
             _myCurve[numChannel].Line.SmoothTension = 0.5F;
 
-            if (width == true) _myCurve[numChannel].Line.Width = 2;
-            else _myCurve[numChannel].Line.Width = 1;
+            _myCurve[numChannel].Line.Width = width ? 2 : 1;
 
             if (typeLine == 0) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
             if (typeLine == 1) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -380,25 +378,37 @@ namespace WpfApplication4
             zedGraph.Invalidate();
         }
 
-        LineObj _stampTrigger;
+        private LineObj _stampTrigger;
+        private TextObj _stampTriggTextObj;
         public void LineStampTrigger()
-        {
-            XDate timeStamp = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateTrigger;
-            _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max);
-            // Стиль линии - пунктирная
-            _stampTrigger.Line.Style = System.Drawing.Drawing2D.DashStyle.DashDot;
-            _stampTrigger.Line.Color = Color.Chocolate;
-            _stampTrigger.Line.Width = 2;
-            _stampTrigger.Link.Title = "StampTrigger";
+        {  try
+            {
+                XDate timeStamp = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateTrigger;
+                _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max)
+                {
+                    Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.DashDot,
+                    Color = Color.Chocolate,
+                    Width = 2
+                },
+                    Link = { Title = "StampTrigger" }
+                };
+                // Стиль линии - пунктирная
 
-            Pane.GraphObjList.Add(_stampTrigger);
+                Pane.GraphObjList.Add(_stampTrigger);
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
+            { }
+
         }
 
         public void StampTriggerClear()
         {
-            for (int i = GraphPanel.Pane.GraphObjList.Count - 1; i >= 0; i--)
+            for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (GraphPanel.Pane.GraphObjList[i].Link.Title == "StampTrigger") GraphPanel.Pane.GraphObjList.Remove(GraphPanel.Pane.GraphObjList[i]);
+                if (Pane.GraphObjList[i].Link.Title == "StampTrigger") Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
             }
 
             zedGraph.AxisChange();
@@ -410,19 +420,33 @@ namespace WpfApplication4
 
         public void CursorAdd()
         {
-            Cursor1 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min), Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min), Pane.YAxis.Scale.Max);
+            Cursor1 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min),
+                Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min),
+                Pane.YAxis.Scale.Max)
+            {
+                Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.Red,
+                    Width = 2
+                },
+                Link = {Title = "Cursor1"}
+            };
             // Стиль линии - пунктирная
-            Cursor1.Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
-            Cursor1.Line.Color = Color.Red;
-            Cursor1.Line.Width = 2;
-            Cursor1.Link.Title = "Cursor1";
 
-            Cursor2 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3 / 4 + Pane.XAxis.Scale.Min), Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min), Pane.YAxis.Scale.Max);
+            Cursor2 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min),
+                Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min),
+                Pane.YAxis.Scale.Max)
+            {
+                Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.Blue,
+                    Width = 2
+                },
+                Link = {Title = "Cursor2"}
+            };
             // Стиль линии - пунктирная
-            Cursor2.Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
-            Cursor2.Line.Color = Color.Blue;
-            Cursor2.Line.Width = 2;
-            Cursor2.Link.Title = "Cursor2";
 
             // Добавим линию в список отображаемых объектов
             Pane.GraphObjList.Add(Cursor1);
@@ -435,9 +459,9 @@ namespace WpfApplication4
 
         public void CursorClear()
         {
-            for (int i = GraphPanel.Pane.GraphObjList.Count - 1; i >= 0; i--)
+            for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (GraphPanel.Pane.GraphObjList[i].Link.Title == "Cursor1" || GraphPanel.Pane.GraphObjList[i].Link.Title == "Cursor2") GraphPanel.Pane.GraphObjList.Remove(GraphPanel.Pane.GraphObjList[i]);
+                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
             }
 
             zedGraph.AxisChange();
@@ -446,9 +470,9 @@ namespace WpfApplication4
 
         private void UpdateCursor()
         {
-            for (int i = GraphPanel.Pane.GraphObjList.Count - 1; i >= 0; i--)
+            for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (GraphPanel.Pane.GraphObjList[i].Link.Title == "Cursor1")
+                if (Pane.GraphObjList[i].Link.Title == "Cursor1")
                 {
                     Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor1.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
@@ -457,7 +481,7 @@ namespace WpfApplication4
                     if (Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
                     continue;
                 }
-                if (GraphPanel.Pane.GraphObjList[i].Link.Title == "Cursor2")
+                if (Pane.GraphObjList[i].Link.Title == "Cursor2")
                 {
                     Cursor2.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor2.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
@@ -470,7 +494,6 @@ namespace WpfApplication4
                 {
                     _stampTrigger.Location.Y1 = Pane.YAxis.Scale.Min;
                     _stampTrigger.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-                    continue;
                 }
             }           
         }
@@ -482,6 +505,8 @@ namespace WpfApplication4
 
             if (Cursor1 != null || Cursor2 != null)
             {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                // ReSharper disable once PossibleNullReferenceException
                 if (Cursor1.Line.Width == 3)
                 {
                     Cursor1.Location.X1 = graphX;
@@ -489,6 +514,7 @@ namespace WpfApplication4
                     zedGraph.Invalidate();
                 }
 
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (Cursor2.Line.Width == 3)
                 {
                     Cursor2.Location.X1 = graphX;
@@ -500,21 +526,22 @@ namespace WpfApplication4
 
         private void zedGraph_MouseClick(object sender, MouseEventArgs e)
         {
-            LineObj lineObject;
             object nearestObject;
             int index;
-            Pane.FindNearestObject(new PointF(e.X, e.Y), this.CreateGraphics(), out nearestObject, out index);
+            Pane.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out nearestObject, out index);
             if (nearestObject != null && nearestObject.GetType() == typeof(LineObj))
             {
-                lineObject = (LineObj)nearestObject;
+                LineObj lineObject = (LineObj)nearestObject;
 
                 if (lineObject.Link.Title == "Cursor1")
                 {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor1.Line.Width == 3) { Cursor1.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 3; Cursor2.Line.Width = 2; }
                 }
                 if (lineObject.Link.Title == "Cursor2")
                 {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor2.Line.Width == 3) { Cursor2.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 2; Cursor2.Line.Width = 3; }
                 }
