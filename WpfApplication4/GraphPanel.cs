@@ -101,6 +101,7 @@ namespace WpfApplication4
        
         private void UpdateGraph()
         {
+            if(ListTemp.Count == 0) return;
             try {
                 int startIndex = 0;
                 int stopIndex = ListTemp[0].Count - 1;
@@ -134,7 +135,8 @@ namespace WpfApplication4
                     }
                 }
             }
-                // ReSharper disable once EmptyGeneralCatchClause
+            
+            // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
 
@@ -201,6 +203,7 @@ namespace WpfApplication4
         {
             _myCurve.Remove(_myCurve[i]);
             Pane.CurveList.Remove(Pane.CurveList[i]);
+            ListTemp.Remove(ListTemp[i]);
 
             // Обновим график
             zedGraph.AxisChange();
@@ -380,6 +383,7 @@ namespace WpfApplication4
 
         private LineObj _stampTrigger;
         private TextObj _stampTriggTextObj;
+
         public void LineStampTrigger()
         {  try
             {
@@ -394,8 +398,18 @@ namespace WpfApplication4
                 },
                     Link = { Title = "StampTrigger" }
                 };
-                // Стиль линии - пунктирная
 
+                _stampTriggTextObj = new TextObj(timeStamp.DateTime.Second + "." + timeStamp.DateTime.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
+                {
+                    FontSpec =
+                    {
+                        Border = {IsVisible = false}
+                    },
+                    Link = {Title = "StampTrigger"}
+                };
+
+
+                Pane.GraphObjList.Add(_stampTriggTextObj);
                 Pane.GraphObjList.Add(_stampTrigger);
             }
             // ReSharper disable once EmptyGeneralCatchClause
@@ -408,12 +422,16 @@ namespace WpfApplication4
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (Pane.GraphObjList[i].Link.Title == "StampTrigger") Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
+                if (Pane.GraphObjList[i].Link.Title == "StampTrigger")
+                {
+                    Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
+                }
             }
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
+
 
         public static LineObj Cursor1;
         public static LineObj Cursor2;
@@ -494,6 +512,26 @@ namespace WpfApplication4
                 {
                     _stampTrigger.Location.Y1 = Pane.YAxis.Scale.Min;
                     _stampTrigger.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
+                    _stampTriggTextObj.IsVisible = !(Pane.YAxis.Scale.Max >= _stampTriggTextObj.Location.Y1) &&
+                                                   !(Pane.YAxis.Scale.Min <= _stampTriggTextObj.Location.Y1);
+
+                    if (_stampTrigger.Location.X <= Pane.XAxis.Scale.Min)
+                    {
+                        _stampTrigger.IsVisible = false;
+                        _stampTriggTextObj.IsVisible = false;
+                    }
+                    if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Max)
+                    {
+                        _stampTrigger.IsVisible = false;
+                        _stampTriggTextObj.IsVisible = false;
+                    }
+                    if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Min &&
+                        _stampTrigger.Location.X <= Pane.XAxis.Scale.Max)
+                    {
+                        _stampTrigger.IsVisible = true;
+                        _stampTriggTextObj.IsVisible = true;
+
+                    }
                 }
             }           
         }
@@ -538,14 +576,16 @@ namespace WpfApplication4
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor1.Line.Width == 3) { Cursor1.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 3; Cursor2.Line.Width = 2; }
+                    MainWindow.AnalysisObj.UpdateCursor();
+
                 }
                 if (lineObject.Link.Title == "Cursor2")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor2.Line.Width == 3) { Cursor2.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 2; Cursor2.Line.Width = 3; }
+                    MainWindow.AnalysisObj.UpdateCursor();
                 }
-                MainWindow.AnalysisObj.UpdateCursor();
 
                 zedGraph.Invalidate();
             }

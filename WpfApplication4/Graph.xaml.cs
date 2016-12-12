@@ -13,37 +13,36 @@ namespace WpfApplication4
     /// <summary>
     /// Interaction logic for Graph.xaml
     /// </summary>
-    public partial class Graph : UserControl
+    public partial class Graph 
     {
         //Заголовки осциллограммы
-        List<Border> _oscilBorder = new List<Border>();
-        List<Label> _oscilName = new List<Label>();
-        List<CheckBox> _showAllCheckBox = new List<CheckBox>();
-        List<CheckBox> _selectAllCheckBox = new List<CheckBox>();
-        List<Rectangle> _closeButton = new List<Rectangle>();
-        List<DockPanel> _layoutOscilPanel = new List<DockPanel>();
-        List <List<int>> _clearChannel = new List <List<int>>();
+        readonly List<Label> _oscilName = new List<Label>();
+        readonly List<CheckBox> _showAllCheckBox = new List<CheckBox>();
+        readonly List<CheckBox> _selectAllCheckBox = new List<CheckBox>();
+        readonly List<Rectangle> _closeButton = new List<Rectangle>();
+        readonly List<DockPanel> _layoutOscilPanel = new List<DockPanel>();
+        readonly List <List<int>> _clearChannel = new List <List<int>>();
 
-        List<DockPanel> _layoutPanel = new List<DockPanel>();
-        List<Label> _nameLabel = new List<Label>();
-        List<Ellipse> _colorEllipse = new List<Ellipse>();
-        List<CheckBox> _visibleCheckBox = new List<CheckBox>();
-        List<CheckBox> _selectCheckBox = new List<CheckBox>();
+        readonly List<DockPanel> _layoutPanel = new List<DockPanel>();
+        readonly List<Label> _nameLabel = new List<Label>();
+        readonly List<Ellipse> _colorEllipse = new List<Ellipse>();
+        readonly List<CheckBox> _visibleCheckBox = new List<CheckBox>();
+        readonly List<CheckBox> _selectCheckBox = new List<CheckBox>();
 
-        List<ComboBox> _typeTypeComboBox = new List<ComboBox>();
-        List<ComboBox> _typeComboBox = new List<ComboBox>();
-        List<CheckBox> _smoothCheckBox = new List<CheckBox>();
-        List<Border> _panelBorder = new List<Border>();
-        List<bool> _openClose = new List<bool>();
-        List<ComboBox> _stepTypeComboBox = new List<ComboBox>();
-        List<CheckBox> _widthCheckBox = new List<CheckBox>();
+        readonly List<ComboBox> _typeTypeComboBox = new List<ComboBox>();
+        readonly List<ComboBox> _typeComboBox = new List<ComboBox>();
+        readonly List<CheckBox> _smoothCheckBox = new List<CheckBox>();
+        readonly List<Border> _panelBorder = new List<Border>();
+        readonly List<bool> _openClose = new List<bool>();
+        readonly List<ComboBox> _stepTypeComboBox = new List<ComboBox>();
+        readonly List<CheckBox> _widthCheckBox = new List<CheckBox>();
 
-        string[] _typeType = new string[] {
+        readonly string[] _typeType = new string[] {
             "Analog",
             "Digital"
         };
 
-        string[] _styleType = new string[] {
+        readonly string[] _styleType = new string[] {
             "Solid",
             "Dash",
             "DashDot",
@@ -51,7 +50,7 @@ namespace WpfApplication4
             "Dot"
         };
 
-        string[] _stepType = new string[] {
+        readonly string[] _stepType = new string[] {
             "NonStep",
             "ForwardSegment",
             "ForwardStep",
@@ -73,7 +72,7 @@ namespace WpfApplication4
             _layoutOscilPanel[_layoutOscilPanel.Count - 1].Background = Brushes.WhiteSmoke;
 
             _oscilName.Add(new Label());
-            _oscilName[_layoutOscilPanel.Count - 1].Content = "Осциллограмма №" + (_layoutOscilPanel.Count);
+            _oscilName[_layoutOscilPanel.Count - 1].Content = "Осциллограмма №" + _layoutOscilPanel.Count;
             _oscilName[_layoutOscilPanel.Count - 1].ToolTip = oscilName;
             _oscilName[_layoutOscilPanel.Count - 1].Width = 150;
             _oscilName[_layoutOscilPanel.Count - 1].Margin = new Thickness(0, 3, 0, 0);
@@ -161,7 +160,7 @@ namespace WpfApplication4
         {
             int i  = Convert.ToInt32(((Rectangle)sender).Tag);
             int count = _clearChannel[i].Count;
-            for (int j = _clearChannel[i][(_clearChannel[i].Count - 1)]; j >= _clearChannel[i][0]; j--)
+            for (int j = _clearChannel[i][_clearChannel[i].Count - 1]; j >= _clearChannel[i][0]; j--)
             {
                 //Удаляем панели 
                 GraphConfigClear(j);
@@ -180,8 +179,8 @@ namespace WpfApplication4
                 {
                     _clearChannel[k][j] -= count;
                 }
-                _closeButton[k].Tag = (int)(_closeButton[k].Tag) - 1;
-                _oscilName[k].Content = "Осциллограмма №" + ((int)(_closeButton[k].Tag) + 1);
+                _closeButton[k].Tag = (int)_closeButton[k].Tag - 1;
+                _oscilName[k].Content = "Осциллограмма №" + ((int)_closeButton[k].Tag + 1);
             }
         }
         private void Graph_MouseLeave(object sender, MouseEventArgs e)
@@ -208,6 +207,13 @@ namespace WpfApplication4
             _selectAllCheckBox.Remove(_selectAllCheckBox[i]);
             _closeButton.Remove(_closeButton[i]);
             _layoutOscilPanel.Remove(_layoutOscilPanel[i]);
+
+            MainWindow.Graph.StampTriggerClear();
+            MainWindow.StampTriggerCreate = false;
+
+            MainWindow.Graph.CursorClear();
+            MainWindow.AnalysisObj.AnalysisCursorClear();
+            MainWindow.CursorCreate = false;
         }
 
         private void GraphConfigClear(int i)
@@ -240,6 +246,7 @@ namespace WpfApplication4
             _panelBorder.Remove(_panelBorder[i]);
             _layoutPanel.Remove(_layoutPanel[i]);
 
+
         }
 
         public void GraphConfigAdd(string nameChannel, string dimensionChannel, int oscilNum)
@@ -255,7 +262,7 @@ namespace WpfApplication4
             _layoutPanel[i].Height = 25;
             _layoutPanel[i].Margin = new Thickness(-10, 2, 1, 0);
             _layoutPanel[i].Background = Brushes.White;
-            _layoutPanel[i].MouseDown += new MouseButtonEventHandler(click_LayoutPanel);
+            _layoutPanel[i].MouseDown += click_LayoutPanel;
 
             _nameLabel.Add(new Label());
             _nameLabel[i].Content = nameChannel;
@@ -263,7 +270,7 @@ namespace WpfApplication4
             _nameLabel[i].FontSize = 12;
             _nameLabel[i].Height = 25;
             _nameLabel[i].Width = 140;
-            _nameLabel[i].ToolTip = "Название канала:\n" + nameChannel + ", " + dimensionChannel; ;
+            _nameLabel[i].ToolTip = "Название канала:\n" + nameChannel + ", " + dimensionChannel; 
             _nameLabel[i].Margin = new Thickness(0,0,0,0);
 
             _colorEllipse.Add(new Ellipse());
@@ -272,7 +279,7 @@ namespace WpfApplication4
             _colorEllipse[i].Margin = new Thickness(0, 2, 0, 0);
             _colorEllipse[i].Fill = new SolidColorBrush(Color.FromArgb(GraphPanel.Pane.CurveList[i].Color.A, GraphPanel.Pane.CurveList[i].Color.R, GraphPanel.Pane.CurveList[i].Color.G, GraphPanel.Pane.CurveList[i].Color.B));
             _colorEllipse[i].ToolTip = "Цвет";
-            _colorEllipse[i].MouseDown += new MouseButtonEventHandler(click_ColorEllipse);
+            _colorEllipse[i].MouseDown += (click_ColorEllipse);
 
             _visibleCheckBox.Add(new CheckBox());
             _visibleCheckBox[i].IsChecked = true;
@@ -303,14 +310,14 @@ namespace WpfApplication4
             _typeComboBox[i].ToolTip = "Тип линии";
             _typeComboBox[i].ItemsSource = _styleType;
             _typeComboBox[i].SelectedIndex = 0;
-            _typeComboBox[i].SelectionChanged += new SelectionChangedEventHandler (Change_index);
+            _typeComboBox[i].SelectionChanged +=(Change_index);
             
             _smoothCheckBox.Add(new CheckBox());
             _smoothCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
             _smoothCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
             _smoothCheckBox[i].Margin = new Thickness(-50, 53, 0, 0);
             _smoothCheckBox[i].ToolTip = "Сглаживание";
-            _smoothCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _smoothCheckBox[i].Click += (click_checkedButton);
 
             _stepTypeComboBox.Add(new ComboBox());
             _stepTypeComboBox[i].Width = 100;
@@ -319,14 +326,14 @@ namespace WpfApplication4
             _stepTypeComboBox[i].ToolTip = "Ступенчатость";
             _stepTypeComboBox[i].ItemsSource = _stepType;
             _stepTypeComboBox[i].SelectedIndex = 0;
-            _stepTypeComboBox[i].SelectionChanged += new SelectionChangedEventHandler(Change_index);
+            _stepTypeComboBox[i].SelectionChanged += (Change_index);
 
             _widthCheckBox.Add(new CheckBox());
             _widthCheckBox[i].VerticalAlignment = VerticalAlignment.Top;
             _widthCheckBox[i].Height = _visibleCheckBox[i].Width = 16;
             _widthCheckBox[i].Margin = new Thickness(-50, 78, 0, 0);
             _widthCheckBox[i].ToolTip = "Толщина";
-            _widthCheckBox[i].Click += new RoutedEventHandler(click_checkedButton);
+            _widthCheckBox[i].Click += (click_checkedButton);
             
             _clearChannel[oscilNum].Add(i);
 
@@ -353,7 +360,7 @@ namespace WpfApplication4
             int j = 0;
             for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (_typeComboBox[i].IsMouseOver == true || _stepTypeComboBox[i].IsMouseOver == true) { j = i; break; }
+                if (_typeComboBox[i].IsMouseOver || _stepTypeComboBox[i].IsMouseOver) { j = i; break; }
             }
             ChangeSomething(j, _typeComboBox[j].SelectedIndex, _stepTypeComboBox[j].SelectedIndex, GraphPanel.Pane.CurveList[j].Color);
         }
@@ -363,7 +370,7 @@ namespace WpfApplication4
             int j = 0;
             for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (_visibleCheckBox[i].IsMouseOver == true || _smoothCheckBox[i].IsMouseOver == true || _widthCheckBox[i].IsMouseOver == true) { j = i; break; }
+                if (_visibleCheckBox[i].IsMouseOver|| _smoothCheckBox[i].IsMouseOver|| _widthCheckBox[i].IsMouseOver ) { j = i; break; }
             }
             ChangeSomething(j, _typeComboBox[j].SelectedIndex, _stepTypeComboBox[j].SelectedIndex, GraphPanel.Pane.CurveList[j].Color);
         }
@@ -373,7 +380,7 @@ namespace WpfApplication4
             int j = 0;
             for (int i = 0; i < _colorEllipse.Count; i++)
             {
-                if (_colorEllipse[i].IsMouseOver == true) { j = i; break; } 
+                if (_colorEllipse[i].IsMouseOver) { j = i; break; } 
             }
             var dialog = new System.Windows.Forms.ColorDialog();
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -390,29 +397,33 @@ namespace WpfApplication4
         {
             for (int i = 0; i < _openClose.Count; i++)
             {
-                if (_layoutPanel[i].IsMouseOver == true && _openClose[i] == false) OpenAnimation(i);
-                else if (_layoutPanel[i].IsMouseOver == true && _openClose[i] == true) CloseAnimation(i);
+                if (_layoutPanel[i].IsMouseOver && _openClose[i] == false) OpenAnimation(i);
+                else if (_layoutPanel[i].IsMouseOver && _openClose[i]) CloseAnimation(i);
             }
         }
 
         private void OpenAnimation(int i)
         {
-            DoubleAnimation openAnimation = new DoubleAnimation();
-            openAnimation.From = 25;
-            openAnimation.To = 100;
+            DoubleAnimation openAnimation = new DoubleAnimation
+            {
+                From = 25,
+                To = 100,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1))
+            };
 
-            openAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
-            _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, openAnimation);
+            _layoutPanel[i].BeginAnimation(MinHeightProperty, openAnimation);
             _openClose[i] = true;
         }
         private void CloseAnimation(int i)
         {
-            DoubleAnimation closeAnimation = new DoubleAnimation();
-            closeAnimation.From = 100;
-            closeAnimation.To = 25;
-            closeAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            DoubleAnimation closeAnimation = new DoubleAnimation
+            {
+                From = 100,
+                To = 25,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1))
+            };
 
-            _layoutPanel[i].BeginAnimation(DockPanel.MinHeightProperty, closeAnimation);
+            _layoutPanel[i].BeginAnimation(MinHeightProperty, closeAnimation);
             _openClose[i] = false;
 
         }

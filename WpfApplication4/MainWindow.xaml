@@ -141,6 +141,7 @@
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                x:FieldModifier="public"
                 MouseDown="StampTrigger_MouseDown"
                 MouseEnter="StampTrigger_MouseEnter"
                 MouseLeave="StampTrigger_MouseLeave"

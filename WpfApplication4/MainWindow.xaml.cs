@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,13 +19,11 @@ namespace WpfApplication4
     /// </summary>
     public partial class MainWindow
     {
-        public MainWindow()
+
+        public MainWindow( )
         {
             InitializeComponent();
-   
         }
-
-
 
         Oscil _oscil = new Oscil();
         public static List<Oscil> OscilList = new List<Oscil>();
@@ -57,24 +56,28 @@ namespace WpfApplication4
             ConfigPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, closeAnimation);
         }
 
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ResetColorGraphButton()
         {
             GraphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
             GraphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
             GraphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
         }
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void SetColorGraphButton()
         {
             GraphButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
             GraphButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
             GraphButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void ResetColorAnalysisButton()
         {
             AnalysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
             AnalysisButton.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
             AnalysisButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
         }
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void SetColorrAnalysisButton()
         {
             AnalysisButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2196F3"));
@@ -103,7 +106,6 @@ namespace WpfApplication4
                 if(_openWindow == false) OpenAnimation();
                 _openWindow = true;
                 ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
-                //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
                 ConfigStackPanel.Children.Add(GraphObj);
 
                 return;
@@ -158,22 +160,13 @@ namespace WpfApplication4
 
             if (ofd.ShowDialog() == true)
             {
-                //Graph.RemoveGraph();
-
                _oscil = new Oscil();
 
-                /* Oscil.ChannelNames.Clear();
-                 Oscil.Dimension.Clear();
-                 Oscil.TypeChannel.Clear();
-                 Oscil.Data.Clear();
-
-                 Graph.ClearListTemp();
-                 */
                 Graph.StampTriggerClear();
                  Graph.CursorClear();
                  
                 AnalysisObj.AnalysisCursorClear();
-                _cursorCreate = false;
+                CursorCreate = false;
 
                 //Чтение .txt
                 string str;
@@ -231,6 +224,7 @@ namespace WpfApplication4
                         sr.ReadLine();
                         str = sr.ReadLine();
                         Regex regex = new Regex(@"\d");
+                        // ReSharper disable once AssignNullToNotNullAttribute
                         MatchCollection matches = regex.Matches(str);
                         _oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
                         for(int i = 0; i < _oscil.ChannelCount; i++)
@@ -315,7 +309,7 @@ namespace WpfApplication4
 
         public static GraphPanel Graph; 
 
-        public void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Graph = new GraphPanel();
             GrPanel.Child = Graph;
@@ -359,7 +353,7 @@ namespace WpfApplication4
             Graph.LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
         }
 
-        public void AxisChange()
+        private void AxisChange()
         {
             Graph.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
             Graph.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
@@ -396,67 +390,82 @@ namespace WpfApplication4
             AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48.png")));
         }
 
-        bool _cursorCreate;
+        public static bool CursorCreate;
 
         private void AddCoursor_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            AddCoursorEvent();
+        }
+
+        public void AddCoursorEvent() {
             if (OscilList.Count == 0) return;
-            if (_cursorCreate == false)
+            if (CursorCreate == false)
             {
                 Graph.CursorClear();
                 Graph.CursorAdd();
                 AnalysisObj.AnalysisCursorAdd();
-                _cursorCreate = true;
+                CursorCreate = true;
                 AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48(1).png")));
             }
             else
             {
                 Graph.CursorClear();
                 AnalysisObj.AnalysisCursorClear();
-                _cursorCreate = false;
+                CursorCreate = false;
                 AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48.png")));
             }
         }
 
         private void AddCoursor_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (_cursorCreate == false) if (_cursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48.png")));
+            if (CursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48.png")));
         }
 
         private void AddCoursor_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (_cursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48(2).png")));
+            if (CursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48(2).png")));
         }
 
-        bool _stampTriggerCreate;
+        public static bool StampTriggerCreate;
         private void StampTrigger_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (OscilList.Count == 0) return;
-            if (_stampTriggerCreate == false)
+            StampTriggerEvent();
+        }
+
+        public void StampTriggerEvent()
+        {
+            if (OscilList.Count == 0)
+            {
+                StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
+                return;
+            }
+            if (StampTriggerCreate == false)
             {
                 Graph.StampTriggerClear();
                 Graph.LineStampTrigger();
-                _stampTriggerCreate = true;
+                StampTriggerCreate = true;
                 StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48.png")));
 
             }
             else
             {
                 Graph.StampTriggerClear();
-                _stampTriggerCreate = false;
+                StampTriggerCreate = false;
                 StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
 
             }
         }
 
+
+
         private void StampTrigger_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (_stampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(1).png")));
+            if (StampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(1).png")));
         }
 
         private void StampTrigger_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (_stampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
+            if (StampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
         }
 
         bool _changeScale;
