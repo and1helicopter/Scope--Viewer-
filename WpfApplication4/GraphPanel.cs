@@ -87,55 +87,72 @@ namespace WpfApplication4
         // Создадим список точек   
         public static List<PointPairList> ListTemp = new List<PointPairList>();
         public static int PointInLine = 250;
-
+        public static List<bool> DigitalList = new List<bool>();
+        public static bool ShowDigital;
+ 
         public void PointInLineChange(int point, bool showDigital)
         {
             PointInLine = point;
+            ShowDigital = showDigital;
+        }
+
+
+        public void ChangeDigitalList(int i, int status)
+        {
+            DigitalList[i] = status != 0;
+            UpdateGraph();
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
         public void ClearListTemp()
         {
             ListTemp.Clear();
         }
-
+        
        
         private void UpdateGraph()
         {
             if(ListTemp.Count == 0) return;
             try {
-                int startIndex = 0;
-                int stopIndex = ListTemp[0].Count - 1;
-
+                //Очишаю точки кривых в кэше
                 foreach (var i in Pane.CurveList)
                 {
                     for (int j = i.NPts - 1; j >= 0; j--) i.RemovePoint(j);
                 }
 
-                for (int k = 0; k < ListTemp[0].Count; k++)
-                {
-                    if (ListTemp[0][k].X >= Pane.XAxis.Scale.Min)
-                    { startIndex = k; break; }
-                }
-                for (int k = 0; k < ListTemp[0].Count; k++)
-                {
-                    if (ListTemp[0][k].X >= Pane.XAxis.Scale.Max)
-                    {
-                        stopIndex = k; break;
-                    }
-                }
-                // ReSharper disable once PossibleLossOfFraction
-                int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
-                if (sum == 0) sum = 1;
-
                 for (int i = 0; i < Pane.CurveList.Count; i++)
                 {
+                    int startIndex = 0;
+                    int stopIndex = ListTemp[i].Count - 1;
+
+                    for (int k = 0; k < ListTemp[i].Count; k++)
+                    {
+                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Min)
+                        {
+                            startIndex = k != 0 ? k - 1 : k;
+                            break;
+                        }
+                    }
+
+                    for (int k = 0; k < ListTemp[i].Count; k++)
+                    {
+                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Max)
+                        {
+                            stopIndex = k == ListTemp[i].Count - 1 ? k : k + 1;
+                            break;
+                        }
+                    }
+                    // ReSharper disable once PossibleLossOfFraction
+                    int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
+                    if (sum == 0 || (ShowDigital && DigitalList[i])) sum = 1;
+
                     for (int j = startIndex; j < stopIndex; j += sum)
                     {
                         Pane.CurveList[i].AddPoint(ListTemp[i][j]);
                     }
                 }
             }
-            
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
@@ -145,6 +162,7 @@ namespace WpfApplication4
         {
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
+            DigitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
 
             string nameCh = "";
 
@@ -167,7 +185,7 @@ namespace WpfApplication4
             {
                 tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                ListTemp[j].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                ListTemp[ListTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
@@ -175,6 +193,12 @@ namespace WpfApplication4
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
 
+            ResizeAxis();
+        }
+
+
+        public void ResizeAxis()
+        {
             // Включим сглаживание
             Pane.YAxis.Scale.MinGrace = 0.01;
             Pane.YAxis.Scale.MaxGrace = 0.01;
@@ -198,12 +222,12 @@ namespace WpfApplication4
             _minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
         }
 
-
         public void RemoveGraph(int i)
         {
             _myCurve.Remove(_myCurve[i]);
             Pane.CurveList.Remove(Pane.CurveList[i]);
             ListTemp.Remove(ListTemp[i]);
+            DigitalList.Remove(DigitalList[i]);
 
             // Обновим график
             zedGraph.AxisChange();

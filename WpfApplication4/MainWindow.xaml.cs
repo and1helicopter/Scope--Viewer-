@@ -106,6 +106,7 @@ namespace WpfApplication4
                 if(_openWindow == false) OpenAnimation();
                 _openWindow = true;
                 ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
+                //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
                 ConfigStackPanel.Children.Add(GraphObj);
 
                 return;
@@ -221,6 +222,7 @@ namespace WpfApplication4
                     try
                     {
                         StreamReader sr = new StreamReader(ofd.FileName, Encoding.Default);
+                        _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
                         sr.ReadLine();
                         str = sr.ReadLine();
                         Regex regex = new Regex(@"\d");
@@ -302,7 +304,7 @@ namespace WpfApplication4
                 for (int i = 0; i < _oscil.ChannelCount; i++)
                 {
                     Graph.AddGraph(i);
-                    GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1);
+                    GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1, _oscil.TypeChannel[i]);
                 }
             }
         }

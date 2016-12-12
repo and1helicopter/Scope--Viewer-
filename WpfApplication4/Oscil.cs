@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace WpfApplication4
 {
@@ -21,7 +19,7 @@ namespace WpfApplication4
 
         public ushort ChannelCount;
         public uint NumCount;
-        public List <bool> TypeChannel = new List <bool>();
+        public List<bool> TypeChannel = new List <bool>();
 
         public List<List<double>> Data = new List<List<double>>();
     }

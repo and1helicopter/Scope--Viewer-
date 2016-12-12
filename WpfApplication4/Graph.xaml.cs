@@ -214,6 +214,8 @@ namespace WpfApplication4
             MainWindow.Graph.CursorClear();
             MainWindow.AnalysisObj.AnalysisCursorClear();
             MainWindow.CursorCreate = false;
+
+            MainWindow.Graph.ResizeAxis();
         }
 
         private void GraphConfigClear(int i)
@@ -245,11 +247,9 @@ namespace WpfApplication4
             _widthCheckBox.Remove(_widthCheckBox[i]);
             _panelBorder.Remove(_panelBorder[i]);
             _layoutPanel.Remove(_layoutPanel[i]);
-
-
         }
 
-        public void GraphConfigAdd(string nameChannel, string dimensionChannel, int oscilNum)
+        public void GraphConfigAdd(string nameChannel, string dimensionChannel, int oscilNum, bool typeChannel)
         {
             _panelBorder.Add(new Border());
             int i = _panelBorder.Count - 1;
@@ -301,7 +301,8 @@ namespace WpfApplication4
             _typeTypeComboBox[i].Margin = new Thickness(-270, 25, 0, 0);
             _typeTypeComboBox[i].ToolTip = "Тип канала";
             _typeTypeComboBox[i].ItemsSource = _typeType;
-            _typeTypeComboBox[i].SelectedIndex = 0;
+            _typeTypeComboBox[i].SelectedIndex = typeChannel ? 1 : 0;
+            _typeTypeComboBox[i].SelectionChanged += TypeChange;
             
             _typeComboBox.Add(new ComboBox());
             _typeComboBox[i].Width = 100;
@@ -353,6 +354,16 @@ namespace WpfApplication4
 
 
             GraphStackPanel.Children.Add(_layoutPanel[i]);
+        }
+
+        private void TypeChange(object sender, SelectionChangedEventArgs e)
+        {
+            int j = 0;
+            for (int i = 0; i < _colorEllipse.Count; i++)
+            {
+                if (_typeTypeComboBox[i].IsMouseOver ){j = i;break;}
+            }
+            MainWindow.Graph.ChangeDigitalList(j, _typeTypeComboBox[j].SelectedIndex);
         }
 
         private void Change_index(object sender, SelectionChangedEventArgs e)
