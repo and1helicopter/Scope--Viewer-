@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     /// <summary>
     /// Interaction logic for Settings.xaml
@@ -209,6 +209,19 @@ namespace WpfApplication4
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {     
             TabControl.SelectedIndex = ((TreeViewItem)e.NewValue).TabIndex;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void OK_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSetting();
+            ReadSetting();
+            UpdateSetting();
+            Close();
         }
     }
 }

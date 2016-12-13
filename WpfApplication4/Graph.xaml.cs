@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     /// <summary>
     /// Interaction logic for Graph.xaml

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
-using System.IO;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using System.Text.RegularExpressions;
+using ScopeViewer;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -20,7 +21,7 @@ namespace WpfApplication4
     public partial class MainWindow
     {
 
-        public MainWindow( )
+        public MainWindow()
         {
             InitializeComponent();
         }
@@ -151,6 +152,15 @@ namespace WpfApplication4
             }
         }
 
+        public void OpenAuto(string str)
+        {
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                FileName = str,
+            };
+            OpenFile(ofd);
+        }
+
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog
@@ -161,151 +171,156 @@ namespace WpfApplication4
 
             if (ofd.ShowDialog() == true)
             {
-               _oscil = new Oscil();
+                OpenFile(ofd);
+            }
+        }
 
-                Graph.StampTriggerClear();
-                 Graph.CursorClear();
-                 
-                AnalysisObj.AnalysisCursorClear();
-                CursorCreate = false;
+        private void OpenFile(OpenFileDialog ofd)
+        {
+            _oscil = new Oscil();
 
-                //Чтение .txt
-                string str;
-                if (ofd.FilterIndex == 1)
+            Graph.StampTriggerClear();
+            Graph.CursorClear();
+
+            AnalysisObj.AnalysisCursorClear();
+            CursorCreate = false;
+
+            //Чтение .txt
+            string str;
+            if (ofd.FilterIndex == 1)
+            {
+                try
                 {
-                    try
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
+                    _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
+                    _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
+                    _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
+                    _oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
+                    _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+                    str = sr.ReadLine();
+                    if (str != null)
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
-                        _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
-                        _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
-                        _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
-                        _oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
-                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+                        string[] str1 = str.Split('\t');
+                        for (int i = 1; i < str1.Length - 1; i++) _oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                    }
+                    _oscil.ChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
+                    for (int j = 0; !sr.EndOfStream; j++)
+                    {
                         str = sr.ReadLine();
                         if (str != null)
                         {
-                            string[] str1 = str.Split('\t');
-                            for(int i = 1; i < str1.Length - 1; i++) _oscil.ChannelNames.Add(Convert.ToString(str1[i]));
-                        }
-                        _oscil.ChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
-                        for(int j = 0; !sr.EndOfStream; j++) 
-                        {
-                            str = sr.ReadLine();
-                            if (str != null)
+                            string[] str2 = str.Split('\t');
+                            _oscil.Data.Add(new List<double>());
+                            for (int i = 1; i < str2.Length - 1; i++)
                             {
-                                string[] str2 = str.Split('\t');
-                                _oscil.Data.Add(new List<double>());
-                                for (int i = 1; i < str2.Length - 1; i++)
-                                {
-                                    _oscil.Data[j].Add(Convert.ToDouble(str2[i]));
-                                }
+                                _oscil.Data[j].Add(Convert.ToDouble(str2[i]));
                             }
                         }
-                        _oscil.NumCount = Convert.ToUInt32(_oscil.Data.Count);
-                        for(int i = 0; i < _oscil.ChannelCount; i++)
-                        {
-                            _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
-                            _oscil.Dimension.Add("NONE");
-                        }
-                        sr.Close();
                     }
-                    catch (Exception)
+                    _oscil.NumCount = Convert.ToUInt32(_oscil.Data.Count);
+                    for (int i = 0; i < _oscil.ChannelCount; i++)
                     {
-                        MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
+                        _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
+                        _oscil.Dimension.Add("NONE");
                     }
+                    sr.Close();
                 }
-
-                //Чтение .comtrade
-                if (ofd.FilterIndex == 2)
+                catch (Exception)
                 {
-                    try
+                    MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            //Чтение .comtrade
+            if (ofd.FilterIndex == 2)
+            {
+                try
+                {
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.Default);
+                    _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
+                    sr.ReadLine();
+                    str = sr.ReadLine();
+                    Regex regex = new Regex(@"\d");
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    MatchCollection matches = regex.Matches(str);
+                    _oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
+                    for (int i = 0; i < _oscil.ChannelCount; i++)
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.Default);
-                        _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
-                        sr.ReadLine();
-                        str = sr.ReadLine();
-                        Regex regex = new Regex(@"\d");
-                        // ReSharper disable once AssignNullToNotNullAttribute
-                        MatchCollection matches = regex.Matches(str);
-                        _oscil.ChannelCount = Convert.ToUInt16(matches[0].Value);
-                        for(int i = 0; i < _oscil.ChannelCount; i++)
-                        {
-                            _oscil.TypeChannel.Add(i >= Convert.ToInt32(matches[1].Value));
-                        }
-                        //Аналоговые каналы
-                        for (int i = 0; i < Convert.ToInt32(matches[1].Value); i++)
-                        {
-                            str = sr.ReadLine();
-                            if (str != null)
-                            {
-                                string[] str1 = str.Split(',');
-                                _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
-                                _oscil.Dimension.Add(Convert.ToString(str1[4]));
-                            }
-                        }
-                        for (int i = 0; i < Convert.ToInt32(matches[2].Value); i++)
-                        {
-                            str = sr.ReadLine();
-                            if (str != null)
-                            {
-                                string[] str1 = str.Split(',');
-                                _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
-                            }
-                            _oscil.Dimension.Add("NONE");
-                        }
-                        sr.ReadLine();
-                        sr.ReadLine();
+                        _oscil.TypeChannel.Add(i >= Convert.ToInt32(matches[1].Value));
+                    }
+                    //Аналоговые каналы
+                    for (int i = 0; i < Convert.ToInt32(matches[1].Value); i++)
+                    {
                         str = sr.ReadLine();
                         if (str != null)
                         {
-                            string[] str2 = str.Split(',');
-                            _oscil.SampleRate = Convert.ToDouble(str2[0]);
-                            _oscil.NumCount = Convert.ToUInt32(str2[1]);
+                            string[] str1 = str.Split(',');
+                            _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                            _oscil.Dimension.Add(Convert.ToString(str1[4]));
                         }
-                        _oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
-                        _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine()); 
-                        sr.Close();
-
-                        var namefile = Path.GetFileNameWithoutExtension(ofd.FileName);
-                        var pathfile = Path.GetDirectoryName(ofd.FileName);
-
-                        string pathDateFile = pathfile + "\\" + namefile + ".dat";
-
-                        StreamReader srd = new StreamReader(pathDateFile, Encoding.Default);
-                        for (int j = 0; !srd.EndOfStream; j++)
+                    }
+                    for (int i = 0; i < Convert.ToInt32(matches[2].Value); i++)
+                    {
+                        str = sr.ReadLine();
+                        if (str != null)
                         {
-                            str = srd.ReadLine();
-                            if (str != null)
+                            string[] str1 = str.Split(',');
+                            _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
+                        }
+                        _oscil.Dimension.Add("NONE");
+                    }
+                    sr.ReadLine();
+                    sr.ReadLine();
+                    str = sr.ReadLine();
+                    if (str != null)
+                    {
+                        string[] str2 = str.Split(',');
+                        _oscil.SampleRate = Convert.ToDouble(str2[0]);
+                        _oscil.NumCount = Convert.ToUInt32(str2[1]);
+                    }
+                    _oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
+                    _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
+                    sr.Close();
+
+                    var namefile = Path.GetFileNameWithoutExtension(ofd.FileName);
+                    var pathfile = Path.GetDirectoryName(ofd.FileName);
+
+                    string pathDateFile = pathfile + "\\" + namefile + ".dat";
+
+                    StreamReader srd = new StreamReader(pathDateFile, Encoding.Default);
+                    for (int j = 0; !srd.EndOfStream; j++)
+                    {
+                        str = srd.ReadLine();
+                        if (str != null)
+                        {
+                            string[] str3 = str.Split(',');
+                            _oscil.Data.Add(new List<double>());
+                            for (int i = 2; i < str3.Length; i++)
                             {
-                                string[] str3= str.Split(',');
-                                _oscil.Data.Add(new List<double>());
-                                for (int i = 2; i < str3.Length; i++)
-                                {
-                                    str3[i] = str3[i].Replace(".",",");
-                                    _oscil.Data[j].Add(Convert.ToDouble(str3[i]));
-                                }
+                                str3[i] = str3[i].Replace(".", ",");
+                                _oscil.Data[j].Add(Convert.ToDouble(str3[i]));
                             }
                         }
-                        srd.Close();
                     }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                    srd.Close();
                 }
-
-                OscilList.Add(_oscil);
-
-
-
-                GraphObj.OscilConfigAdd(_oscil.OscilNames);
-                for (int i = 0; i < _oscil.ChannelCount; i++)
+                catch (Exception)
                 {
-                    Graph.AddGraph(i);
-                    GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1, _oscil.TypeChannel[i]);
+                    MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
+            }
+
+            OscilList.Add(_oscil);
+
+
+
+            GraphObj.OscilConfigAdd(_oscil.OscilNames);
+            for (int i = 0; i < _oscil.ChannelCount; i++)
+            {
+                Graph.AddGraph(i);
+                GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1, _oscil.TypeChannel[i]);
             }
         }
 

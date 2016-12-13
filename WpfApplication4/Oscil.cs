@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     public class Oscil
     {

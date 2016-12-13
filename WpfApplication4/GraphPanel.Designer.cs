@@ -1,4 +1,4 @@
-﻿namespace WpfApplication4
+﻿namespace ScopeViewer
 {
     public partial class GraphPanel
     {

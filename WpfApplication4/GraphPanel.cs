@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using ScopeViewer;
 using ZedGraph;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     public partial class GraphPanel : UserControl
     {

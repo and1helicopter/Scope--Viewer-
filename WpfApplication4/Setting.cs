@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Xml;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     public static class Setting
     {

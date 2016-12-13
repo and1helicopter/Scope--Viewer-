@@ -9,7 +9,7 @@ using Border = System.Windows.Controls.Border;
 using Brushes = System.Windows.Media.Brushes;
 using Label = System.Windows.Controls.Label;
 
-namespace WpfApplication4
+namespace ScopeViewer
 {
     /// <summary>
     /// Interaction logic for Analysis.xaml
