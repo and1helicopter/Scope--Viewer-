@@ -6,12 +6,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using ScopeViewer;
+using Xceed.Wpf.AvalonDock.Layout;
+
 
 namespace ScopeViewer
 {
@@ -27,10 +29,20 @@ namespace ScopeViewer
         }
 
         Oscil _oscil = new Oscil();
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static List<Oscil> OscilList = new List<Oscil>();
+        public static List<OscilChannel> OscilChannelList = new List<OscilChannel>();
+        public static List<GraphPanel> GraphPanelList = new List<GraphPanel>();
+        public static List<WindowsFormsHost> WindowsFormsHostList = new List<WindowsFormsHost>();
+        public static List<LayoutDocument> LayoutDocumentList = new List<LayoutDocument>();
 
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static Graph GraphObj = new Graph();
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static Analysis AnalysisObj = new Analysis();
+
+        Settings _settingsObj;
+
         bool _openWindow;
         bool _graphButtonStatus;
         bool _styleButtonStatus;
@@ -122,7 +134,6 @@ namespace ScopeViewer
             }
         }
 
-
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
             OpenWindow();
@@ -178,12 +189,6 @@ namespace ScopeViewer
         private void OpenFile(OpenFileDialog ofd)
         {
             _oscil = new Oscil();
-
-            Graph.StampTriggerClear();
-            Graph.CursorClear();
-
-            AnalysisObj.AnalysisCursorClear();
-            CursorCreate = false;
 
             //Чтение .txt
             string str;
@@ -314,40 +319,56 @@ namespace ScopeViewer
 
             OscilList.Add(_oscil);
 
+            AddOscilChannnel(_oscil);
+        }
 
+        private void AddOscilChannnel(Oscil oscil)
+        {
+            OscilChannel oscilChannel = new OscilChannel();
 
-            GraphObj.OscilConfigAdd(_oscil.OscilNames);
-            for (int i = 0; i < _oscil.ChannelCount; i++)
+            oscilChannel.OscilConfigAdd(oscil.OscilNames, 1);
+            for (int i = 0; i < oscil.ChannelCount; i++)
+                oscilChannel.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], oscil.TypeChannel[i]);
+
+            OscilChannelList.Add(oscilChannel);
+
+            GraphObj.GraphStackPanel.Children.Add(oscilChannel.LayoutOscilPanel);
+            for (int i = 0; i < oscil.ChannelCount; i++)
+                GraphObj.GraphStackPanel.Children.Add(oscilChannel.LayoutPanel[i]);
+
+            GraphPanelList.Add(new GraphPanel());
+
+            SetSetting();
+
+            WindowsFormsHostList.Add(new WindowsFormsHost());
+            LayoutDocumentList.Add(new LayoutDocument());
+            LayoutDocumentList[LayoutDocumentList.Count - 1].Content = WindowsFormsHostList[WindowsFormsHostList.Count - 1];
+            LayoutDocumentList[LayoutDocumentList.Count - 1].Title = oscil.OscilNames;
+            LayoutDocumentList[LayoutDocumentList.Count - 1].CanClose = false;
+
+            LayoutGraph.Children.Add(LayoutDocumentList[LayoutDocumentList.Count - 1]);
+            WindowsFormsHostList[WindowsFormsHostList.Count - 1].Child = GraphPanelList[GraphPanelList.Count - 1];
+
+            for (int i = 0; i < OscilChannelList[OscilChannelList.Count - 1].NameLabel.Count; i++)
             {
-                Graph.AddGraph(i);
-                GraphObj.GraphConfigAdd(_oscil.ChannelNames[i], _oscil.Dimension[i], OscilList.Count - 1, _oscil.TypeChannel[i]);
+                SolidColorBrush brush = (SolidColorBrush) OscilChannelList[OscilChannelList.Count - 1].ColorEllipse[i].Fill;
+                System.Drawing.Color color = System.Drawing.Color.FromArgb(brush.Color.A, brush.Color.R, brush.Color.G, brush.Color.B);
+                GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color);
             }
         }
 
-        public static GraphPanel Graph; 
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Graph = new GraphPanel();
-            GrPanel.Child = Graph;
-            OpenSetting();
-            UpdateSetting();
-        }
 
-        private void OpenSetting()
+        private void SetSetting()
         {
             Setting.InitSetting();
-        }
+            GraphPanelList[GraphPanelList.Count - 1].PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
+            if(Setting.PointInLine < 50) GraphPanelList[GraphPanelList.Count - 1].PointInLineChange(50, Setting.ShowDigital);
+            GraphPanelList[GraphPanelList.Count - 1].GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
+            GraphPanelList[GraphPanelList.Count - 1].GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
+            GraphPanelList[GraphPanelList.Count - 1].GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
+            GraphPanelList[GraphPanelList.Count - 1].GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
 
-        private void UpdateSetting()
-        {
-            LegendChange();
-            AxisChange();
-            LineInChash();
-        }
-
-        private void LegendChange()
-        {
             bool checkedLegend = false;
             int h = 1, v = 1;
             if (Setting.ShowLegend) checkedLegend = true;
@@ -367,23 +388,8 @@ namespace ScopeViewer
             {
                 h = 1; v = 1;
             }
-            Graph.LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
-        }
-
-        private void AxisChange()
-        {
-            Graph.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
-            Graph.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
-            Graph.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
-            Graph.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
-        }
-
-        private void LineInChash()
-        {
-           Graph.PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
-        }
-  
-        Settings _settingsObj; 
+            GraphPanelList[GraphPanelList.Count - 1].LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
+        }      
 
         private void settings_Click(object sender, RoutedEventArgs e)
         {
@@ -391,6 +397,28 @@ namespace ScopeViewer
             _settingsObj.UpdatePointPerChannelTextBox();
             _settingsObj.Show();
         }
+
+        public static void DelateOscil(int i)
+        {
+            OscilList.Remove(OscilList[i]);
+            
+            GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutOscilPanel);
+            for (int j = OscilChannelList[i].LayoutPanel.Count - 1; j >= 0; j--)
+                GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutPanel[j]);
+            OscilChannelList.Remove(OscilChannelList[i]);
+            GraphPanelList.Remove(GraphPanelList[i]);
+            WindowsFormsHostList.Remove(WindowsFormsHostList[i]);
+            LayoutDocumentList[i].Close();
+            LayoutDocumentList.Remove(LayoutDocumentList[i]);  
+        }
+
+        /// <summary>
+        /// Отредактированно
+        /// </summary>
+        public static GraphPanel Graph;
+
+        
+
 
         private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -414,7 +442,7 @@ namespace ScopeViewer
             AddCoursorEvent();
         }
 
-        public void AddCoursorEvent() {
+        private void AddCoursorEvent() {
             if (OscilList.Count == 0) return;
             if (CursorCreate == false)
             {
@@ -449,7 +477,7 @@ namespace ScopeViewer
             StampTriggerEvent();
         }
 
-        public void StampTriggerEvent()
+        private void StampTriggerEvent()
         {
             if (OscilList.Count == 0)
             {

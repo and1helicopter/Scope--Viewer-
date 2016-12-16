@@ -7,10 +7,12 @@ namespace ScopeViewer
     /// </summary>
     public partial class App
     {
+        public static MainWindow mainWindow;
+
         private void App_Startup(object sender, StartupEventArgs e)
         {
 
-            MainWindow mainWindow = new MainWindow();
+            mainWindow = new MainWindow();
             mainWindow.Show();
             if (e.Args.Length > 0)
             {

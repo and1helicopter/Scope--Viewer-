@@ -30,6 +30,7 @@ namespace ScopeViewer
         public Settings()
         {
             InitializeComponent();
+            ReadSetting();
             UpdateSetting();
         }
 
@@ -176,33 +177,48 @@ namespace ScopeViewer
                 h = 1; v = 1;
             }
             ShowLegendSlider.Value = Setting.SizeLegend;
-            MainWindow.Graph.LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
+            foreach (GraphPanel t in MainWindow.GraphPanelList)
+            {
+                t.LegendShow(checkedLegend, Convert.ToInt32(Setting.SizeLegend), h, v);
+            }
         }
 
        private void AxisChange()
-        {
-            XMinorCheckBox.IsChecked = Setting.XMinorShow;
-            XMinorComboBox.SelectedIndex = Setting.XMinor;
-            MainWindow.Graph.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
+       {
+           foreach (GraphPanel t in MainWindow.GraphPanelList)
+           {
+               XMinorCheckBox.IsChecked = Setting.XMinorShow;
+               XMinorComboBox.SelectedIndex = Setting.XMinor;
+               t.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
 
-            XMajorCheckBox.IsChecked = Setting.XMajorShow;
-            XMajorComboBox.SelectedIndex = Setting.XMajor;
-            MainWindow.Graph.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
+               XMajorCheckBox.IsChecked = Setting.XMajorShow;
+               XMajorComboBox.SelectedIndex = Setting.XMajor;
+               t.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
 
-            YMinorCheckBox.IsChecked = Setting.YMinorShow;
-            YMinorComboBox.SelectedIndex = Setting.YMinor;
-            MainWindow.Graph.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
+               YMinorCheckBox.IsChecked = Setting.YMinorShow;
+               YMinorComboBox.SelectedIndex = Setting.YMinor;
+               t.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
 
-            YMajorCheckBox.IsChecked = Setting.YMajorShow;
-            YMajorComboBox.SelectedIndex = Setting.YMajor;
-            MainWindow.Graph.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
-        }
+               YMajorCheckBox.IsChecked = Setting.YMajorShow;
+               YMajorComboBox.SelectedIndex = Setting.YMajor;
+               t.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
+           }
+       }
 
         private void LineInChash()
         {
             ShowDigitalCheckBox.IsChecked = Setting.ShowDigital;
             PointInLineTextBox.Text = Convert.ToString(Setting.PointInLine);
-            MainWindow.Graph.PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
+            foreach (GraphPanel t in MainWindow.GraphPanelList)
+            {
+                if (Setting.PointInLine < 50)
+                {
+                    t.PointInLineChange(50, Setting.ShowDigital);
+                    Setting.PointInLine = 50;
+                    PointInLineTextBox.Text = Setting.PointInLine.ToString();
+                }
+                else t.PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
+            }
         }
 
 

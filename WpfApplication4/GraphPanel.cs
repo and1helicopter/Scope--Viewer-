@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using ScopeViewer;
 using ZedGraph;
 
 namespace ScopeViewer
 {
     public partial class GraphPanel : UserControl
     {
-        MasterPane _masterPane;
-        public static GraphPane Pane;
+       // MasterPane _masterPane;
+        public GraphPane Pane;
         readonly List<LineItem> _myCurve = new List<LineItem>();
        // List<LineItem> myCurveTemp = new List<LineItem>();
-        readonly Random _rngColor = new Random();
 
         double _maxXAxis = 1000;
         double _minXAxis = -1000;
@@ -24,8 +22,10 @@ namespace ScopeViewer
         public GraphPanel()
         {
             InitializeComponent();
+
             zedGraph.ZoomEvent += zedGraph_ZoomEvent;
             zedGraph.ScrollEvent += zedGraph_ScrollEvent;
+
             InitDrawGraph();
         }
 
@@ -79,28 +79,26 @@ namespace ScopeViewer
             _scaleY = !_scaleY;
         }
 
-        public  Color GenerateColor(Random rng) {
-
-            Color color = Color.FromArgb(rng.Next(0, 255), rng.Next(0, 255), rng.Next(0, 255));
-            return color;
-        }
 
         // Создадим список точек   
-        public static List<PointPairList> ListTemp = new List<PointPairList>();
+        private readonly List<PointPairList> _listTemp = new List<PointPairList>();
         public static int PointInLine = 250;
-        public static List<bool> DigitalList = new List<bool>();
+        private readonly List<bool> _digitalList = new List<bool>();
         public static bool ShowDigital;
  
         public void PointInLineChange(int point, bool showDigital)
         {
             PointInLine = point;
             ShowDigital = showDigital;
+            UpdateGraph();
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
 
         public void ChangeDigitalList(int i, int status)
         {
-            DigitalList[i] = status != 0;
+            _digitalList[i] = status != 0;
             UpdateGraph();
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -108,13 +106,13 @@ namespace ScopeViewer
 
         public void ClearListTemp()
         {
-            ListTemp.Clear();
+            _listTemp.Clear();
         }
         
        
         private void UpdateGraph()
         {
-            if(ListTemp.Count == 0) return;
+            if(_listTemp.Count == 0) return;
             try {
                 //Очишаю точки кривых в кэше
                 foreach (var i in Pane.CurveList)
@@ -125,45 +123,45 @@ namespace ScopeViewer
                 for (int i = 0; i < Pane.CurveList.Count; i++)
                 {
                     int startIndex = 0;
-                    int stopIndex = ListTemp[i].Count - 1;
+                    int stopIndex = _listTemp[i].Count - 1;
 
-                    for (int k = 0; k < ListTemp[i].Count; k++)
+                    for (int k = 0; k < _listTemp[i].Count; k++)
                     {
-                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Min)
+                        if (_listTemp[i][k].X >= Pane.XAxis.Scale.Min)
                         {
                             startIndex = k != 0 ? k - 1 : k;
                             break;
                         }
                     }
 
-                    for (int k = 0; k < ListTemp[i].Count; k++)
+                    for (int k = 0; k < _listTemp[i].Count; k++)
                     {
-                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Max)
+                        if (_listTemp[i][k].X >= Pane.XAxis.Scale.Max)
                         {
-                            stopIndex = k == ListTemp[i].Count - 1 ? k : k + 1;
+                            stopIndex = k == _listTemp[i].Count - 1 ? k : k + 1;
                             break;
                         }
                     }
                     // ReSharper disable once PossibleLossOfFraction
                     int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
-                    if (sum == 0 || (ShowDigital && DigitalList[i])) sum = 1;
+                    if (sum == 0 || (ShowDigital && _digitalList[i])) sum = 1;
 
                     for (int j = startIndex; j < stopIndex; j += sum)
                     {
-                        Pane.CurveList[i].AddPoint(ListTemp[i][j]);
+                        Pane.CurveList[i].AddPoint(_listTemp[i][j]);
                     }
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
-
+ 
     
-        public void AddGraph(int j)
+        public void AddGraph(int j, Color color)
         {
             PointPairList list = new PointPairList();
-            ListTemp.Add(new PointPairList());
-            DigitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
+            _listTemp.Add(new PointPairList());
+            _digitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
 
             string nameCh = "";
 
@@ -186,17 +184,16 @@ namespace ScopeViewer
             {
                 tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                ListTemp[ListTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                _listTemp[_listTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
-            LineItem newCurve = Pane.AddCurve(nameCh, list, GenerateColor(_rngColor), SymbolType.None);
+            LineItem newCurve = Pane.AddCurve(nameCh, list, color, SymbolType.None);
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
 
             ResizeAxis();
         }
-
 
         public void ResizeAxis()
         {
@@ -227,31 +224,17 @@ namespace ScopeViewer
         {
             _myCurve.Remove(_myCurve[i]);
             Pane.CurveList.Remove(Pane.CurveList[i]);
-            ListTemp.Remove(ListTemp[i]);
-            DigitalList.Remove(DigitalList[i]);
+            _listTemp.Remove(_listTemp[i]);
+            _digitalList.Remove(_digitalList[i]);
 
             // Обновим график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
 
-        public void InitDrawGraph()
+        private void InitDrawGraph()
         {
-
-            _masterPane = zedGraph.MasterPane;
-            _masterPane.PaneList.Clear();
-            //zedGraph.IsShowHScrollBar = true;
-
-            Pane = new GraphPane();
-            _masterPane.Add(Pane);
-
-            /*
-            GraphPane pane1 = new GraphPane();
-            masterPane.Add(pane1);
-
-            GraphPane pane2 = new GraphPane();
-            masterPane.Add(pane2);
-            */
+            Pane = zedGraph.GraphPane; 
 
             Pane.Legend.IsVisible = false;
             Pane.XAxis.Title.IsVisible = false;
@@ -316,6 +299,8 @@ namespace ScopeViewer
 
         public void ChangeLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine)
         {
+           // Pane = MainWindow.GraphPanelList[numGraphPane];
+
             Pane.CurveList[numChannel].Color = colorLine;
             Pane.CurveList[numChannel].IsVisible = show;
             _myCurve[numChannel].Line.IsSmooth = smooth;
@@ -396,8 +381,6 @@ namespace ScopeViewer
 
 
             Pane.Legend.FontSpec.Size = fontSize;
-
-
             Pane.Legend.IsVisible = show;
 
 

@@ -37,13 +37,13 @@ namespace ScopeViewer
             {
                 if(_nameLabel[i].TabIndex == 0)
                 {
-                    for (int j = GraphPanel.Pane.CurveList.Count - 1; j >= 0; j--)
+                /*    for (int j = GraphPanel.Pane.CurveList.Count - 1; j >= 0; j--)
                     { 
                     
                             _layoutPanel[i].Children.Remove(_nameChannelLabel[j]);
                             _layoutPanel[i].Children.Remove(_nameValue1Label[j]);
                             _layoutPanel[i].Children.Remove(_nameValue2Label[j]);
-                    }
+                    }*/
 
                     _layoutPanel[i].Children.Remove(_nameStatuslLabel[2]);
                     _layoutPanel[i].Children.Remove(_nameStatuslLabel[1]);
@@ -137,7 +137,7 @@ namespace ScopeViewer
             }
 
             double positonX = -200;
-            for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
+           /* for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
             {
                 _nameChannelLabel.Add(new Label());
                 _nameChannelLabel[j].Content = GraphPanel.Pane.CurveList[j].Label.Text;
@@ -186,7 +186,7 @@ namespace ScopeViewer
                 _nameValue2Label[j].Height = 25;
                 _nameValue2Label[j].Width = 85;
                 _nameValue2Label[j].Margin = new Thickness(-85, positonY, 0, 0);
-            }
+            }*/
 
             _openClose.Add(new bool());
             _openClose[i] = false;
@@ -196,12 +196,12 @@ namespace ScopeViewer
             _layoutPanel[i].Children.Add(_nameStatuslLabel[1]);
             _layoutPanel[i].Children.Add(_nameStatuslLabel[2]);
 
-            for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
+           /* for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
             {
                 _layoutPanel[i].Children.Add(_nameChannelLabel[j]);
                 _layoutPanel[i].Children.Add(_nameValue1Label[j]);
                 _layoutPanel[i].Children.Add(_nameValue2Label[j]);
-            }
+            }*/
 
             _layoutPanel[i].Children.Add(_panelBorder[i]);
 
@@ -210,7 +210,7 @@ namespace ScopeViewer
 
         public void UpdateCursor()
         {
-            for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
+         /*   for (int j = 0; j < GraphPanel.Pane.CurveList.Count; j++)
             {
                 for (int k = 0; k < GraphPanel.ListTemp[j].Count; k++)
                 {
@@ -230,7 +230,7 @@ namespace ScopeViewer
                         break;
                     }
                 }
-            }
+            }*/
 
             XDate x1 = new XDate(GraphPanel.Cursor1.Location.X);
             XDate x2 = new XDate(GraphPanel.Cursor2.Location.X);
@@ -245,8 +245,8 @@ namespace ScopeViewer
         {
             for (int i = 0; i < _openClose.Count; i++)
             {
-                if (_layoutPanel[i].IsMouseOver && _openClose[i] == false) OpenAnimation(i, GraphPanel.Pane.CurveList.Count + 2);
-                else if (_layoutPanel[i].IsMouseOver && _openClose[i]) CloseAnimation(i, GraphPanel.Pane.CurveList.Count + 2);
+          /*      if (_layoutPanel[i].IsMouseOver && _openClose[i] == false) OpenAnimation(i, GraphPanel.Pane.CurveList.Count + 2);
+                else if (_layoutPanel[i].IsMouseOver && _openClose[i]) CloseAnimation(i, GraphPanel.Pane.CurveList.Count + 2);*/
             }
         }
 

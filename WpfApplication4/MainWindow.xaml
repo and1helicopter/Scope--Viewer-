@@ -4,12 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
     Title="MainWindow"
     Width="800"
     Height="550"
     Icon="Resources/Line Chart-48.ico"
-    Loaded="Window_Loaded"
     mc:Ignorable="d">
+    <!--  Loaded="Window_Loaded"  -->
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -18,17 +19,18 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="76" />
             <ColumnDefinition x:Name="ConfigPanel" Width="0*" />
+            <ColumnDefinition Width="2" />
             <ColumnDefinition
                 Width="32"
                 MinWidth="32 px"
-                MaxWidth="64" />
-            <ColumnDefinition Width="4" />
+                MaxWidth="32 px" />
+            <ColumnDefinition Width="2" />
             <ColumnDefinition x:Name="PanelForGraph" />
         </Grid.ColumnDefinitions>
         <Menu
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="5"
+            Grid.ColumnSpan="6"
             Height="30"
             Margin="0,0,0,0"
             VerticalAlignment="Top">
@@ -93,9 +95,8 @@
         <ScrollViewer
             Grid.Row="1"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
             Height="Auto"
-            Margin="0,0,32,0"
+            Margin="0,0,2,0"
             VerticalContentAlignment="Stretch"
             VerticalScrollBarVisibility="Auto">
             <StackPanel
@@ -103,7 +104,13 @@
                 Height="Auto"
                 ScrollViewer.CanContentScroll="True" />
         </ScrollViewer>
-        <StackPanel Grid.Row="1" Grid.Column="2">
+        <Border
+            Grid.Row="1"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Margin="0,0,32,0"
+            Background="WhiteSmoke" />
+        <StackPanel Grid.Row="1" Grid.Column="3">
             <Rectangle
                 x:Name="AddGraph"
                 Width="28"
@@ -165,22 +172,26 @@
                     <ImageBrush ImageSource="Resources/Width-48.png" />
                 </Rectangle.Fill>
             </Rectangle>
-
         </StackPanel>
-        <GridSplitter
-            Grid.Row="1"
-            Grid.Column="3"
-            Width="4"
-            Margin="0,0,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Stretch"
-            ShowsPreview="False" />
-        <WindowsFormsHost
-            x:Name="GrPanel"
+        <Border
             Grid.Row="1"
             Grid.Column="4"
-            Margin="0"
-            x:FieldModifier="public"
-            Background="{x:Null}" />
+            Background="WhiteSmoke" />
+        <xcad:DockingManager
+            Grid.Row="1"
+            Grid.Column="5"
+            AllowMixedOrientation="True">
+            <xcad:DockingManager.Theme>
+                <xcad:MetroTheme />
+            </xcad:DockingManager.Theme>
+            <xcad:LayoutRoot x:Name="_layoutRoot">
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane x:Name="LayoutGraph" />
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
     </Grid>
 </Window>
+
