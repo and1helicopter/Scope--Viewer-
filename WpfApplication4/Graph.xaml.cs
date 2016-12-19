@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms.Integration;
-using Xceed.Wpf.AvalonDock.Layout;
-
-namespace ScopeViewer
+﻿namespace ScopeViewer
 {
     /// <summary>
     /// Interaction logic for Graph.xaml

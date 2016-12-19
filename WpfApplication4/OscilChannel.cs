@@ -63,7 +63,7 @@ namespace ScopeViewer
         }
 
 
-        public void OscilConfigAdd(string oscilName, int i)
+        public void OscilConfigAdd(string oscilName)
         {
             LayoutOscilPanel = new DockPanel
             {
@@ -75,7 +75,7 @@ namespace ScopeViewer
 
             OscilName = new Label
             {
-                Content = "Осциллограмма №" + i,
+                Content = "Осциллограмма №" + (MainWindow.OscilChannelList.Count + 1),
                 ToolTip = oscilName,
                 Width = 150,
                 Margin = new Thickness(0, 3, 0, 0)
@@ -380,7 +380,6 @@ namespace ScopeViewer
             }
 
             MainWindow.DelateOscil(l);
-
         }
 
         private void Graph_MouseLeave(object sender, MouseEventArgs e)

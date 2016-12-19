@@ -326,7 +326,7 @@ namespace ScopeViewer
         {
             OscilChannel oscilChannel = new OscilChannel();
 
-            oscilChannel.OscilConfigAdd(oscil.OscilNames, 1);
+            oscilChannel.OscilConfigAdd(oscil.OscilNames);
             for (int i = 0; i < oscil.ChannelCount; i++)
                 oscilChannel.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], oscil.TypeChannel[i]);
 
@@ -409,20 +409,77 @@ namespace ScopeViewer
             GraphPanelList.Remove(GraphPanelList[i]);
             WindowsFormsHostList.Remove(WindowsFormsHostList[i]);
             LayoutDocumentList[i].Close();
-            LayoutDocumentList.Remove(LayoutDocumentList[i]);  
+            LayoutDocumentList.Remove(LayoutDocumentList[i]);
+
+            while (i < OscilChannelList.Count)
+            {
+                OscilChannelList[i].OscilName.Content = "Осциллограмма №" + (i + 1);
+
+                    i++;
+            }
         }
-
-        /// <summary>
-        /// Отредактированно
-        /// </summary>
-        public static GraphPanel Graph;
-
-        
-
 
         private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            //Создание новой осциллограммы OscilList
+            _oscil = new Oscil();
 
+            _oscil.OscilNames += 1;
+
+
+            for (int k = 0; k < OscilChannelList.Count; k++)
+            {
+                for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
+                {
+                    if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                    {
+                        _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
+                        _oscil.Dimension.Add(OscilList[k].Dimension[i]);
+
+
+
+                        if (_oscil.ChannelCount > 0 && ((_oscil.SampleRate != OscilList[k].SampleRate) || (_oscil.HistotyCount != OscilList[k].HistotyCount) || (_oscil.NumCount != OscilList[k].NumCount)))
+                        {
+                            MessageBox.Show("Каналы не совместимы", "Ошибка",MessageBoxButton.OK);
+                            return;
+                        }
+
+
+                        if(_oscil.ChannelCount == 0)
+                        {
+                            // StampDateStart;
+                            // StampDateTrigger;
+                            // StampDateEnd;
+                            // SampleRate;
+                            // HistotyCount;
+
+                            _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
+                            _oscil.SampleRate = OscilList[k].SampleRate;
+                            _oscil.HistotyCount = OscilList[k].HistotyCount;
+                            _oscil.NumCount = OscilList[k].NumCount;
+                            _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+
+
+                            for (int j = 0; j < _oscil.NumCount; j++)
+                                _oscil.Data.Add(new List<double>());
+                        }
+
+                        _oscil.ChannelCount += 1;
+                        _oscil.TypeChannel.Add(OscilList[k].TypeChannel[i]);
+
+                        for (int j = 0; j < _oscil.NumCount; j++)
+                        {
+                            _oscil.Data[j].Add(OscilList[k].Data[j][i]);
+                        }
+                    }
+                }
+            }
+
+            if (_oscil.ChannelCount == 0) return;
+
+            OscilList.Add(_oscil);
+
+            AddOscilChannnel(_oscil);
         }
 
         private void AddGraph_MouseEnter(object sender, MouseEventArgs e)
@@ -434,6 +491,16 @@ namespace ScopeViewer
         {
             AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48.png")));
         }
+
+        /// <summary>
+        /// Отредактированно
+        /// </summary>
+        public static GraphPanel Graph;
+
+        
+
+
+
 
         public static bool CursorCreate;
 

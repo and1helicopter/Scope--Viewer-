@@ -184,7 +184,7 @@
             <xcad:DockingManager.Theme>
                 <xcad:MetroTheme />
             </xcad:DockingManager.Theme>
-            <xcad:LayoutRoot x:Name="_layoutRoot">
+            <xcad:LayoutRoot x:Name="LayoutRoot">
                 <xcad:LayoutPanel Orientation="Horizontal">
                     <xcad:LayoutDocumentPaneGroup>
                         <xcad:LayoutDocumentPane x:Name="LayoutGraph" />
