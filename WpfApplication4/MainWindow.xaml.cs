@@ -105,6 +105,8 @@ namespace ScopeViewer
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
         {
+            if(OscilChannelList.Count == 0) return;
+           
             OpenWindow();
 
             _styleButtonStatus = false;
@@ -136,6 +138,8 @@ namespace ScopeViewer
 
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
+            if (OscilChannelList.Count == 0) return;
+
             OpenWindow();
 
             _graphButtonStatus = false;
