@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 
 namespace ScopeViewer
 {
-    public class OscilChannel
+    public class OscilGraph
     {
         //Заголовки осциллограммы
         public Label OscilName;

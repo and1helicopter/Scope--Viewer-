@@ -31,7 +31,7 @@ namespace ScopeViewer
         Oscil _oscil = new Oscil();
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static List<Oscil> OscilList = new List<Oscil>();
-        public static List<OscilChannel> OscilChannelList = new List<OscilChannel>();
+        public static List<OscilGraph> OscilChannelList = new List<OscilGraph>();
         public static List<GraphPanel> GraphPanelList = new List<GraphPanel>();
         public static List<WindowsFormsHost> WindowsFormsHostList = new List<WindowsFormsHost>();
         public static List<LayoutDocument> LayoutDocumentList = new List<LayoutDocument>();
@@ -104,9 +104,7 @@ namespace ScopeViewer
         }
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
-        {
-            if(OscilChannelList.Count == 0) return;
-           
+        {           
             OpenWindow();
 
             _styleButtonStatus = false;
@@ -116,6 +114,8 @@ namespace ScopeViewer
 
             if (_graphButtonStatus == false)
             {
+                if (OscilChannelList.Count == 0) return;
+
                 _graphButtonStatus = true;
                 SetColorGraphButton();
                 if(_openWindow == false) OpenAnimation();
@@ -138,8 +138,6 @@ namespace ScopeViewer
 
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
-            if (OscilChannelList.Count == 0) return;
-
             OpenWindow();
 
             _graphButtonStatus = false;
@@ -149,6 +147,8 @@ namespace ScopeViewer
 
             if (_analysisButtonStatus == false)
             {
+                if (OscilChannelList.Count == 0) return;
+
                 _analysisButtonStatus = true;
                 SetColorrAnalysisButton();
                 if (_openWindow == false) OpenAnimation();
@@ -328,17 +328,17 @@ namespace ScopeViewer
 
         private void AddOscilChannnel(Oscil oscil)
         {
-            OscilChannel oscilChannel = new OscilChannel();
+            OscilGraph oscilGraph = new OscilGraph();
 
-            oscilChannel.OscilConfigAdd(oscil.OscilNames);
+            oscilGraph.OscilConfigAdd(oscil.OscilNames);
             for (int i = 0; i < oscil.ChannelCount; i++)
-                oscilChannel.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], oscil.TypeChannel[i]);
+                oscilGraph.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], oscil.TypeChannel[i]);
 
-            OscilChannelList.Add(oscilChannel);
+            OscilChannelList.Add(oscilGraph);
 
-            GraphObj.GraphStackPanel.Children.Add(oscilChannel.LayoutOscilPanel);
+            GraphObj.GraphStackPanel.Children.Add(oscilGraph.LayoutOscilPanel);
             for (int i = 0; i < oscil.ChannelCount; i++)
-                GraphObj.GraphStackPanel.Children.Add(oscilChannel.LayoutPanel[i]);
+                GraphObj.GraphStackPanel.Children.Add(oscilGraph.LayoutPanel[i]);
 
             GraphPanelList.Add(new GraphPanel());
 
@@ -507,40 +507,6 @@ namespace ScopeViewer
 
 
         public static bool CursorCreate;
-
-        private void AddCoursor_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            AddCoursorEvent();
-        }
-
-        private void AddCoursorEvent() {
-            if (OscilList.Count == 0) return;
-            if (CursorCreate == false)
-            {
-                Graph.CursorClear();
-                Graph.CursorAdd();
-                AnalysisObj.AnalysisCursorAdd();
-                CursorCreate = true;
-                AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48(1).png")));
-            }
-            else
-            {
-                Graph.CursorClear();
-                AnalysisObj.AnalysisCursorClear();
-                CursorCreate = false;
-                AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48.png")));
-            }
-        }
-
-        private void AddCoursor_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (CursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48.png")));
-        }
-
-        private void AddCoursor_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (CursorCreate == false) AddCoursor.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line-48(2).png")));
-        }
 
         public static bool StampTriggerCreate;
         private void StampTrigger_MouseDown(object sender, MouseButtonEventArgs e)

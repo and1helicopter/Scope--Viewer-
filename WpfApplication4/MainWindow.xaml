@@ -133,9 +133,6 @@
                 Margin="2,2,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                MouseDown="AddCoursor_MouseDown"
-                MouseEnter="AddCoursor_MouseEnter"
-                MouseLeave="AddCoursor_MouseLeave"
                 ToolTip="Добавить курсоры на график">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="Resources/Line-48(2).png" />

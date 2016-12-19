@@ -21,6 +21,7 @@ namespace ScopeViewer
 
         public GraphPanel()
         {
+            ListTemp = new List<PointPairList>();
             InitializeComponent();
 
             zedGraph.ZoomEvent += zedGraph_ZoomEvent;
@@ -81,7 +82,7 @@ namespace ScopeViewer
 
 
         // Создадим список точек   
-        private readonly List<PointPairList> _listTemp = new List<PointPairList>();
+        public readonly List<PointPairList> ListTemp;
         public static int PointInLine = 250;
         private readonly List<bool> _digitalList = new List<bool>();
         public static bool ShowDigital;
@@ -106,13 +107,13 @@ namespace ScopeViewer
 
         public void ClearListTemp()
         {
-            _listTemp.Clear();
+            ListTemp.Clear();
         }
         
        
         private void UpdateGraph()
         {
-            if(_listTemp.Count == 0) return;
+            if(ListTemp.Count == 0) return;
             try {
                 //Очишаю точки кривых в кэше
                 foreach (var i in Pane.CurveList)
@@ -123,22 +124,22 @@ namespace ScopeViewer
                 for (int i = 0; i < Pane.CurveList.Count; i++)
                 {
                     int startIndex = 0;
-                    int stopIndex = _listTemp[i].Count - 1;
+                    int stopIndex = ListTemp[i].Count - 1;
 
-                    for (int k = 0; k < _listTemp[i].Count; k++)
+                    for (int k = 0; k < ListTemp[i].Count; k++)
                     {
-                        if (_listTemp[i][k].X >= Pane.XAxis.Scale.Min)
+                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Min)
                         {
                             startIndex = k != 0 ? k - 1 : k;
                             break;
                         }
                     }
 
-                    for (int k = 0; k < _listTemp[i].Count; k++)
+                    for (int k = 0; k < ListTemp[i].Count; k++)
                     {
-                        if (_listTemp[i][k].X >= Pane.XAxis.Scale.Max)
+                        if (ListTemp[i][k].X >= Pane.XAxis.Scale.Max)
                         {
-                            stopIndex = k == _listTemp[i].Count - 1 ? k : k + 1;
+                            stopIndex = k == ListTemp[i].Count - 1 ? k : k + 1;
                             break;
                         }
                     }
@@ -148,7 +149,7 @@ namespace ScopeViewer
 
                     for (int j = startIndex; j < stopIndex; j += sum)
                     {
-                        Pane.CurveList[i].AddPoint(_listTemp[i][j]);
+                        Pane.CurveList[i].AddPoint(ListTemp[i][j]);
                     }
                 }
             }
@@ -160,7 +161,7 @@ namespace ScopeViewer
         public void AddGraph(int j, Color color)
         {
             PointPairList list = new PointPairList();
-            _listTemp.Add(new PointPairList());
+            ListTemp.Add(new PointPairList());
             _digitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
 
             string nameCh = "";
@@ -184,7 +185,7 @@ namespace ScopeViewer
             {
                 tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                _listTemp[_listTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                ListTemp[ListTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
@@ -224,7 +225,7 @@ namespace ScopeViewer
         {
             _myCurve.Remove(_myCurve[i]);
             Pane.CurveList.Remove(Pane.CurveList[i]);
-            _listTemp.Remove(_listTemp[i]);
+            ListTemp.Remove(ListTemp[i]);
             _digitalList.Remove(_digitalList[i]);
 
             // Обновим график
@@ -440,9 +441,26 @@ namespace ScopeViewer
             zedGraph.Invalidate();
         }
 
+        public OscilAnalysis OscilCursor = new OscilAnalysis();
+        public bool CursorsCreate;
+        public int NumCursors;
+        public LineObj Cursor1;
+        public LineObj Cursor2;
 
-        public static LineObj Cursor1;
-        public static LineObj Cursor2;
+        private int NumGraphPanel()
+        {
+            //Определяем номер рабочей GraphPanel 
+            int j = 0;
+            for (int i = 0; i < MainWindow.GraphPanelList.Count; i++)
+            {
+                if (Pane == MainWindow.GraphPanelList[i].Pane)
+                {
+                    j = i;
+                    break;
+                }
+            }
+            return j;
+        }
 
         public void CursorAdd()
         {
@@ -478,17 +496,21 @@ namespace ScopeViewer
             Pane.GraphObjList.Add(Cursor1);
             Pane.GraphObjList.Add(Cursor2);
 
+            CursorsCreate = true;
+
             // Обновляем график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
 
-        public void CursorClear()
+        private void CursorClear()
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
                 if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
             }
+
+            CursorsCreate = false;
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -584,7 +606,7 @@ namespace ScopeViewer
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor1.Line.Width == 3) { Cursor1.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 3; Cursor2.Line.Width = 2; }
-                    MainWindow.AnalysisObj.UpdateCursor();
+                    OscilCursor.UpdateCursor(NumGraphPanel());
 
                 }
                 if (lineObject.Link.Title == "Cursor2")
@@ -592,10 +614,36 @@ namespace ScopeViewer
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor2.Line.Width == 3) { Cursor2.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
                     else { Cursor1.Line.Width = 2; Cursor2.Line.Width = 3; }
-                    MainWindow.AnalysisObj.UpdateCursor();
+                    OscilCursor.UpdateCursor(NumGraphPanel());
                 }
 
                 zedGraph.Invalidate();
+            }
+        }
+
+        private void AddCoursor_MouseDown(object sender, MouseEventArgs e)
+        {
+            AddCoursorEvent();
+        }
+
+        private void AddCoursorEvent()
+        {
+            if (CursorsCreate == false)
+            {
+                CursorClear();
+                CursorAdd();
+                OscilCursor.AnalysisCursorAdd(NumGraphPanel());
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel);
+                AddCursor.CheckState = CheckState.Checked;
+                CursorsCreate = true;
+            }
+            else
+            {
+                CursorClear();
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel);
+                OscilCursor.AnalysisCursorClear();
+                AddCursor.CheckState = CheckState.Unchecked;
+                CursorsCreate = false;
             }
         }
     }

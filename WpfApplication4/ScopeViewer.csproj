@@ -108,7 +108,8 @@
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Oscil.cs" />
-    <Compile Include="OscilChannel.cs" />
+    <Compile Include="OscilAnalysis.cs" />
+    <Compile Include="OscilGraph.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings.xaml.cs">

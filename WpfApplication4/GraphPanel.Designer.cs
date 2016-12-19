@@ -28,7 +28,7 @@
             this.components = new System.ComponentModel.Container();
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.AddCursor = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -36,7 +36,7 @@
             // zedGraph
             // 
             this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraph.Location = new System.Drawing.Point(32, 0);
+            this.zedGraph.Location = new System.Drawing.Point(33, 0);
             this.zedGraph.Name = "zedGraph";
             this.zedGraph.ScrollGrace = 0D;
             this.zedGraph.ScrollMaxX = 0D;
@@ -45,7 +45,7 @@
             this.zedGraph.ScrollMinX = 0D;
             this.zedGraph.ScrollMinY = 0D;
             this.zedGraph.ScrollMinY2 = 0D;
-            this.zedGraph.Size = new System.Drawing.Size(560, 471);
+            this.zedGraph.Size = new System.Drawing.Size(559, 471);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
             this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
@@ -57,24 +57,28 @@
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.AddCursor,
             this.toolStripButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(32, 471);
+            this.toolStrip1.Size = new System.Drawing.Size(33, 471);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // AddCursor
             // 
-            this.toolStripButton1.AutoSize = false;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::ScopeViewer.Properties.Resources.Line_48_2_;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(28, 28);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.AddCursor.AutoSize = false;
+            this.AddCursor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.AddCursor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddCursor.Image = global::ScopeViewer.Properties.Resources.Line_48_2_;
+            this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
+            this.AddCursor.Name = "AddCursor";
+            this.AddCursor.Size = new System.Drawing.Size(30, 30);
+            this.AddCursor.Text = "Добавить курсоры";
+            this.AddCursor.ToolTipText = "Добавить курсоры ";
+            this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
             // 
             // toolStripButton2
             // 
@@ -105,7 +109,7 @@
 
         public ZedGraph.ZedGraphControl zedGraph;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton AddCursor;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
