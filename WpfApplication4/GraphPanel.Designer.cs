@@ -30,6 +30,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.AddCursor = new System.Windows.Forms.ToolStripButton();
             this.StampTrigger = new System.Windows.Forms.ToolStripButton();
+            this.ScaleButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,12 +57,13 @@
             this.toolStrip1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddCursor,
-            this.StampTrigger});
+            this.StampTrigger,
+            this.ScaleButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip1.Size = new System.Drawing.Size(33, 471);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
@@ -91,6 +93,19 @@
             this.StampTrigger.Text = "Штамп времени ";
             this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
             // 
+            // ScaleButton
+            // 
+            this.ScaleButton.AutoSize = false;
+            this.ScaleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ScaleButton.Image = global::ScopeViewer.Properties.Resources.Width_48;
+            this.ScaleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ScaleButton.Name = "ScaleButton";
+            this.ScaleButton.Size = new System.Drawing.Size(30, 30);
+            this.ScaleButton.Text = "toolStripButton1";
+            this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
+            // 
             // GraphPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -112,6 +127,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton AddCursor;
         private System.Windows.Forms.ToolStripButton StampTrigger;
+        private System.Windows.Forms.ToolStripButton ScaleButton;
     }
 }
 

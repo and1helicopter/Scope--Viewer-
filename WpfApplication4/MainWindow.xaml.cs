@@ -504,56 +504,5 @@ namespace ScopeViewer
         {
             AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48.png")));
         }
-
-        /// <summary>
-        /// Отредактированно
-        /// </summary>
-        public static GraphPanel Graph;
-
-        
-
-
-
-
-
-
-
-
-
-        private void StampTrigger_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void StampTrigger_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
-
-        bool _changeScale;
-
-        private void ChangeScale_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (_changeScale == false)
-            {
-                Graph.ChangeScale();
-                _changeScale = true;
-
-            }
-            else
-            {
-                Graph.ChangeScale();
-                _changeScale = false;
-
-            }
-        }
-
-        private void ChangeScale_MouseLeave(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void ChangeScale_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
     }
 }

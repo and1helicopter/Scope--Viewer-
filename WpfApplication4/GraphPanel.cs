@@ -634,14 +634,14 @@ namespace ScopeViewer
                 CursorAdd();
                 OscilCursor.AnalysisCursorAdd(NumGraphPanel());
                 MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[0]);
-                AddCursor.CheckState = CheckState.Checked;
+                AddCursor.Image = Properties.Resources.Line_48_1_;
             }
             else
             {
                 CursorClear();
                 MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
                 OscilCursor.AnalysisCursorClear();
-                AddCursor.CheckState = CheckState.Unchecked;
+                AddCursor.Image = Properties.Resources.Line_48_2_;
             }
         }
 
@@ -668,17 +668,33 @@ namespace ScopeViewer
                 StampTriggerClear();
                 LineStampTrigger();
                 _stampTriggerCreate = true;
-                StampTrigger.CheckState = CheckState.Checked;
+                StampTrigger.Image = Properties.Resources.Horizontal_Line_48;
             }
             else
             {
                 StampTriggerClear();
                 _stampTriggerCreate = false;
-                StampTrigger.CheckState = CheckState.Unchecked;
+                StampTrigger.Image = Properties.Resources.Horizontal_Line_48_2_;
             }
         }
 
+        private bool _changeScale;
 
+        private void ScaleButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_changeScale == false)
+            {
+                ChangeScale();
+                _changeScale = true;
+                ScaleButton.Image = Properties.Resources.Resize_48;
+            }
+            else
+            {
+                ChangeScale();
+                _changeScale = false;
+                ScaleButton.Image = Properties.Resources.Width_48;
+            }
+        }
     }
 }
 
