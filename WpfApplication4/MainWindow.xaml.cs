@@ -104,24 +104,27 @@ namespace ScopeViewer
         }
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
-        {           
+        {
             OpenWindow();
 
             _styleButtonStatus = false;
             _analysisButtonStatus = false;
+
             ConfigStackPanel.Children.Remove(AnalysisObj);
             ResetColorAnalysisButton();
 
             if (_graphButtonStatus == false)
             {
-                if (OscilChannelList.Count == 0) return;
+                if (OscilChannelList.Count == 0)
+                {
+                    return;
+                }
 
                 _graphButtonStatus = true;
                 SetColorGraphButton();
                 if(_openWindow == false) OpenAnimation();
                 _openWindow = true;
                 ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
-                //configPanel.Width = new GridLength(150, GridUnitType.Pixel);
                 ConfigStackPanel.Children.Add(GraphObj);
 
                 return;
@@ -141,13 +144,16 @@ namespace ScopeViewer
             OpenWindow();
 
             _graphButtonStatus = false;
-            _styleButtonStatus = false;
+
             ConfigStackPanel.Children.Remove(GraphObj);
             ResetColorGraphButton();
 
             if (_analysisButtonStatus == false)
             {
-                if (OscilChannelList.Count == 0) return;
+                if (OscilChannelList.Count == 0)
+                {
+                    return;
+                }
 
                 _analysisButtonStatus = true;
                 SetColorrAnalysisButton();
@@ -405,7 +411,8 @@ namespace ScopeViewer
         public static void DelateOscil(int i)
         {
             OscilList.Remove(OscilList[i]);
-            
+            GraphPanelList[i].DelCursor();
+
             GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutOscilPanel);
             for (int j = OscilChannelList[i].LayoutPanel.Count - 1; j >= 0; j--)
                 GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutPanel[j]);
@@ -421,6 +428,8 @@ namespace ScopeViewer
 
                     i++;
             }
+
+
         }
 
         private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
@@ -506,48 +515,17 @@ namespace ScopeViewer
 
 
 
-        public static bool CursorCreate;
 
-        public static bool StampTriggerCreate;
-        private void StampTrigger_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            StampTriggerEvent();
-        }
 
-        private void StampTriggerEvent()
-        {
-            if (OscilList.Count == 0)
-            {
-                StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
-                return;
-            }
-            if (StampTriggerCreate == false)
-            {
-                Graph.StampTriggerClear();
-                Graph.LineStampTrigger();
-                StampTriggerCreate = true;
-                StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48.png")));
-
-            }
-            else
-            {
-                Graph.StampTriggerClear();
-                StampTriggerCreate = false;
-                StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
-
-            }
-        }
 
 
 
         private void StampTrigger_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (StampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(1).png")));
         }
 
         private void StampTrigger_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (StampTriggerCreate == false) StampTrigger.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Horizontal Line-48(2).png")));
         }
 
         bool _changeScale;
@@ -558,14 +536,12 @@ namespace ScopeViewer
             {
                 Graph.ChangeScale();
                 _changeScale = true;
-                ChangeScale.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Resize-48.png")));
 
             }
             else
             {
                 Graph.ChangeScale();
                 _changeScale = false;
-                ChangeScale.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Width-48.png")));
 
             }
         }

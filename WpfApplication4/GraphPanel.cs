@@ -396,7 +396,7 @@ namespace ScopeViewer
         public void LineStampTrigger()
         {  try
             {
-                XDate timeStamp = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateTrigger;
+                XDate timeStamp = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger;
                 _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max)
                 {
                     Line =
@@ -633,19 +633,52 @@ namespace ScopeViewer
                 CursorClear();
                 CursorAdd();
                 OscilCursor.AnalysisCursorAdd(NumGraphPanel());
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel);
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[0]);
                 AddCursor.CheckState = CheckState.Checked;
-                CursorsCreate = true;
             }
             else
             {
                 CursorClear();
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel);
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
                 OscilCursor.AnalysisCursorClear();
                 AddCursor.CheckState = CheckState.Unchecked;
-                CursorsCreate = false;
             }
         }
+
+
+        public void DelCursor()
+        {
+            if (CursorsCreate)
+            {
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
+                OscilCursor.AnalysisCursorClear();
+            }
+        }
+
+        private bool _stampTriggerCreate;
+
+        private void StampTrigger_MouseDown(object sender, MouseEventArgs e)
+        {
+            StampTriggerEvent();
+        }
+        private void StampTriggerEvent()
+        {
+            if (_stampTriggerCreate == false)
+            {
+                StampTriggerClear();
+                LineStampTrigger();
+                _stampTriggerCreate = true;
+                StampTrigger.CheckState = CheckState.Checked;
+            }
+            else
+            {
+                StampTriggerClear();
+                _stampTriggerCreate = false;
+                StampTrigger.CheckState = CheckState.Unchecked;
+            }
+        }
+
+
     }
 }
 

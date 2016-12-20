@@ -14,15 +14,15 @@ namespace ScopeViewer
         /// <summary>
         /// Interaction logic for Analysis.xaml
         /// </summary>
-        public DockPanel LayoutPanel = new DockPanel();
-        public Label NameLabel = new Label();
-        public List<Label> _nameChannelLabel = new List<Label>();
-        public List<Label> _nameStatuslLabel = new List<Label>();
-        public List<Label> _nameValue1Label = new List<Label>();
-        public List<Label> _nameValue2Label = new List<Label>();
+        public readonly List<DockPanel> LayoutPanel = new List<DockPanel>();
 
-        public Border _panelBorder = new Border();
+        private readonly Label _nameLabel = new Label();
+        private readonly Border _panelBorder = new Border();
 
+        private readonly List<Label> _nameChannelLabel = new List<Label>();
+        private readonly List<Label> _nameStatuslLabel = new List<Label>();
+        private readonly List<Label> _nameValue1Label = new List<Label>();
+        private readonly List<Label> _nameValue2Label = new List<Label>();
 
         public void AnalysisCursorAdd(int numOsc)
         {
@@ -30,19 +30,20 @@ namespace ScopeViewer
             _panelBorder.BorderThickness = new Thickness(1.0);
             _panelBorder.Margin = new Thickness(-195, 0, 0, 0);
 
-            LayoutPanel.Width = 225;
-            LayoutPanel.Height = 25;
-            LayoutPanel.Margin = new Thickness(2, 5, 2, 0);
-            LayoutPanel.MouseDown += click_LayoutPanelCursor;
+            LayoutPanel.Add(new DockPanel());
+            LayoutPanel[0].Width = 225;
+            LayoutPanel[0].Height = 25;
+            LayoutPanel[0].Margin = new Thickness(2, 5, 2, 0);
+            LayoutPanel[0].MouseDown += click_LayoutPanelCursor;
 
-            NameLabel.Content = "Курсоры";
-            NameLabel.VerticalAlignment = VerticalAlignment.Top;
-            NameLabel.FontSize = 12;
-            NameLabel.Height = 25;
-            NameLabel.Width = 180;
-            NameLabel.TabIndex = 0;
-            NameLabel.ToolTip = "Положения курсоров";
-            NameLabel.Margin = new Thickness(0, 0, 0, 0);
+            _nameLabel.Content = "Курсоры";
+            _nameLabel.VerticalAlignment = VerticalAlignment.Top;
+            _nameLabel.FontSize = 12;
+            _nameLabel.Height = 25;
+            _nameLabel.Width = 180;
+            _nameLabel.TabIndex = 0;
+            _nameLabel.ToolTip = "Положения курсоров";
+            _nameLabel.Margin = new Thickness(0, 0, 0, 0);
 
             double positonY = 0;
             {
@@ -73,7 +74,6 @@ namespace ScopeViewer
             }
 
             {
-                //  (GraphPanel.Cursor2.Location.X - GraphPanel.Cursor1.Location.X).ToString("F4") + "                  "
                 _nameStatuslLabel.Add(new Label());
                 XDate x = new XDate(MainWindow.GraphPanelList[numOsc].Cursor2.Location.X);
                 _nameStatuslLabel[2].Content = x.DateTime.Second + "." + x.DateTime.Millisecond.ToString("000") +
@@ -141,38 +141,37 @@ namespace ScopeViewer
                 _nameValue2Label[j].Margin = new Thickness(-85, positonY, 0, 0);
             }
 
-            LayoutPanel.Children.Add(NameLabel);
-            LayoutPanel.Children.Add(_nameStatuslLabel[0]);
-            LayoutPanel.Children.Add(_nameStatuslLabel[1]);
-            LayoutPanel.Children.Add(_nameStatuslLabel[2]);
+            LayoutPanel[0].Children.Add(_nameLabel);
+            LayoutPanel[0].Children.Add(_nameStatuslLabel[0]);
+            LayoutPanel[0].Children.Add(_nameStatuslLabel[1]);
+            LayoutPanel[0].Children.Add(_nameStatuslLabel[2]);
 
             for (int j = 0; j < MainWindow.GraphPanelList[numOsc].Pane.CurveList.Count; j++)
             {
-                LayoutPanel.Children.Add(_nameChannelLabel[j]);
-                LayoutPanel.Children.Add(_nameValue1Label[j]);
-                LayoutPanel.Children.Add(_nameValue2Label[j]);
+                LayoutPanel[0].Children.Add(_nameChannelLabel[j]);
+                LayoutPanel[0].Children.Add(_nameValue1Label[j]);
+                LayoutPanel[0].Children.Add(_nameValue2Label[j]);
             }
 
-            LayoutPanel.Children.Add(_panelBorder);
+            LayoutPanel[0].Children.Add(_panelBorder);
         }
 
         public void AnalysisCursorClear()
         {
-
             for (int j = _nameChannelLabel.Count - 1; j >= 0; j--)
             {
-                LayoutPanel.Children.Remove(_nameChannelLabel[j]);
-                LayoutPanel.Children.Remove(_nameValue1Label[j]);
-                LayoutPanel.Children.Remove(_nameValue2Label[j]);
+                LayoutPanel[0].Children.Remove(_nameChannelLabel[j]);
+                LayoutPanel[0].Children.Remove(_nameValue1Label[j]);
+                LayoutPanel[0].Children.Remove(_nameValue2Label[j]);
             }
 
             for (int i = 2; i >= 0; i--)
             {
-                LayoutPanel.Children.Remove(_nameStatuslLabel[i]);
+                LayoutPanel[0].Children.Remove(_nameStatuslLabel[i]);
             }
 
-            LayoutPanel.Children.Remove(NameLabel);
-            LayoutPanel.Children.Remove(_panelBorder);
+            LayoutPanel[0].Children.Remove(_nameLabel);
+            LayoutPanel[0].Children.Remove(_panelBorder);
 
             _nameStatuslLabel.Remove(_nameStatuslLabel[2]);
             _nameStatuslLabel.Remove(_nameStatuslLabel[1]);
@@ -181,6 +180,8 @@ namespace ScopeViewer
             _nameChannelLabel.Clear();
             _nameValue1Label.Clear();
             _nameValue2Label.Clear();
+
+            LayoutPanel.Clear();
         }
 
         public void UpdateCursor(int numOsc)
@@ -220,8 +221,8 @@ namespace ScopeViewer
 
         private void click_LayoutPanelCursor(object sender, MouseButtonEventArgs e)
         {
-            
-            LayoutPanel.Height = LayoutPanel.Height == 25 ? 25 + 20*(_nameChannelLabel.Count + 1)*2 : 25;
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            LayoutPanel[0].Height = LayoutPanel[0].Height == 25 ? 25 + 20 * (_nameChannelLabel.Count + 1) * 2 : 25;
         }
     }
 }

@@ -126,49 +126,6 @@
                     <ImageBrush ImageSource="Resources/Chromatography-48.png" />
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle
-                x:Name="AddCoursor"
-                Width="28"
-                Height="28"
-                Margin="2,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                ToolTip="Добавить курсоры на график">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Line-48(2).png" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <Rectangle
-                x:Name="StampTrigger"
-                Width="28"
-                Height="28"
-                Margin="2,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                x:FieldModifier="public"
-                MouseDown="StampTrigger_MouseDown"
-                MouseEnter="StampTrigger_MouseEnter"
-                MouseLeave="StampTrigger_MouseLeave"
-                ToolTip="Отобразить штамп времени">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Horizontal Line-48(2).png" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <Rectangle
-                x:Name="ChangeScale"
-                Width="28"
-                Height="28"
-                Margin="2,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                MouseDown="ChangeScale_MouseDown"
-                MouseEnter="ChangeScale_MouseEnter"
-                MouseLeave="ChangeScale_MouseLeave"
-                ToolTip="Отобразить штамп времени">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Width-48.png" />
-                </Rectangle.Fill>
-            </Rectangle>
         </StackPanel>
         <Border
             Grid.Row="1"

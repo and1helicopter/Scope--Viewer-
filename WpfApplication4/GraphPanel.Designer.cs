@@ -29,7 +29,7 @@
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.AddCursor = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.StampTrigger = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +58,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddCursor,
-            this.toolStripButton2});
+            this.StampTrigger});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -80,15 +80,16 @@
             this.AddCursor.ToolTipText = "Добавить курсоры ";
             this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
             // 
-            // toolStripButton2
+            // StampTrigger
             // 
-            this.toolStripButton2.AutoSize = false;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = global::ScopeViewer.Properties.Resources.Horizontal_Line_48_2_;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(28, 28);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.StampTrigger.AutoSize = false;
+            this.StampTrigger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.StampTrigger.Image = global::ScopeViewer.Properties.Resources.Horizontal_Line_48_2_;
+            this.StampTrigger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StampTrigger.Name = "StampTrigger";
+            this.StampTrigger.Size = new System.Drawing.Size(30, 30);
+            this.StampTrigger.Text = "Штамп времени ";
+            this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
             // 
             // GraphPanel
             // 
@@ -110,7 +111,7 @@
         public ZedGraph.ZedGraphControl zedGraph;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton AddCursor;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton StampTrigger;
     }
 }
 
