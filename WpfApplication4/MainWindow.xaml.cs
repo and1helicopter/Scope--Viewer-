@@ -329,10 +329,10 @@ namespace ScopeViewer
 
             OscilList.Add(_oscil);
 
-            AddOscilChannnel(_oscil);
+            AddOscilChannnel(_oscil, false);
         }
 
-        private void AddOscilChannnel(Oscil oscil)
+        private void AddOscilChannnel(Oscil oscil, bool dig)
         {
             OscilGraph oscilGraph = new OscilGraph();
 
@@ -363,7 +363,7 @@ namespace ScopeViewer
             {
                 SolidColorBrush brush = (SolidColorBrush) OscilChannelList[OscilChannelList.Count - 1].ColorEllipse[i].Fill;
                 System.Drawing.Color color = System.Drawing.Color.FromArgb(brush.Color.A, brush.Color.R, brush.Color.G, brush.Color.B);
-                GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color);
+                GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color, dig);
             }
         }
 
@@ -439,7 +439,6 @@ namespace ScopeViewer
 
             _oscil.OscilNames += 1;
 
-
             for (int k = 0; k < OscilChannelList.Count; k++)
             {
                 for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
@@ -449,14 +448,11 @@ namespace ScopeViewer
                         _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
                         _oscil.Dimension.Add(OscilList[k].Dimension[i]);
 
-
-
                         if (_oscil.ChannelCount > 0 && ((_oscil.SampleRate != OscilList[k].SampleRate) || (_oscil.HistotyCount != OscilList[k].HistotyCount) || (_oscil.NumCount != OscilList[k].NumCount)))
                         {
                             MessageBox.Show("Каналы не совместимы", "Ошибка",MessageBoxButton.OK);
                             return;
                         }
-
 
                         if(_oscil.ChannelCount == 0)
                         {
@@ -471,7 +467,6 @@ namespace ScopeViewer
                             _oscil.HistotyCount = OscilList[k].HistotyCount;
                             _oscil.NumCount = OscilList[k].NumCount;
                             _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
-
 
                             for (int j = 0; j < _oscil.NumCount; j++)
                                 _oscil.Data.Add(new List<double>());
@@ -492,7 +487,7 @@ namespace ScopeViewer
 
             OscilList.Add(_oscil);
 
-            AddOscilChannnel(_oscil);
+            AddOscilChannnel(_oscil, false);
         }
 
         private void AddGraph_MouseEnter(object sender, MouseEventArgs e)
@@ -504,5 +499,60 @@ namespace ScopeViewer
         {
             AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48.png")));
         }
+
+        private void AddDigitalChannel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //Создание новой осциллограммы OscilList
+            _oscil = new Oscil();
+
+            _oscil.OscilNames += 1;
+
+            for (int k = 0; k < OscilChannelList.Count; k++)
+            {
+                for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
+                {
+                    if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                    {
+                       // if( )
+                        _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
+                        _oscil.Dimension.Add(OscilList[k].Dimension[i]);
+                        _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
+                        _oscil.SampleRate = OscilList[k].SampleRate;
+                        _oscil.HistotyCount = OscilList[k].HistotyCount;
+                        _oscil.NumCount = OscilList[k].NumCount;
+                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+
+                        for (int j = 0; j < _oscil.NumCount; j++)
+                            _oscil.Data.Add(new List<double>());
+
+                        _oscil.ChannelCount += 1;
+                        _oscil.TypeChannel.Add(OscilList[k].TypeChannel[i]);
+
+                        for (int j = 0; j < _oscil.NumCount; j++)
+                        {
+                            _oscil.Data[j].Add(OscilList[k].Data[j][i]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (_oscil.ChannelCount == 0) return;
+
+            OscilList.Add(_oscil);
+
+            AddOscilChannnel(_oscil, true);
+        }
+
+        private void AddDigitalChannel_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Cancel 4 Digits-48(1).png")));
+        }
+
+        private void AddDigitalChannel_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Cancel 4 Digits-48.png")));
+        }
+    
     }
 }

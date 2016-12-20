@@ -13,12 +13,12 @@ namespace ScopeViewer
     {
         //Заголовки осциллограммы
         public Label OscilName;
-        public CheckBox ShowAllCheckBox;
-        public CheckBox SelectAllCheckBox;
-        public Rectangle CloseButton ;
+        private CheckBox _showAllCheckBox;
+        private CheckBox _selectAllCheckBox;
+        private Rectangle _closeButton ;
         public DockPanel LayoutOscilPanel;
 
-        public List<Border> PanelBorder = new List<Border>();
+        private readonly List<Border> PanelBorder = new List<Border>();
         public List<DockPanel> LayoutPanel = new List<DockPanel>();
         public List<Label> NameLabel = new List<Label>();
         public List<Ellipse> ColorEllipse = new List<Ellipse>();
@@ -81,24 +81,24 @@ namespace ScopeViewer
                 Margin = new Thickness(0, 3, 0, 0)
             };
 
-            SelectAllCheckBox = new CheckBox
+            _selectAllCheckBox = new CheckBox
             {
                 ToolTip = "Выбрать все каналы",
                 Margin = new Thickness(0, 8, 0, 0)
             };
-            //  SelectAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked;
-            //  SelectAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked;
+            //  _selectAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked;
+            //  _selectAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked;
 
-            ShowAllCheckBox = new CheckBox
+            _showAllCheckBox = new CheckBox
             {
                 ToolTip = "Отображать все каналы",
                 Margin = new Thickness(0, 8, 0, 0),
                 IsChecked = true
             };
-            //    ShowAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked1;
-            //  ShowAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked1;
+            //    _showAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked1;
+            //  _showAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked1;
 
-            CloseButton = new Rectangle
+            _closeButton = new Rectangle
             {
                 ToolTip = "Закрыть осциллограмму",
                 Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window-48(1).png"))),
@@ -106,14 +106,14 @@ namespace ScopeViewer
                 Width = 16,
                 Height = 16
             };
-            CloseButton.MouseEnter += Graph_MouseEnter;
-            CloseButton.MouseLeave += Graph_MouseLeave;
-            CloseButton.MouseDown += Graph_MouseDown;
+            _closeButton.MouseEnter += Graph_MouseEnter;
+            _closeButton.MouseLeave += Graph_MouseLeave;
+            _closeButton.MouseDown += Graph_MouseDown;
 
             LayoutOscilPanel.Children.Add(OscilName);
-            LayoutOscilPanel.Children.Add(ShowAllCheckBox);
-            LayoutOscilPanel.Children.Add(SelectAllCheckBox);
-            LayoutOscilPanel.Children.Add(CloseButton);
+            LayoutOscilPanel.Children.Add(_showAllCheckBox);
+            LayoutOscilPanel.Children.Add(_selectAllCheckBox);
+            LayoutOscilPanel.Children.Add(_closeButton);
         }
 
         public void GraphConfigAdd(string nameChannel, string dimensionChannel, bool typeChannel)
@@ -336,7 +336,7 @@ namespace ScopeViewer
                 }
             }
 
-            MainWindow.GraphPanelList[l].ChangeDigitalList(j, TypeTypeComboBox[j].SelectedIndex);
+            MainWindow.GraphPanelList[l].ChangeDigitalList(j, l, TypeTypeComboBox[j].SelectedIndex);
         }
 
         private void Change_index(object sender, SelectionChangedEventArgs e)
@@ -372,7 +372,7 @@ namespace ScopeViewer
             int l = 0;
             for (int k = 0; k < MainWindow.OscilChannelList.Count; k++)
             {
-                if (MainWindow.OscilChannelList[k].CloseButton.IsMouseOver)
+                if (MainWindow.OscilChannelList[k]._closeButton.IsMouseOver)
                 {
                     l = k;
                     break;
@@ -398,9 +398,9 @@ namespace ScopeViewer
         /*
         private void Graph_Checked1(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < ShowAllCheckBox.Count; i++)
+            for (int i = 0; i < _showAllCheckBox.Count; i++)
             {
-                if (ShowAllCheckBox[i].IsChecked == true)
+                if (_showAllCheckBox[i].IsChecked == true)
                 {
                     for (int j = 0; j < ClearChannel[i].Count; j++)
                     {
@@ -423,9 +423,9 @@ namespace ScopeViewer
 
         private void Graph_Checked(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < SelectAllCheckBox.Count; i++)
+            for (int i = 0; i < _selectAllCheckBox.Count; i++)
             {
-                if (SelectAllCheckBox[i].IsChecked == true)
+                if (_selectAllCheckBox[i].IsChecked == true)
                 {
                     for (int j = 0; j < ClearChannel[i].Count; j++)
                     {
@@ -447,16 +447,16 @@ namespace ScopeViewer
         private void OscilConfigClear(int i)
         {
             LayoutOscilPanel[i].Children.Remove(OscilName[i]);
-            LayoutOscilPanel[i].Children.Remove(ShowAllCheckBox[i]);
-            LayoutOscilPanel[i].Children.Remove(SelectAllCheckBox[i]);
-            LayoutOscilPanel[i].Children.Remove(CloseButton[i]);
+            LayoutOscilPanel[i].Children.Remove(_showAllCheckBox[i]);
+            LayoutOscilPanel[i].Children.Remove(_selectAllCheckBox[i]);
+            LayoutOscilPanel[i].Children.Remove(_closeButton[i]);
 
             GraphStackPanel.Children.Remove(LayoutOscilPanel[i]);
 
             OscilName.Remove(OscilName[i]);
-            ShowAllCheckBox.Remove(ShowAllCheckBox[i]);
-            SelectAllCheckBox.Remove(SelectAllCheckBox[i]);
-            CloseButton.Remove(CloseButton[i]);
+            _showAllCheckBox.Remove(_showAllCheckBox[i]);
+            _selectAllCheckBox.Remove(_selectAllCheckBox[i]);
+            _closeButton.Remove(_closeButton[i]);
             LayoutOscilPanel.Remove(LayoutOscilPanel[i]);
 
             MainWindow.Graph.StampTriggerClear();

@@ -102,7 +102,7 @@
             this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
             this.ScaleButton.Name = "ScaleButton";
             this.ScaleButton.Size = new System.Drawing.Size(30, 30);
-            this.ScaleButton.Text = "toolStripButton1";
+            this.ScaleButton.Text = "Изменить размер";
             this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
             this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
             // 

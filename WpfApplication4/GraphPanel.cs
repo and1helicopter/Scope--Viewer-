@@ -97,9 +97,10 @@ namespace ScopeViewer
         }
 
 
-        public void ChangeDigitalList(int i, int status)
+        public void ChangeDigitalList(int i, int j, int status)
         {
             _digitalList[i] = status != 0;
+            MainWindow.OscilList[j].TypeChannel[i] = status != 0;
             UpdateGraph();
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -158,7 +159,13 @@ namespace ScopeViewer
         }
  
     
-        public void AddGraph(int j, Color color)
+        public void AddGraph(int j, Color color, bool dig)
+        {
+            if (!dig) AddAnalogChannel(j, color);
+            if (dig)  AddDigitalChannel(j, color);
+        }
+
+        private void AddAnalogChannel(int j, Color color)
         {
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -173,15 +180,15 @@ namespace ScopeViewer
             if (sum == 0) sum = 1;
             DateTime tempTime;
 
-            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i+= sum)
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i += sum)
             {
                 tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                list.Add(new XDate (tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                list.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
                 nameCh = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
             }
 
-            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)   
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
                 tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
@@ -196,7 +203,75 @@ namespace ScopeViewer
             ResizeAxis();
         }
 
-        public void ResizeAxis()
+        private void AddDigitalChannel(int j, Color color)
+        {
+            PointPairList list1 = new PointPairList();
+            PointPairList list0 = new PointPairList();
+
+            DateTime tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+
+            list1.Add(new XDate(tempTime.AddMilliseconds((0 * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), 1);
+            list0.Add(new XDate(tempTime.AddMilliseconds((0 * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), 0);
+
+            string nameCh1 = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
+
+            for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+            {
+                int line1 = 1, line0 = 0;
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
+                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
+                {
+                    int temp0 = line0;
+                    int temp1 = line1;
+                    line1 = temp0;
+                    line0 = temp1;
+                }
+
+                list1.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), line1);
+                list0.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), line0);
+            }
+
+            LineItem newCurve1 = Pane.AddCurve(nameCh1, list1, color, SymbolType.None);
+            LineItem newCurve0 = Pane.AddCurve(nameCh1, list0, color, SymbolType.None);
+            newCurve0.Line.IsSmooth = false;
+            newCurve1.Line.IsSmooth = false;
+            _myCurve.Add(newCurve1);
+            _myCurve.Add(newCurve0);
+
+            AddCursor.Visible = false;
+
+
+
+            Pane.YAxis.Scale.MinGrace = 0.01;
+            Pane.YAxis.Scale.MaxGrace = 0.01;
+            Pane.XAxis.Scale.MinGrace = 0.01;
+            Pane.XAxis.Scale.MaxGrace = 0.01;
+            Pane.YAxis.Scale.MinAuto = true;
+            Pane.YAxis.Scale.MaxAuto = true;
+            Pane.XAxis.Scale.MinAuto = true;
+            Pane.XAxis.Scale.MaxAuto = true;
+            zedGraph.IsShowHScrollBar = true;
+            zedGraph.IsShowVScrollBar = true;
+            zedGraph.IsAutoScrollRange = true;
+
+            // Обновим график
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+            UpdateGraph();
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+
+
+            _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
+            _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
+            _maxYAxis = 2;
+            _minYAxis = -18;
+
+
+            //ResizeAxis();
+        }
+        private void ResizeAxis()
         {
             // Включим сглаживание
             Pane.YAxis.Scale.MinGrace = 0.01;
@@ -214,6 +289,10 @@ namespace ScopeViewer
             // Обновим график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
+            UpdateGraph();
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+
 
             _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
@@ -300,8 +379,6 @@ namespace ScopeViewer
 
         public void ChangeLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine)
         {
-           // Pane = MainWindow.GraphPanelList[numGraphPane];
-
             Pane.CurveList[numChannel].Color = colorLine;
             Pane.CurveList[numChannel].IsVisible = show;
             _myCurve[numChannel].Line.IsSmooth = smooth;

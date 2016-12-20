@@ -126,6 +126,23 @@
                     <ImageBrush ImageSource="Resources/Chromatography-48.png" />
                 </Rectangle.Fill>
             </Rectangle>
+
+
+            <Rectangle
+                x:Name="AddDigitalChannel"
+                Width="28"
+                Height="28"
+                Margin="2,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                MouseDown="AddDigitalChannel_MouseDown"
+                MouseEnter="AddDigitalChannel_MouseEnter"
+                MouseLeave="AddDigitalChannel_MouseLeave"
+                ToolTip="Открыть дискретный канал">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Cancel 4 Digits-48.png" />
+                </Rectangle.Fill>
+            </Rectangle>
         </StackPanel>
         <Border
             Grid.Row="1"
