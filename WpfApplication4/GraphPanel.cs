@@ -6,7 +6,7 @@ using ZedGraph;
 
 namespace ScopeViewer
 {
-    public partial class GraphPanel : UserControl
+    public sealed partial class GraphPanel : UserControl
     {
        // MasterPane _masterPane;
         public GraphPane Pane;
@@ -23,6 +23,8 @@ namespace ScopeViewer
         {
             ListTemp = new List<PointPairList>();
             InitializeComponent();
+
+            DoubleBuffered = true;
 
             zedGraph.ZoomEvent += zedGraph_ZoomEvent;
             zedGraph.ScrollEvent += zedGraph_ScrollEvent;
@@ -70,6 +72,8 @@ namespace ScopeViewer
             }
 
             Pane.YAxis.Scale.Mag = 0;
+            Pane.XAxis.Scale.Mag = 0;
+
 
             UpdateCursor();
             UpdateGraph();
@@ -157,16 +161,138 @@ namespace ScopeViewer
             // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
- 
-    
+
+        class Node
+        {
+            public string Name { get; private set; }
+            public string Value1 { get; private set; }
+            public string Value2 { get; private set; }
+            public List<Node> Children { get; private set; }
+            public Node( string name, string value1, string value2)
+            {
+                this.Name = name;
+                this.Value1 = value1;
+                this.Value2 = value2;
+                this.Children = new List<Node>();
+            }
+        }
+
+        // private fields
+        private List<Node> _data;
+        private BrightIdeasSoftware.TreeListView _treeListView;
+
+        private void InitializeData()
+        {
+            // create fake nodes
+            var parent1 = new Node("PARENT1", "-", "-");
+            parent1.Children.Add(new Node("CHILD_1_1", "A", "X"));
+            parent1.Children.Add(new Node("CHILD_1_2", "A", "Y"));
+            parent1.Children.Add(new Node("CHILD_1_3", "A", "Z"));
+
+            _data = new List<Node> { parent1 };
+        }
+
+        private void FillTree()
+        {
+            // set the delegate that the tree uses to know if a node is expandable
+            treeListView1.CanExpandGetter = x => (x as Node).Children.Count > 0;
+            // set the delegate that the tree uses to know the children of a node
+            treeListView1.ChildrenGetter = x => (x as Node).Children;
+
+            treeListView1.Roots = _data;
+
+            /*
+            // set the delegate that the tree uses to know if a node is expandable
+            _treeListView.CanExpandGetter = x => (x as Node).Children.Count > 0;
+            // set the delegate that the tree uses to know the children of a node
+            _treeListView.ChildrenGetter = x => (x as Node).Children;
+
+
+            // create the tree columns and set the delegates to print the desired object proerty
+
+            var col1 = new BrightIdeasSoftware.OLVColumn("Канал", "Канал");
+            col1.AspectGetter = x => (x as Node).Name;
+            col1.MaximumWidth = 80;
+            col1.MinimumWidth = 80;
+            
+            var col2 = new BrightIdeasSoftware.OLVColumn("Курсор 1", "Курсор 1");
+            col2.AspectGetter = x => (x as Node).Value1;
+            col2.MaximumWidth = 70;
+            col2.MinimumWidth = 70;
+
+            var col3 = new BrightIdeasSoftware.OLVColumn("Курсор 2", "Курсор 2");
+            col3.AspectGetter = x => (x as Node).Value2;
+            col3.MaximumWidth = 70;
+            col3.MinimumWidth = 70;
+
+            // add the columns to the tree
+            _treeListView.Columns.Add(col1);
+            _treeListView.Columns.Add(col2);
+            _treeListView.Columns.Add(col3);
+            _treeListView.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            _treeListView.BorderStyle = BorderStyle.FixedSingle;
+            _treeListView.TreeModel.TreeView.BorderStyle = BorderStyle.FixedSingle;
+            _treeListView.TreeModel.TreeView.GridLines = true;
+
+            // set the tree roots
+            _treeListView.Roots = _data;
+            */
+        }
+
+        private void AddTree()
+        {
+
+            _treeListView = new BrightIdeasSoftware.TreeListView
+            {
+                Dock = DockStyle.Fill,
+                Activation = ItemActivation.Standard,
+                HotTracking = false,
+                HoverSelection = false
+            };
+            panel.Controls.Add(_treeListView);
+        }
+
+        string XAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
+        {
+            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 86400)
+            {
+                return string.Format("{0} H", val/3600);
+            }
+            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 3600)
+            {
+                return string.Format("{0} m", val/60);
+            }
+            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 1)
+            {
+                return string.Format("{0} s", val);
+            }
+            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 0.001)
+            {
+                return string.Format("{0} ms", val*1000);
+            }
+            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 0.000001)
+            {
+                return string.Format("{0} \u03BCs", val*1000000);
+            }
+            else
+            {
+                // Остальные числа просто преобразуем в строку
+                return string.Format("{0} us", val*1000000000);
+            }
+        }
+
         public void AddGraph(int j, Color color, bool dig)
         {
+            Pane.Border.Color = Color.White;
+
             if (!dig) AddAnalogChannel(j, color);
             if (dig)  AddDigitalChannel(j, color);
         }
 
         private void AddAnalogChannel(int j, Color color)
         {
+            panel.Visible = false;
+
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
             _digitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
@@ -178,21 +304,25 @@ namespace ScopeViewer
             // ReSharper disable once PossibleLossOfFraction
             int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
             if (sum == 0) sum = 1;
-            DateTime tempTime;
+            // DateTime tempTime;
+            double tempTime;
+
 
             for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i += sum)
             {
-                tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                tempTime = 0;
                 // добавим в список точку
-                list.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                list.Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
                 nameCh = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
             }
 
             for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
-                tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                tempTime = 0;
                 // добавим в список точку
-                ListTemp[ListTemp.Count - 1].Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
             // Выберем случайный цвет для графика
@@ -205,6 +335,9 @@ namespace ScopeViewer
 
         private void AddDigitalChannel(int j, Color color)
         {
+            InitializeData();
+            FillTree();
+
             PointPairList list1 = new PointPairList();
             PointPairList list0 = new PointPairList();
 
@@ -241,6 +374,11 @@ namespace ScopeViewer
 
             AddCursor.Visible = false;
 
+            Pane.YAxis.IsVisible = false;
+            Pane.XAxis.Scale.FontSpec.Size = 10;
+            Pane.X2Axis.IsVisible = true;
+            Pane.X2Axis.Scale.FontSpec.Size = 10;
+
 
 
             Pane.YAxis.Scale.MinGrace = 0.01;
@@ -255,6 +393,12 @@ namespace ScopeViewer
             zedGraph.IsShowVScrollBar = true;
             zedGraph.IsAutoScrollRange = true;
 
+            Pane.X2Axis.Title.IsVisible = false;
+            Pane.X2Axis.Scale.FontSpec.Size = 5;
+            Pane.X2Axis.Type = AxisType.Date;
+            Pane.X2Axis.Scale.Format = "HH:mm:ss.fff";
+
+
             // Обновим график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -268,6 +412,12 @@ namespace ScopeViewer
             _maxYAxis = 2;
             _minYAxis = -18;
 
+            // Обновим график
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+            UpdateGraph();
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
 
             //ResizeAxis();
         }
@@ -314,7 +464,10 @@ namespace ScopeViewer
 
         private void InitDrawGraph()
         {
-            Pane = zedGraph.GraphPane; 
+            Pane = zedGraph.GraphPane;
+
+            Pane.XAxis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
+
 
             Pane.Legend.IsVisible = false;
             Pane.XAxis.Title.IsVisible = false;
@@ -322,14 +475,16 @@ namespace ScopeViewer
             Pane.YAxis.Title.IsVisible = false;
             Pane.YAxis.Scale.FontSpec.Size = 10;
             Pane.Title.IsVisible = false;
-            Pane.XAxis.Scale.FontSpec.Size = 10;
-            Pane.XAxis.Type = AxisType.Date;
-            Pane.XAxis.Scale.Format = "HH:mm:ss.fff";
+           // Pane.XAxis.Type = AxisType.Date;
+           // Pane.XAxis.Scale.Format = "HH:mm:ss.fff";
+  
             Pane.YAxis.MajorGrid.IsZeroLine = false;
             Pane.XAxis.MajorGrid.IsVisible = true;
             Pane.YAxis.MajorGrid.IsVisible = true;
 
             Pane.YAxis.Scale.Mag = 0;
+            Pane.XAxis.Scale.Mag = 0;
+
 
             Pane.YAxis.Scale.MinAuto = true;
             Pane.YAxis.Scale.MaxAuto = true;

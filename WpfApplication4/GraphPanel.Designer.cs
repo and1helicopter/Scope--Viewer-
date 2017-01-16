@@ -1,6 +1,8 @@
-﻿namespace ScopeViewer
+﻿using System.Windows.Forms;
+
+namespace ScopeViewer
 {
-    public partial class GraphPanel
+    public sealed partial class GraphPanel
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -31,13 +33,25 @@
             this.AddCursor = new System.Windows.Forms.ToolStripButton();
             this.StampTrigger = new System.Windows.Forms.ToolStripButton();
             this.ScaleButton = new System.Windows.Forms.ToolStripButton();
+            this.panel = new System.Windows.Forms.Panel();
+            this.treeListView1 = new BrightIdeasSoftware.TreeListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1.SuspendLayout();
+            this.panel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.treeListView1)).BeginInit();
             this.SuspendLayout();
             // 
             // zedGraph
             // 
+            this.zedGraph.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.zedGraph.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.zedGraph.Cursor = System.Windows.Forms.Cursors.Default;
             this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraph.Location = new System.Drawing.Point(33, 0);
+            this.zedGraph.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.zedGraph.IsAutoScrollRange = true;
+            this.zedGraph.IsShowPointValues = true;
+            this.zedGraph.Location = new System.Drawing.Point(123, 0);
+            this.zedGraph.Margin = new System.Windows.Forms.Padding(0);
             this.zedGraph.Name = "zedGraph";
             this.zedGraph.ScrollGrace = 0D;
             this.zedGraph.ScrollMaxX = 0D;
@@ -46,7 +60,7 @@
             this.zedGraph.ScrollMinX = 0D;
             this.zedGraph.ScrollMinY = 0D;
             this.zedGraph.ScrollMinY2 = 0D;
-            this.zedGraph.Size = new System.Drawing.Size(559, 471);
+            this.zedGraph.Size = new System.Drawing.Size(686, 471);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
             this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
@@ -54,7 +68,8 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.toolStrip1.BackColor = System.Drawing.SystemColors.Window;
+            this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
@@ -106,16 +121,63 @@
             this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
             this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
             // 
+            // panel
+            // 
+            this.panel.AutoScroll = true;
+            this.panel.BackColor = System.Drawing.SystemColors.Window;
+            this.panel.Controls.Add(this.treeListView1);
+            this.panel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel.Location = new System.Drawing.Point(33, 0);
+            this.panel.Name = "panel";
+            this.panel.Padding = new System.Windows.Forms.Padding(5, 10, 5, 32);
+            this.panel.Size = new System.Drawing.Size(90, 471);
+            this.panel.TabIndex = 2;
+            // 
+            // treeListView1
+            // 
+            this.treeListView1.AllColumns.Add(this.olvColumn1);
+            this.treeListView1.AllowColumnReorder = true;
+            this.treeListView1.AllowDrop = true;
+            this.treeListView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treeListView1.CellEditUseWholeCell = false;
+            this.treeListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1});
+            this.treeListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.treeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeListView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.treeListView1.GridLines = true;
+            this.treeListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.treeListView1.Location = new System.Drawing.Point(5, 10);
+            this.treeListView1.Name = "treeListView1";
+            this.treeListView1.ShowGroups = false;
+            this.treeListView1.Size = new System.Drawing.Size(80, 429);
+            this.treeListView1.TabIndex = 0;
+            this.treeListView1.UseCompatibleStateImageBehavior = false;
+            this.treeListView1.View = System.Windows.Forms.View.Details;
+            this.treeListView1.VirtualMode = true;
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "Name";
+            this.olvColumn1.MaximumWidth = 90;
+            this.olvColumn1.MinimumWidth = 90;
+            this.olvColumn1.Text = "Название";
+            this.olvColumn1.Width = 90;
+            // 
             // GraphPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.Controls.Add(this.zedGraph);
+            this.Controls.Add(this.panel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "GraphPanel";
-            this.Size = new System.Drawing.Size(592, 471);
+            this.Size = new System.Drawing.Size(809, 471);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.panel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.treeListView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -125,9 +187,12 @@
 
         public ZedGraph.ZedGraphControl zedGraph;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton AddCursor;
-        private System.Windows.Forms.ToolStripButton StampTrigger;
-        private System.Windows.Forms.ToolStripButton ScaleButton;
+        private System.Windows.Forms.Panel panel;
+        private ToolStripButton AddCursor;
+        private ToolStripButton StampTrigger;
+        private ToolStripButton ScaleButton;
+        private BrightIdeasSoftware.TreeListView treeListView1;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
     }
 }
 

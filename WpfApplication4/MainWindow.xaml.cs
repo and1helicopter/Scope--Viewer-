@@ -354,8 +354,9 @@ namespace ScopeViewer
             LayoutDocumentList.Add(new LayoutDocument());
             LayoutDocumentList[LayoutDocumentList.Count - 1].Content = WindowsFormsHostList[WindowsFormsHostList.Count - 1];
             LayoutDocumentList[LayoutDocumentList.Count - 1].Title = oscil.OscilNames;
+            LayoutDocumentList[LayoutDocumentList.Count - 1].CanFloat = true;
             LayoutDocumentList[LayoutDocumentList.Count - 1].CanClose = false;
-
+            
             LayoutGraph.Children.Add(LayoutDocumentList[LayoutDocumentList.Count - 1]);
             WindowsFormsHostList[WindowsFormsHostList.Count - 1].Child = GraphPanelList[GraphPanelList.Count - 1];
 
