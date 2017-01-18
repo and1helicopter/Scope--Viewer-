@@ -48,11 +48,14 @@ namespace ScopeViewer
             if (Pane.XAxis.Scale.Min <= _minXAxis)
             {
                 Pane.XAxis.Scale.Min = _minXAxis;
+                Pane.X2Axis.Scale.Min = _minXAxis;
+
             }
 
             if (Pane.XAxis.Scale.Max >= _maxXAxis)
             {
                 Pane.XAxis.Scale.Max = _maxXAxis;
+                Pane.X2Axis.Scale.Max = _maxXAxis;
             }
 
             if (Pane.YAxis.Scale.Min <= _minYAxis)
@@ -71,15 +74,19 @@ namespace ScopeViewer
                 Pane.YAxis.Scale.Min = _minYAxis;
             }
 
+            Pane.X2Axis.Scale.Max = Pane.XAxis.Scale.Max;
+            Pane.X2Axis.Scale.Min = Pane.XAxis.Scale.Min;
+
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
+            Pane.X2Axis.Scale.Mag = 0;
 
 
             UpdateCursor();
             UpdateGraph();
         }
 
-        public void ChangeScale()
+        private void ChangeScale()
         {
             _scaleY = !_scaleY;
         }
@@ -162,98 +169,9 @@ namespace ScopeViewer
             catch { }
         }
 
-        class Node
-        {
-            public string Name { get; private set; }
-            public string Value1 { get; private set; }
-            public string Value2 { get; private set; }
-            public List<Node> Children { get; private set; }
-            public Node( string name, string value1, string value2)
-            {
-                this.Name = name;
-                this.Value1 = value1;
-                this.Value2 = value2;
-                this.Children = new List<Node>();
-            }
-        }
-
-        // private fields
-        private List<Node> _data;
-        private BrightIdeasSoftware.TreeListView _treeListView;
-
-        private void InitializeData()
-        {
-            // create fake nodes
-            var parent1 = new Node("PARENT1", "-", "-");
-            parent1.Children.Add(new Node("CHILD_1_1", "A", "X"));
-            parent1.Children.Add(new Node("CHILD_1_2", "A", "Y"));
-            parent1.Children.Add(new Node("CHILD_1_3", "A", "Z"));
-
-            _data = new List<Node> { parent1 };
-        }
-
-        private void FillTree()
-        {
-            // set the delegate that the tree uses to know if a node is expandable
-            treeListView1.CanExpandGetter = x => (x as Node).Children.Count > 0;
-            // set the delegate that the tree uses to know the children of a node
-            treeListView1.ChildrenGetter = x => (x as Node).Children;
-
-            treeListView1.Roots = _data;
-
-            /*
-            // set the delegate that the tree uses to know if a node is expandable
-            _treeListView.CanExpandGetter = x => (x as Node).Children.Count > 0;
-            // set the delegate that the tree uses to know the children of a node
-            _treeListView.ChildrenGetter = x => (x as Node).Children;
-
-
-            // create the tree columns and set the delegates to print the desired object proerty
-
-            var col1 = new BrightIdeasSoftware.OLVColumn("Канал", "Канал");
-            col1.AspectGetter = x => (x as Node).Name;
-            col1.MaximumWidth = 80;
-            col1.MinimumWidth = 80;
-            
-            var col2 = new BrightIdeasSoftware.OLVColumn("Курсор 1", "Курсор 1");
-            col2.AspectGetter = x => (x as Node).Value1;
-            col2.MaximumWidth = 70;
-            col2.MinimumWidth = 70;
-
-            var col3 = new BrightIdeasSoftware.OLVColumn("Курсор 2", "Курсор 2");
-            col3.AspectGetter = x => (x as Node).Value2;
-            col3.MaximumWidth = 70;
-            col3.MinimumWidth = 70;
-
-            // add the columns to the tree
-            _treeListView.Columns.Add(col1);
-            _treeListView.Columns.Add(col2);
-            _treeListView.Columns.Add(col3);
-            _treeListView.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            _treeListView.BorderStyle = BorderStyle.FixedSingle;
-            _treeListView.TreeModel.TreeView.BorderStyle = BorderStyle.FixedSingle;
-            _treeListView.TreeModel.TreeView.GridLines = true;
-
-            // set the tree roots
-            _treeListView.Roots = _data;
-            */
-        }
-
-        private void AddTree()
-        {
-
-            _treeListView = new BrightIdeasSoftware.TreeListView
-            {
-                Dock = DockStyle.Fill,
-                Activation = ItemActivation.Standard,
-                HotTracking = false,
-                HoverSelection = false
-            };
-            panel.Controls.Add(_treeListView);
-        }
-
         string XAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
         {
+            /*
             if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 86400)
             {
                 return string.Format("{0} H", val/3600);
@@ -261,28 +179,42 @@ namespace ScopeViewer
             if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 3600)
             {
                 return string.Format("{0} m", val/60);
-            }
-            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 1)
+            }*/
+           
+            if ((axis.Scale.Max - axis.Scale.Min) > 1)
             {
+
                 return string.Format("{0} s", val);
             }
-            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 0.001)
+            if ((axis.Scale.Max - axis.Scale.Min) > 0.001)
             {
                 return string.Format("{0} ms", val*1000);
             }
-            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 0.000001)
+            if ((axis.Scale.Max - axis.Scale.Min) > 0.000001)
             {
                 return string.Format("{0} \u03BCs", val*1000000);
             }
             else
             {
                 // Остальные числа просто преобразуем в строку
-                return string.Format("{0} us", val*1000000000);
+                return string.Format("{0} ns", val*1000000000);
             }
+        }
+
+        string YAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
+        {
+            Pane.YAxis.MinorGrid.IsVisible = false;
+            Pane.YAxis.Scale.MinorStep = 1.0;
+            Pane.YAxis.MajorGrid.IsVisible = true;
+            Pane.YAxis.Scale.MajorStep = 1.0;
+
+            return string.Format("{0}", val * -1);
         }
 
         public void AddGraph(int j, Color color, bool dig)
         {
+            zedGraph.IsEnableVZoom = false;
+
             Pane.Border.Color = Color.White;
 
             if (!dig) AddAnalogChannel(j, color);
@@ -292,6 +224,7 @@ namespace ScopeViewer
         private void AddAnalogChannel(int j, Color color)
         {
             panel.Visible = false;
+            MaskY_panel.Visible = false;
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -305,13 +238,11 @@ namespace ScopeViewer
             int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
             if (sum == 0) sum = 1;
             // DateTime tempTime;
-            double tempTime;
 
 
             for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i += sum)
             {
                 //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
-                tempTime = 0;
                 // добавим в список точку
                 list.Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
                 nameCh = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
@@ -320,7 +251,6 @@ namespace ScopeViewer
             for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
                 //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
-                tempTime = 0;
                 // добавим в список точку
                 ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
@@ -335,34 +265,31 @@ namespace ScopeViewer
 
         private void AddDigitalChannel(int j, Color color)
         {
-            InitializeData();
-            FillTree();
+            color = Color.Crimson;
 
             PointPairList list1 = new PointPairList();
             PointPairList list0 = new PointPairList();
 
-            DateTime tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
-
-            list1.Add(new XDate(tempTime.AddMilliseconds((0 * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), 1);
-            list0.Add(new XDate(tempTime.AddMilliseconds((0 * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), 0);
+            list1.Add(0, -0.25);
+            list0.Add(0, -0.75);
 
             string nameCh1 = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
 
             for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
-                int line1 = 1, line0 = 0;
+                double line1 = -0.25, line0 = -0.75;
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
                     MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
                 {
-                    int temp0 = line0;
-                    int temp1 = line1;
+                    double temp0 = line0;
+                    double temp1 = line1;
                     line1 = temp0;
                     line0 = temp1;
                 }
 
-                list1.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), line1);
-                list0.Add(new XDate(tempTime.AddMilliseconds((i * 100) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate)), line0);
+                list1.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
+                list0.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
             }
 
             LineItem newCurve1 = Pane.AddCurve(nameCh1, list1, color, SymbolType.None);
@@ -370,68 +297,81 @@ namespace ScopeViewer
             newCurve0.Line.IsSmooth = false;
             newCurve1.Line.IsSmooth = false;
             _myCurve.Add(newCurve1);
+            _myCurve[_myCurve.Count - 1].Line.Width = 2;
             _myCurve.Add(newCurve0);
+            _myCurve[_myCurve.Count - 1].Line.Width = 2;
+
+
+            for (int l = 0; l < 32; l++)
+            {
+                PointPairList list = new PointPairList();
+
+                for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+                {
+                    double line;
+                    if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
+                    {
+                        line = -0.75 - 1 - l;
+                    }
+                    else
+                    {
+                        line = -0.25 - 1 - l;
+                    }
+                    list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+                }
+
+                LineItem newCurve = Pane.AddCurve(nameCh1, list, color, SymbolType.None);
+                newCurve.Line.IsSmooth = false;
+                _myCurve.Add(newCurve);
+                _myCurve[_myCurve.Count - 1].Line.Width = 2;
+            }
+
+            zedGraph.Resize += ZedGraph_Resize;
 
             AddCursor.Visible = false;
 
-            Pane.YAxis.IsVisible = false;
-            Pane.XAxis.Scale.FontSpec.Size = 10;
+            Pane.YAxis.IsVisible = true;
+
             Pane.X2Axis.IsVisible = true;
-            Pane.X2Axis.Scale.FontSpec.Size = 10;
+            Pane.X2Axis.Scale.FontSpec.Size = 11;
+            Pane.YAxis.ScaleFormatEvent += YAxis_ScaleFormatEvent;
+
+            Pane.YAxis.MinorGrid.IsVisible = false;
+            Pane.YAxis.Scale.MinorStep = 1.0;
+            Pane.YAxis.MajorGrid.IsVisible = true;
+            Pane.YAxis.Scale.MajorStep = 1.0;
+            Pane.YAxis.MajorGrid.DashOn = 1;
+            Pane.YAxis.MajorGrid.DashOff = 0;
 
 
+            Pane.YAxis.Scale.FontSpec.StringAlignment = StringAlignment.Center;
+            Pane.YAxis.Scale.FontSpec.Angle = 80;
 
-            Pane.YAxis.Scale.MinGrace = 0.01;
-            Pane.YAxis.Scale.MaxGrace = 0.01;
-            Pane.XAxis.Scale.MinGrace = 0.01;
-            Pane.XAxis.Scale.MaxGrace = 0.01;
-            Pane.YAxis.Scale.MinAuto = true;
-            Pane.YAxis.Scale.MaxAuto = true;
-            Pane.XAxis.Scale.MinAuto = true;
-            Pane.XAxis.Scale.MaxAuto = true;
-            zedGraph.IsShowHScrollBar = true;
-            zedGraph.IsShowVScrollBar = true;
-            zedGraph.IsAutoScrollRange = true;
-
-            Pane.X2Axis.Title.IsVisible = false;
-            Pane.X2Axis.Scale.FontSpec.Size = 5;
-            Pane.X2Axis.Type = AxisType.Date;
-            Pane.X2Axis.Scale.Format = "HH:mm:ss.fff";
-
-
-            // Обновим график
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-            UpdateGraph();
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-
+            ResizeAxis();
 
             _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
-            _maxYAxis = 2;
-            _minYAxis = -18;
-
-            // Обновим график
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-            UpdateGraph();
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-
-            //ResizeAxis();
+            _maxYAxis = 0;
+            _minYAxis = -32;
+            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
+            MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxis).ToString();
         }
+
+        private void ZedGraph_Resize(object sender, EventArgs e)
+        {
+            zedGraph.GraphPane.YAxis.Scale.Min = _minYAxis;
+        }
+
         private void ResizeAxis()
         {
             // Включим сглаживание
-            Pane.YAxis.Scale.MinGrace = 0.01;
-            Pane.YAxis.Scale.MaxGrace = 0.01;
-            Pane.XAxis.Scale.MinGrace = 0.01;
-            Pane.XAxis.Scale.MaxGrace = 0.01;
             Pane.YAxis.Scale.MinAuto = true;
             Pane.YAxis.Scale.MaxAuto = true;
             Pane.XAxis.Scale.MinAuto = true;
             Pane.XAxis.Scale.MaxAuto = true;
+            Pane.X2Axis.Scale.MinAuto = true;
+            Pane.X2Axis.Scale.MaxAuto = true;
+
             zedGraph.IsShowHScrollBar = true;
             zedGraph.IsShowVScrollBar = true;
             zedGraph.IsAutoScrollRange = true;
@@ -467,13 +407,18 @@ namespace ScopeViewer
             Pane = zedGraph.GraphPane;
 
             Pane.XAxis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
+            Pane.X2Axis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
 
+            Pane.IsFontsScaled = false;
+
+
+           // Pane.PaneList.IsFontScaled = false;
 
             Pane.Legend.IsVisible = false;
             Pane.XAxis.Title.IsVisible = false;
-            Pane.XAxis.Scale.FontSpec.Size = 10;
+            Pane.XAxis.Scale.FontSpec.Size = 11;
             Pane.YAxis.Title.IsVisible = false;
-            Pane.YAxis.Scale.FontSpec.Size = 10;
+            Pane.YAxis.Scale.FontSpec.Size = 11;
             Pane.Title.IsVisible = false;
            // Pane.XAxis.Type = AxisType.Date;
            // Pane.XAxis.Scale.Format = "HH:mm:ss.fff";
@@ -484,7 +429,7 @@ namespace ScopeViewer
 
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
-
+            Pane.X2Axis.Scale.Mag = 0;
 
             Pane.YAxis.Scale.MinAuto = true;
             Pane.YAxis.Scale.MaxAuto = true;
@@ -628,7 +573,7 @@ namespace ScopeViewer
         public void LineStampTrigger()
         {  try
             {
-                XDate timeStamp = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger;
+                double timeStamp = MainWindow.OscilList[NumGraphPanel()].HistotyCount / MainWindow.OscilList[NumGraphPanel()].SampleRate;
                 _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max)
                 {
                     Line =
@@ -640,7 +585,7 @@ namespace ScopeViewer
                     Link = { Title = "StampTrigger" }
                 };
 
-                _stampTriggTextObj = new TextObj(timeStamp.DateTime.Second + "." + timeStamp.DateTime.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
+                _stampTriggTextObj = new TextObj(MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + "." + MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
                 {
                     FontSpec =
                     {
@@ -918,14 +863,41 @@ namespace ScopeViewer
             {
                 ChangeScale();
                 _changeScale = true;
+                zedGraph.IsEnableVZoom = true;
                 ScaleButton.Image = Properties.Resources.Resize_48;
             }
             else
             {
                 ChangeScale();
+                zedGraph.IsEnableVZoom = false;
                 _changeScale = false;
                 ScaleButton.Image = Properties.Resources.Width_48;
             }
+        }
+        private void Mask_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+            if (!Char.IsDigit(e.KeyChar) && e.KeyChar != Convert.ToChar(8))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void MaskMin_textBox_TextChanged(object sender, EventArgs e)
+        {
+            if (MaskMax_textBox.Text != "")
+            {
+                _minYAxis = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+            }
+        }
+
+        private void MaskMax_textBox_TextChanged(object sender, EventArgs e)
+        {
+            if (MaskMax_textBox.Text != "")
+            {
+                _maxYAxis = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+            }
+            
         }
     }
 }
