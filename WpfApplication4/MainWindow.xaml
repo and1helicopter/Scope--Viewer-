@@ -151,7 +151,7 @@
         <xcad:DockingManager
             Grid.Row="1"
             Grid.Column="5"
-            AllowMixedOrientation="True">
+            AllowMixedOrientation="True" Background="#FFE8E2E2">
             <xcad:DockingManager.Theme>
                 <xcad:GenericTheme/>
             </xcad:DockingManager.Theme>

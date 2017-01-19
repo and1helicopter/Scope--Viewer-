@@ -17,6 +17,8 @@ namespace ScopeViewer
         double _minXAxis = -1000;
         double _maxYAxis = 1000;
         double _minYAxis = -1000;
+        double _maxYAxisAuto;
+        double _minYAxisAuto;
         bool _scaleY;
 
         public GraphPanel()
@@ -39,7 +41,6 @@ namespace ScopeViewer
 
         private void zedGraph_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
         {
-            Pane = sender.GraphPane;
             ScrollEvent();
         }
 
@@ -49,7 +50,6 @@ namespace ScopeViewer
             {
                 Pane.XAxis.Scale.Min = _minXAxis;
                 Pane.X2Axis.Scale.Min = _minXAxis;
-
             }
 
             if (Pane.XAxis.Scale.Max >= _maxXAxis)
@@ -80,7 +80,6 @@ namespace ScopeViewer
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
             Pane.X2Axis.Scale.Mag = 0;
-
 
             UpdateCursor();
             UpdateGraph();
@@ -116,13 +115,7 @@ namespace ScopeViewer
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
-
-        public void ClearListTemp()
-        {
-            ListTemp.Clear();
-        }
-        
-       
+      
         private void UpdateGraph()
         {
             if(ListTemp.Count == 0) return;
@@ -216,6 +209,8 @@ namespace ScopeViewer
             zedGraph.IsEnableVZoom = false;
 
             Pane.Border.Color = Color.White;
+            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + @"." +
+                                   MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
 
             if (!dig) AddAnalogChannel(j, color);
             if (dig)  AddDigitalChannel(j, color);
@@ -224,7 +219,15 @@ namespace ScopeViewer
         private void AddAnalogChannel(int j, Color color)
         {
             panel.Visible = false;
-            MaskY_panel.Visible = false;
+
+            toolStripSeparator1.Visible = false;
+            Mask1_label.Visible = false;
+            Mask2_label.Visible = false;
+            MaskMin_textBox.Visible = false;
+            MaskMax_textBox.Visible = false;
+            AutoRange_Button.Visible = false;
+            HidePanel_button.Visible = false;
+
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -265,19 +268,27 @@ namespace ScopeViewer
 
         private void AddDigitalChannel(int j, Color color)
         {
-            color = Color.Crimson;
+            BinaryMask binObj = new BinaryMask();
+            int binary = 0;
+
+            DialogResult dlgr = binObj.ShowDialog();
+
+            if (dlgr == DialogResult.OK)
+            {
+                binary = BinaryMask.BinnaryMask;
+            }
 
             PointPairList list1 = new PointPairList();
             PointPairList list0 = new PointPairList();
 
-            list1.Add(0, -0.25);
-            list0.Add(0, -0.75);
+            list1.Add(0, -0.2);
+            list0.Add(0, -0.8);
 
             string nameCh1 = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
 
             for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
-                double line1 = -0.25, line0 = -0.75;
+                double line1 = -0.2, line0 = -0.8;
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
                     MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
@@ -301,8 +312,21 @@ namespace ScopeViewer
             _myCurve.Add(newCurve0);
             _myCurve[_myCurve.Count - 1].Line.Width = 2;
 
+            string[] row = { MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[0], "0" };
+            Mask_listView.Items.Add(new ListViewItem(row));
 
-            for (int l = 0; l < 32; l++)
+            int maxMaskCount = 0;
+
+            if (binary == 0)
+            {
+                maxMaskCount = 16;
+            }
+            else if(binary == 1)
+            {
+                maxMaskCount = 32;
+            }
+
+            for (int l = 0; l < maxMaskCount; l++)
             {
                 PointPairList list = new PointPairList();
 
@@ -311,11 +335,11 @@ namespace ScopeViewer
                     double line;
                     if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
                     {
-                        line = -0.75 - 1 - l;
+                        line = -0.8 - 1 - l;
                     }
                     else
                     {
-                        line = -0.25 - 1 - l;
+                        line = -0.2 - 1 - l;
                     }
                     list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
                 }
@@ -324,6 +348,12 @@ namespace ScopeViewer
                 newCurve.Line.IsSmooth = false;
                 _myCurve.Add(newCurve);
                 _myCurve[_myCurve.Count - 1].Line.Width = 2;
+            }
+
+            for (int l = 0; l < maxMaskCount; l++)
+            {
+                string[] str = { (l + 1).ToString(),"0"};
+                Mask_listView.Items.Add(new ListViewItem(str));
             }
 
             zedGraph.Resize += ZedGraph_Resize;
@@ -352,9 +382,18 @@ namespace ScopeViewer
             _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
             _maxYAxis = 0;
-            _minYAxis = -32;
+            _minYAxis = -maxMaskCount - 1;
+            _maxYAxisAuto = _maxYAxis;
+            _minYAxisAuto = _minYAxis;
+
+            Pane.X2Axis.Scale.Max = Pane.XAxis.Scale.Max;
+            Pane.X2Axis.Scale.Min = Pane.XAxis.Scale.Min;
+
             MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
             MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxis).ToString();
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
         private void ZedGraph_Resize(object sender, EventArgs e)
@@ -568,7 +607,7 @@ namespace ScopeViewer
         }
 
         private LineObj _stampTrigger;
-        private TextObj _stampTriggTextObj;
+      //  private TextObj _stampTriggTextObj;
 
         public void LineStampTrigger()
         {  try
@@ -585,23 +624,22 @@ namespace ScopeViewer
                     Link = { Title = "StampTrigger" }
                 };
 
-                _stampTriggTextObj = new TextObj(MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + "." + MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
+             /*   _stampTriggTextObj = new TextObj(MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + "." + MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
                 {
                     FontSpec =
                     {
                         Border = {IsVisible = false}
                     },
                     Link = {Title = "StampTrigger"}
-                };
+                };*/
 
 
-                Pane.GraphObjList.Add(_stampTriggTextObj);
+              //  Pane.GraphObjList.Add(_stampTriggTextObj);
                 Pane.GraphObjList.Add(_stampTrigger);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch
             { }
-
         }
 
         public void StampTriggerClear()
@@ -719,24 +757,24 @@ namespace ScopeViewer
                 {
                     _stampTrigger.Location.Y1 = Pane.YAxis.Scale.Min;
                     _stampTrigger.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-                    _stampTriggTextObj.IsVisible = !(Pane.YAxis.Scale.Max >= _stampTriggTextObj.Location.Y1) &&
-                                                   !(Pane.YAxis.Scale.Min <= _stampTriggTextObj.Location.Y1);
+               //     _stampTriggTextObj.IsVisible = !(Pane.YAxis.Scale.Max >= _stampTriggTextObj.Location.Y1) &&
+                //                                   !(Pane.YAxis.Scale.Min <= _stampTriggTextObj.Location.Y1);
 
                     if (_stampTrigger.Location.X <= Pane.XAxis.Scale.Min)
                     {
                         _stampTrigger.IsVisible = false;
-                        _stampTriggTextObj.IsVisible = false;
+                   //     _stampTriggTextObj.IsVisible = false;
                     }
                     if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Max)
                     {
                         _stampTrigger.IsVisible = false;
-                        _stampTriggTextObj.IsVisible = false;
+                    //    _stampTriggTextObj.IsVisible = false;
                     }
                     if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Min &&
                         _stampTrigger.Location.X <= Pane.XAxis.Scale.Max)
                     {
                         _stampTrigger.IsVisible = true;
-                        _stampTriggTextObj.IsVisible = true;
+                    //    _stampTriggTextObj.IsVisible = true;
 
                     }
                 }
@@ -876,7 +914,6 @@ namespace ScopeViewer
         }
         private void Mask_KeyPress(object sender, KeyPressEventArgs e)
         {
-
             if (!Char.IsDigit(e.KeyChar) && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
@@ -885,9 +922,14 @@ namespace ScopeViewer
 
         private void MaskMin_textBox_TextChanged(object sender, EventArgs e)
         {
-            if (MaskMax_textBox.Text != "")
+            if (MaskMin_textBox.Text != "")
             {
                 _minYAxis = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+
+                ScrollEvent();
+
+                zedGraph.AxisChange();
+                zedGraph.Invalidate();
             }
         }
 
@@ -896,8 +938,32 @@ namespace ScopeViewer
             if (MaskMax_textBox.Text != "")
             {
                 _maxYAxis = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+
+                ScrollEvent();
+
+                zedGraph.AxisChange();
+                zedGraph.Invalidate();
             }
-            
+        }
+
+        private void AutoRange_Button_Click(object sender, EventArgs e)
+        {
+            _minYAxis = _minYAxisAuto;
+            _maxYAxis = _maxYAxisAuto;
+
+            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
+            MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxis).ToString();
+
+            ScrollEvent();
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+        }
+
+        private void HidePanel_button_Click(object sender, EventArgs e)
+        {
+            panel.Visible = !panel.Visible;
+            HidePanel_button.Image = panel.Visible ? Properties.Resources.Show_Property_48_1_ : Properties.Resources.Delete_Property_48;
         }
     }
 }

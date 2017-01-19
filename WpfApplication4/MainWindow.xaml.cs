@@ -22,7 +22,6 @@ namespace ScopeViewer
     /// </summary>
     public partial class MainWindow
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -367,8 +366,6 @@ namespace ScopeViewer
                 GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color, dig);
             }
         }
-
-
 
         private void SetSetting()
         {
