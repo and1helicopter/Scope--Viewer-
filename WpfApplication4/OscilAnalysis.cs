@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ZedGraph;
 using Border = System.Windows.Controls.Border;
 using Brushes = System.Windows.Media.Brushes;
 using Label = System.Windows.Controls.Label;
@@ -60,30 +60,28 @@ namespace ScopeViewer
 
             {
                 _nameStatuslLabel.Add(new Label());
-                XDate x = new XDate(MainWindow.GraphPanelList[numOsc].Cursor1.Location.X);
-                _nameStatuslLabel[1].Content = x.DateTime.Second + "." + x.DateTime.Millisecond.ToString("000") +
-                                               " сек";
+                double x = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
+                _nameStatuslLabel[1].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[1].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[1].FontSize = 12;
                 _nameStatuslLabel[1].Height = 25;
                 _nameStatuslLabel[1].Width = 85;
-                _nameStatuslLabel[1].ToolTip = x + ":" + x.DateTime.Second + "." +
-                                               x.DateTime.Millisecond.ToString("000");
+                _nameStatuslLabel[1].ToolTip = (int)x + " сек " + (int)((x - (int)x)*1000) + " мс " +
+                    (int)((x*1000 - (int)(x*1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 positonY += 20;
                 _nameStatuslLabel[1].Margin = new Thickness(-275, positonY, 0, 0);
             }
 
             {
                 _nameStatuslLabel.Add(new Label());
-                XDate x = new XDate(MainWindow.GraphPanelList[numOsc].Cursor2.Location.X);
-                _nameStatuslLabel[2].Content = x.DateTime.Second + "." + x.DateTime.Millisecond.ToString("000") +
-                                               " сек";
+                double x = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
+                _nameStatuslLabel[2].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[2].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[2].FontSize = 12;
                 _nameStatuslLabel[2].Height = 25;
                 _nameStatuslLabel[2].Width = 85;
-                _nameStatuslLabel[2].ToolTip = x + ":" + x.DateTime.Second + "." +
-                                               x.DateTime.Millisecond.ToString("000");
+                _nameStatuslLabel[2].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
+                    (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 _nameStatuslLabel[2].Margin = new Thickness(-80, positonY, 0, 0);
             }
 
@@ -210,13 +208,15 @@ namespace ScopeViewer
                 }
             }
 
-            XDate x1 = new XDate(MainWindow.GraphPanelList[numOsc].Cursor1.Location.X);
-            XDate x2 = new XDate(MainWindow.GraphPanelList[numOsc].Cursor2.Location.X);
+            double x1 = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
+            double x2 = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
 
-            _nameStatuslLabel[1].Content = x1.DateTime.Second + "." + x1.DateTime.Millisecond.ToString("000") + " сек";
-            _nameStatuslLabel[1].ToolTip = x1 + ":" + x1.DateTime.Second + "." + x1.DateTime.Millisecond.ToString("000");
-            _nameStatuslLabel[2].Content = x2.DateTime.Second + "." + x2.DateTime.Millisecond.ToString("000") + " сек";
-            _nameStatuslLabel[2].ToolTip = x2 + ":" + x2.DateTime.Second + "." + x2.DateTime.Millisecond.ToString("000");
+            _nameStatuslLabel[1].Content = x1.ToString("F6") + " сек";
+            _nameStatuslLabel[1].ToolTip = (int)x1 + " сек " + (int)((x1 - (int)x1) * 1000) + " мс " +
+                    (int)((x1 * 1000 - (int)(x1 * 1000)) * 1000) + " мкс " + (int)((x1 * 1000000 - (int)(x1 * 1000000)) * 1000) + " нс";
+            _nameStatuslLabel[2].Content = x2.ToString("F6") + " сек";
+            _nameStatuslLabel[2].ToolTip = (int)x2 + " сек " + (int)((x2 - (int)x2) * 1000) + " мс " +
+                    (int)((x2 * 1000 - (int)(x2 * 1000)) * 1000) + " мкс " + (int)((x2 * 1000000 - (int)(x2 * 1000000)) * 1000) + " нс";
         }
 
         private void click_LayoutPanelCursor(object sender, MouseButtonEventArgs e)

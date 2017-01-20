@@ -220,6 +220,7 @@ namespace ScopeViewer
         {
             panel.Visible = false;
 
+            AddCursorDig_button.Visible = false;
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
             Mask2_label.Visible = false;
@@ -227,7 +228,7 @@ namespace ScopeViewer
             MaskMax_textBox.Visible = false;
             AutoRange_Button.Visible = false;
             HidePanel_button.Visible = false;
-
+            toolStripSeparator2.Visible = false;
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -236,12 +237,10 @@ namespace ScopeViewer
             string nameCh = "";
 
             // Заполняем список точек. Приращение по оси X 
-
             // ReSharper disable once PossibleLossOfFraction
             int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
             if (sum == 0) sum = 1;
             // DateTime tempTime;
-
 
             for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i += sum)
             {
@@ -285,10 +284,10 @@ namespace ScopeViewer
             list0.Add(0, -0.8);
 
             string nameCh1 = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
+            double line1 = -0.2, line0 = -0.8;
 
             for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
             {
-                double line1 = -0.2, line0 = -0.8;
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
                     MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
@@ -335,11 +334,11 @@ namespace ScopeViewer
                     double line;
                     if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
                     {
-                        line = -0.8 - 1 - l;
+                        line = -0.2 - 1 - l;
                     }
                     else
                     {
-                        line = -0.2 - 1 - l;
+                        line = -0.8 - 1 - l;
                     }
                     list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
                 }
@@ -722,7 +721,7 @@ namespace ScopeViewer
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
+                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") { Pane.GraphObjList.Remove(Pane.GraphObjList[i]);}
             }
 
             CursorsCreate = false;
@@ -795,6 +794,7 @@ namespace ScopeViewer
                     Cursor1.Location.X1 = graphX;
                     UpdateCursor();
                     zedGraph.Invalidate();
+                    Cursor = Cursors.VSplit;
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -803,6 +803,7 @@ namespace ScopeViewer
                     Cursor2.Location.X1 = graphX;
                     UpdateCursor();
                     zedGraph.Invalidate();
+                    Cursor = Cursors.VSplit;
                 }
             }
         }
@@ -819,16 +820,30 @@ namespace ScopeViewer
                 if (lineObject.Link.Title == "Cursor1")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if (Cursor1.Line.Width == 3) { Cursor1.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
-                    else { Cursor1.Line.Width = 3; Cursor2.Line.Width = 2; }
+                    if (Cursor1.Line.Width == 3)
+                    {
+                        Cursor1.Line.Width = 2;
+                    }
+                    else
+                    {
+                        Cursor1.Line.Width = 3;
+                        Cursor2.Line.Width = 2;
+                    }
                     OscilCursor.UpdateCursor(NumGraphPanel());
 
                 }
                 if (lineObject.Link.Title == "Cursor2")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if (Cursor2.Line.Width == 3) { Cursor2.Line.Width = 2; zedGraph.Cursor = Cursors.HSplit; }
-                    else { Cursor1.Line.Width = 2; Cursor2.Line.Width = 3; }
+                    if (Cursor2.Line.Width == 3)
+                    {
+                        Cursor2.Line.Width = 2;
+                    }
+                    else
+                    {
+                        Cursor1.Line.Width = 2;
+                        Cursor2.Line.Width = 3;
+                    }
                     OscilCursor.UpdateCursor(NumGraphPanel());
                 }
 
