@@ -30,23 +30,23 @@ namespace ScopeViewer
             this.components = new System.ComponentModel.Container();
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.AddCursor = new System.Windows.Forms.ToolStripButton();
+            this.AddCursorDig_button = new System.Windows.Forms.ToolStripButton();
+            this.StampTrigger = new System.Windows.Forms.ToolStripButton();
+            this.ScaleButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Mask1_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMax_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
+            this.AutoRange_Button = new System.Windows.Forms.ToolStripButton();
             this.StampTime_label = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.HidePanel_button = new System.Windows.Forms.ToolStripButton();
             this.panel = new System.Windows.Forms.Panel();
             this.Mask_listView = new System.Windows.Forms.ListView();
             this.Names = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Value1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.AddCursor = new System.Windows.Forms.ToolStripButton();
-            this.AddCursorDig_button = new System.Windows.Forms.ToolStripButton();
-            this.StampTrigger = new System.Windows.Forms.ToolStripButton();
-            this.ScaleButton = new System.Windows.Forms.ToolStripButton();
-            this.AutoRange_Button = new System.Windows.Forms.ToolStripButton();
-            this.HidePanel_button = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel.SuspendLayout();
             this.SuspendLayout();
@@ -102,6 +102,55 @@ namespace ScopeViewer
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // AddCursor
+            // 
+            this.AddCursor.AutoSize = false;
+            this.AddCursor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.AddCursor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddCursor.Image = global::ScopeViewer.Properties.Resources.Line_48_2_;
+            this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
+            this.AddCursor.Name = "AddCursor";
+            this.AddCursor.Size = new System.Drawing.Size(30, 30);
+            this.AddCursor.Text = "Добавить курсоры";
+            this.AddCursor.ToolTipText = "Добавить курсоры ";
+            this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
+            // 
+            // AddCursorDig_button
+            // 
+            this.AddCursorDig_button.AutoSize = false;
+            this.AddCursorDig_button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddCursorDig_button.Image = global::ScopeViewer.Properties.Resources.Long_Position_48_;
+            this.AddCursorDig_button.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddCursorDig_button.Name = "AddCursorDig_button";
+            this.AddCursorDig_button.Size = new System.Drawing.Size(30, 30);
+            this.AddCursorDig_button.Text = "Добавить курсор";
+            this.AddCursorDig_button.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCursorDig_button_MouseDown);
+            // 
+            // StampTrigger
+            // 
+            this.StampTrigger.AutoSize = false;
+            this.StampTrigger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.StampTrigger.Image = global::ScopeViewer.Properties.Resources.Horizontal_Line_48_2_;
+            this.StampTrigger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StampTrigger.Name = "StampTrigger";
+            this.StampTrigger.Size = new System.Drawing.Size(30, 30);
+            this.StampTrigger.Text = "Штамп времени ";
+            this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
+            // 
+            // ScaleButton
+            // 
+            this.ScaleButton.AutoSize = false;
+            this.ScaleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ScaleButton.Image = global::ScopeViewer.Properties.Resources.Width_48;
+            this.ScaleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ScaleButton.Name = "ScaleButton";
+            this.ScaleButton.Size = new System.Drawing.Size(30, 30);
+            this.ScaleButton.Text = "Изменить размер";
+            this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -135,6 +184,17 @@ namespace ScopeViewer
             this.MaskMin_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
             this.MaskMin_textBox.TextChanged += new System.EventHandler(this.MaskMin_textBox_TextChanged);
             // 
+            // AutoRange_Button
+            // 
+            this.AutoRange_Button.AutoSize = false;
+            this.AutoRange_Button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AutoRange_Button.Image = global::ScopeViewer.Properties.Resources.Available_Updates_48;
+            this.AutoRange_Button.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AutoRange_Button.Name = "AutoRange_Button";
+            this.AutoRange_Button.Size = new System.Drawing.Size(30, 30);
+            this.AutoRange_Button.Text = "Сбросить";
+            this.AutoRange_Button.Click += new System.EventHandler(this.AutoRange_Button_Click);
+            // 
             // StampTime_label
             // 
             this.StampTime_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -147,6 +207,18 @@ namespace ScopeViewer
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
+            // 
+            // HidePanel_button
+            // 
+            this.HidePanel_button.AutoSize = false;
+            this.HidePanel_button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.HidePanel_button.Image = global::ScopeViewer.Properties.Resources.Show_Property_48_1_;
+            this.HidePanel_button.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HidePanel_button.Name = "HidePanel_button";
+            this.HidePanel_button.Size = new System.Drawing.Size(30, 30);
+            this.HidePanel_button.Text = "Спрятать боковую панель";
+            this.HidePanel_button.ToolTipText = "Спрятать боковую панель";
+            this.HidePanel_button.Click += new System.EventHandler(this.HidePanel_button_Click);
             // 
             // panel
             // 
@@ -192,77 +264,6 @@ namespace ScopeViewer
             this.Value1.Text = "Курсор";
             this.Value1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Value1.Width = 75;
-            // 
-            // AddCursor
-            // 
-            this.AddCursor.AutoSize = false;
-            this.AddCursor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.AddCursor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AddCursor.Image = global::ScopeViewer.Properties.Resources.Line_48_2_;
-            this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
-            this.AddCursor.Name = "AddCursor";
-            this.AddCursor.Size = new System.Drawing.Size(30, 30);
-            this.AddCursor.Text = "Добавить курсоры";
-            this.AddCursor.ToolTipText = "Добавить курсоры ";
-            this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
-            // 
-            // AddCursorDig_button
-            // 
-            this.AddCursorDig_button.AutoSize = false;
-            this.AddCursorDig_button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AddCursorDig_button.Image = global::ScopeViewer.Properties.Resources.Long_Position_48_;
-            this.AddCursorDig_button.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AddCursorDig_button.Name = "AddCursorDig_button";
-            this.AddCursorDig_button.Size = new System.Drawing.Size(30, 30);
-            this.AddCursorDig_button.Text = "toolStripButton1";
-            // 
-            // StampTrigger
-            // 
-            this.StampTrigger.AutoSize = false;
-            this.StampTrigger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.StampTrigger.Image = global::ScopeViewer.Properties.Resources.Horizontal_Line_48_2_;
-            this.StampTrigger.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.StampTrigger.Name = "StampTrigger";
-            this.StampTrigger.Size = new System.Drawing.Size(30, 30);
-            this.StampTrigger.Text = "Штамп времени ";
-            this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
-            // 
-            // ScaleButton
-            // 
-            this.ScaleButton.AutoSize = false;
-            this.ScaleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ScaleButton.Image = global::ScopeViewer.Properties.Resources.Width_48;
-            this.ScaleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
-            this.ScaleButton.Name = "ScaleButton";
-            this.ScaleButton.Size = new System.Drawing.Size(30, 30);
-            this.ScaleButton.Text = "Изменить размер";
-            this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
-            // 
-            // AutoRange_Button
-            // 
-            this.AutoRange_Button.AutoSize = false;
-            this.AutoRange_Button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AutoRange_Button.Image = global::ScopeViewer.Properties.Resources.Available_Updates_48;
-            this.AutoRange_Button.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AutoRange_Button.Name = "AutoRange_Button";
-            this.AutoRange_Button.Size = new System.Drawing.Size(30, 30);
-            this.AutoRange_Button.Text = "Сбросить";
-            this.AutoRange_Button.Click += new System.EventHandler(this.AutoRange_Button_Click);
-            // 
-            // HidePanel_button
-            // 
-            this.HidePanel_button.AutoSize = false;
-            this.HidePanel_button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.HidePanel_button.Image = global::ScopeViewer.Properties.Resources.Show_Property_48_1_;
-            this.HidePanel_button.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.HidePanel_button.Name = "HidePanel_button";
-            this.HidePanel_button.Size = new System.Drawing.Size(30, 30);
-            this.HidePanel_button.Text = "Спрятать боковую панель";
-            this.HidePanel_button.ToolTipText = "Спрятать боковую панель";
-            this.HidePanel_button.Click += new System.EventHandler(this.HidePanel_button_Click);
             // 
             // GraphPanel
             // 
