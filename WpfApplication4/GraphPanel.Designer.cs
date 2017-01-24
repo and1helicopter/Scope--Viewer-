@@ -45,6 +45,8 @@ namespace ScopeViewer
             this.AutoRange_Button = new System.Windows.Forms.ToolStripButton();
             this.Cut_StripButton = new System.Windows.Forms.ToolStripButton();
             this.Save_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.AddDig_Channel = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,10 +83,10 @@ namespace ScopeViewer
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddCursor,
-            this.AddCursorDig_button,
             this.StampTrigger,
             this.ScaleButton,
             this.toolStripSeparator1,
+            this.AddCursorDig_button,
             this.Mask1_label,
             this.MaskMax_textBox,
             this.Mask2_label,
@@ -93,7 +95,9 @@ namespace ScopeViewer
             this.StampTime_label,
             this.toolStripSeparator2,
             this.Cut_StripButton,
-            this.Save_StripButton});
+            this.Save_StripButton,
+            this.toolStripSeparator3,
+            this.AddDig_Channel});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(809, 33);
@@ -226,6 +230,21 @@ namespace ScopeViewer
             this.Save_StripButton.Size = new System.Drawing.Size(30, 30);
             this.Save_StripButton.Text = "toolStripButton2";
             // 
+            // AddDig_Channel
+            // 
+            this.AddDig_Channel.AutoSize = false;
+            this.AddDig_Channel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddDig_Channel.Image = ((System.Drawing.Image)(resources.GetObject("AddDig_Channel.Image")));
+            this.AddDig_Channel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddDig_Channel.Name = "AddDig_Channel";
+            this.AddDig_Channel.Size = new System.Drawing.Size(30, 30);
+            this.AddDig_Channel.Text = "toolStripButton1";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
+            // 
             // GraphPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,6 +280,8 @@ namespace ScopeViewer
         private ToolStripButton AddCursorDig_button;
         private ToolStripButton Cut_StripButton;
         private ToolStripButton Save_StripButton;
+        private ToolStripButton AddDig_Channel;
+        private ToolStripSeparator toolStripSeparator3;
     }
 }
 

@@ -500,46 +500,19 @@ namespace ScopeViewer
 
         private void AddDigitalChannel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //Создание новой осциллограммы OscilList
-            _oscil = new Oscil();
-
-            _oscil.OscilNames += 1;
-
             for (int k = 0; k < OscilChannelList.Count; k++)
             {
                 for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
                 {
                     if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
                     {
-                       // if( )
-                        _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
-                        _oscil.Dimension.Add(OscilList[k].Dimension[i]);
-                        _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
-                        _oscil.SampleRate = OscilList[k].SampleRate;
-                        _oscil.HistotyCount = OscilList[k].HistotyCount;
-                        _oscil.NumCount = OscilList[k].NumCount;
-                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
 
-                        for (int j = 0; j < _oscil.NumCount; j++)
-                            _oscil.Data.Add(new List<double>());
 
-                        _oscil.ChannelCount += 1;
-                        _oscil.TypeChannel.Add(OscilList[k].TypeChannel[i]);
-
-                        for (int j = 0; j < _oscil.NumCount; j++)
-                        {
-                            _oscil.Data[j].Add(OscilList[k].Data[j][i]);
-                        }
+                        GraphPanelList[k].AddDigitalChannel(i,k, System.Drawing.Color.Blue);
                         break;
                     }
                 }
             }
-
-            if (_oscil.ChannelCount == 0) return;
-
-            OscilList.Add(_oscil);
-
-            AddOscilChannnel(_oscil, true);
         }
 
         private void AddDigitalChannel_MouseEnter(object sender, MouseEventArgs e)

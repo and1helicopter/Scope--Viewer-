@@ -8,7 +8,7 @@ namespace ScopeViewer
 {
     public sealed partial class GraphPanel : UserControl
     {
-       // MasterPane _masterPane;
+        MasterPane _masterPane;
         public GraphPane Pane;
         public GraphPane PaneDig;
         readonly List<LineItem> _myCurve = new List<LineItem>();
@@ -50,37 +50,55 @@ namespace ScopeViewer
             if (Pane.XAxis.Scale.Min <= _minXAxis)
             {
                 Pane.XAxis.Scale.Min = _minXAxis;
-                Pane.X2Axis.Scale.Min = _minXAxis;
+                if(PaneDig != null)
+                {
+                    PaneDig.XAxis.Scale.Min = _minXAxis;
+                    PaneDig.X2Axis.Scale.Min = _minXAxis;
+                }
             }
 
             if (Pane.XAxis.Scale.Max >= _maxXAxis)
             {
                 Pane.XAxis.Scale.Max = _maxXAxis;
-                Pane.X2Axis.Scale.Max = _maxXAxis;
+                if (PaneDig != null)
+               {
+                    PaneDig.XAxis.Scale.Max = _maxXAxis;
+                    PaneDig.X2Axis.Scale.Max = _maxXAxis;
+               }
             }
 
             if (Pane.YAxis.Scale.Min <= _minYAxis)
             {
                 Pane.YAxis.Scale.Min = _minYAxis;
+                if (PaneDig != null) { PaneDig.YAxis.Scale.Min = _minYAxisAuto; }
             }
 
             if (Pane.YAxis.Scale.Max >= _maxYAxis)
             {
                 Pane.YAxis.Scale.Max = _maxYAxis;
+               if (PaneDig != null) { PaneDig.YAxis.Scale.Max = _maxYAxisAuto; }
             }
 
             if (_scaleY == false)
             {
                 Pane.YAxis.Scale.Max = _maxYAxis;
                 Pane.YAxis.Scale.Min = _minYAxis;
+                if (PaneDig != null)
+                {
+                    PaneDig.YAxis.Scale.Max = _maxYAxisAuto;
+                    PaneDig.YAxis.Scale.Min = _minYAxisAuto;
+                }
             }
-
-            Pane.X2Axis.Scale.Max = Pane.XAxis.Scale.Max;
-            Pane.X2Axis.Scale.Min = Pane.XAxis.Scale.Min;
-
+            
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
-            Pane.X2Axis.Scale.Mag = 0;
+            if (PaneDig != null)
+            {
+                PaneDig.XAxis.Scale.Mag = 0;
+                PaneDig.X2Axis.Scale.Mag = 0;
+                PaneDig.X2Axis.Scale.Max = PaneDig.XAxis.Scale.Max;
+                PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
+            }
 
             UpdateCursor();
             UpdateGraph();
@@ -90,8 +108,7 @@ namespace ScopeViewer
         {
             _scaleY = !_scaleY;
         }
-
-
+        
         // Создадим список точек   
         public readonly List<PointPairList> ListTemp;
         public static int PointInLine = 250;
@@ -197,10 +214,10 @@ namespace ScopeViewer
 
         string YAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
         {
-            Pane.YAxis.MinorGrid.IsVisible = false;
-            Pane.YAxis.Scale.MinorStep = 1.0;
-            Pane.YAxis.MajorGrid.IsVisible = true;
-            Pane.YAxis.Scale.MajorStep = 1.0;
+            PaneDig.YAxis.MinorGrid.IsVisible = false;
+            PaneDig.YAxis.Scale.MinorStep = 1.0;
+            PaneDig.YAxis.MajorGrid.IsVisible = true;
+            PaneDig.YAxis.Scale.MajorStep = 1.0;
 
 
             return string.Format("{0}", val * -1);
@@ -215,7 +232,7 @@ namespace ScopeViewer
                                    MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
 
             if (!dig) AddAnalogChannel(j, color);
-            if (dig)  AddDigitalChannel(j, color);
+          //  if (dig)  AddDigitalChannel(j, color);
         }
 
         private void AddAnalogChannel(int j, Color color)
@@ -264,8 +281,19 @@ namespace ScopeViewer
             ResizeAxis();
         }
 
-        private void AddDigitalChannel(int j, Color color)
+        public void AddDigitalChannel(int numCh, int numOsc  ,Color color)
         {
+            PaneDig = new GraphPane();
+
+            _masterPane.Add(PaneDig);
+            using (Graphics g = CreateGraphics())
+            {
+                // Графики будут размещены в 2 строки.
+                // В первой будет 1 столбца,
+                // Во второй - 1
+                _masterPane.SetLayout(g, true, new[] { 1, 1 });
+            }
+
             zedGraph.IsShowPointValues = false;   //Отключил отображение точек 
 
             BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
@@ -284,35 +312,35 @@ namespace ScopeViewer
             list1.Add(0, -0.2);
             list0.Add(0, -0.8);
 
-            string nameCh1 = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
+            string nameCh1 = MainWindow.OscilList[numOsc].ChannelNames[numCh];
             double line1 = -0.2, line0 = -0.8;
 
-            for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+            for (int i = 1; i < MainWindow.OscilList[numOsc].NumCount; i++)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
-                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
+                if (MainWindow.OscilList[numOsc].Data[i][numCh] !=
+                    MainWindow.OscilList[numOsc].Data[i - 1][numCh])
                 {
-                    list1.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
-                    list0.Add((i - 1 )/ MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                    list1.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line1);
+                    list0.Add((i - 1 )/ MainWindow.OscilList[numOsc].SampleRate, line0);
 
                     double temp0 = line0;
                     double temp1 = line1;
                     line1 = temp0;
                     line0 = temp1;
 
-                    list1.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
-                    list0.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                    list1.Add(i / MainWindow.OscilList[numOsc].SampleRate, line1);
+                    list0.Add(i / MainWindow.OscilList[numOsc].SampleRate, line0);
                 }
-                if (i == MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount - 1)
+                if (i == MainWindow.OscilList[numOsc].NumCount - 1)
                 {
-                    list1.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
-                    list0.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                    list1.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line1);
+                    list0.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line0);
                 }
             }
 
-            LineItem newCurve1 = Pane.AddCurve(nameCh1, list1, color, SymbolType.None);
-            LineItem newCurve0 = Pane.AddCurve(nameCh1, list0, color, SymbolType.None);
+            LineItem newCurve1 = PaneDig.AddCurve(nameCh1, list1, color, SymbolType.None);
+            LineItem newCurve0 = PaneDig.AddCurve(nameCh1, list0, color, SymbolType.None);
             newCurve0.Line.IsSmooth = false;
             newCurve1.Line.IsSmooth = false;
             _myCurve.Add(newCurve1);
@@ -320,18 +348,15 @@ namespace ScopeViewer
             _myCurve.Add(newCurve0);
             _myCurve[_myCurve.Count - 1].Line.Width = 2;
 
-           // ListTemp.Add(new PointPairList());
             var list = new PointPairList();
 
-            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+            for (int i = 0; i < MainWindow.OscilList[numOsc].NumCount; i++)
             {
-                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
                 // добавим в список точку
-                list.Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
-               // ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                list.Add(i / MainWindow.OscilList[numOsc].SampleRate, MainWindow.OscilList[numOsc].Data[i][numCh]);
             }
 
-            LineItem newCurveBase = Pane.AddCurve(nameCh1, list, color, SymbolType.None);
+            LineItem newCurveBase = PaneDig.AddCurve(nameCh1, list, color, SymbolType.None);
             newCurveBase.Line.IsSmooth = false;
             newCurveBase.IsVisible = false;
             _myCurve.Add(newCurveBase);
@@ -352,7 +377,7 @@ namespace ScopeViewer
                 list = new PointPairList();
                 double line;
 
-                if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[0][j]) & 1 << l) == 1 << l)
+                if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[0][numCh]) & 1 << l) == 1 << l)
                 {
                     line = -0.2 - 1 - l;
                 }
@@ -361,16 +386,16 @@ namespace ScopeViewer
                     line = -0.8 - 1 - l;
                 }
 
-                list.Add(0 / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+                list.Add(0 / MainWindow.OscilList[numOsc].SampleRate, line);
 
-                for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+                for (int i = 1; i < MainWindow.OscilList[numOsc].NumCount; i++)
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
-                       MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
+                    if(MainWindow.OscilList[numOsc].Data[i][numCh] !=
+                       MainWindow.OscilList[numOsc].Data[i - 1][numCh])
                     {
-                        list.Add((i - 1)/ MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
-                        if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
+                        list.Add((i - 1)/ MainWindow.OscilList[numOsc].SampleRate, line);
+                        if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[i][numCh]) & 1 << l) == 1 << l)
                         {
                             line = -0.2 - 1 - l;
                         }
@@ -378,64 +403,77 @@ namespace ScopeViewer
                         {
                             line = -0.8 - 1 - l;
                         }
-                        list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+                        list.Add(i / MainWindow.OscilList[numOsc].SampleRate, line);
                     }
-                    if (i == MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount - 1)
+                    if (i == MainWindow.OscilList[numOsc].NumCount - 1)
                     {
-                        list.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+                        list.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line);
                     }
                 }
 
-                LineItem newCurve = Pane.AddCurve(nameCh1, list, color, SymbolType.None);
+                LineItem newCurve = PaneDig.AddCurve(nameCh1, list, color, SymbolType.None);
                 newCurve.Line.IsSmooth = false;
                 _myCurve.Add(newCurve);
                 _myCurve[_myCurve.Count - 1].Line.Width = 2;
             }
 
-
-            zedGraph.Resize += ZedGraph_Resize;
-
             AddCursor.Visible = false;
 
-            Pane.YAxis.IsVisible = true;
+            PaneDig.Border.Color = Color.White;
 
-            Pane.X2Axis.IsVisible = true;
-            Pane.X2Axis.Scale.FontSpec.Size = 11;
-            Pane.YAxis.ScaleFormatEvent += YAxis_ScaleFormatEvent;
+            PaneDig.YAxis.IsVisible = true;
 
-            Pane.YAxis.MinorGrid.IsVisible = false;
-            Pane.YAxis.Scale.MinorStep = 1.0;
-            Pane.YAxis.MajorGrid.IsVisible = true;
-            Pane.YAxis.Scale.MajorStep = 1.0;
-            Pane.YAxis.MajorGrid.DashOn = 1;
-            Pane.YAxis.MajorGrid.DashOff = 0;
+            PaneDig.X2Axis.IsVisible = true;
+            PaneDig.X2Axis.Scale.FontSpec.Size = 11;
+            PaneDig.YAxis.ScaleFormatEvent += YAxis_ScaleFormatEvent;
+
+            PaneDig.YAxis.MinorGrid.IsVisible = false;
+            PaneDig.YAxis.Scale.MinorStep = 1.0;
+            PaneDig.YAxis.MajorGrid.IsVisible = true;
+            PaneDig.YAxis.Scale.MajorStep = 1.0;
+            PaneDig.YAxis.MajorGrid.DashOn = 1;
+            PaneDig.YAxis.MajorGrid.DashOff = 0;
 
 
-            Pane.YAxis.Scale.FontSpec.StringAlignment = StringAlignment.Center;
-            Pane.YAxis.Scale.FontSpec.Angle = 80;
+            PaneDig.YAxis.Scale.FontSpec.StringAlignment = StringAlignment.Center;
+            PaneDig.YAxis.Scale.FontSpec.Angle = 80;
 
-            ResizeAxis();
+            PaneDig.XAxis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
+            PaneDig.X2Axis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
 
-            _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
-            _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
-            _maxYAxis = 0;
-            _minYAxis = -maxMaskCount - 1;
-            _maxYAxisAuto = _maxYAxis;
-            _minYAxisAuto = _minYAxis;
+            PaneDig.IsFontsScaled = false;
 
-            Pane.X2Axis.Scale.Max = Pane.XAxis.Scale.Max;
-            Pane.X2Axis.Scale.Min = Pane.XAxis.Scale.Min;
+            PaneDig.Legend.IsVisible = false;
+            PaneDig.XAxis.Title.IsVisible = false;
+            PaneDig.XAxis.Scale.FontSpec.Size = 11;
+            PaneDig.YAxis.Title.IsVisible = false;
+            PaneDig.YAxis.Scale.FontSpec.Size = 11;
+            PaneDig.Title.IsVisible = false;
 
-            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
-            MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxis).ToString();
+            PaneDig.YAxis.MajorGrid.IsZeroLine = false;
+            PaneDig.XAxis.MajorGrid.IsVisible = true;
+            PaneDig.YAxis.MajorGrid.IsVisible = true;
+
+            PaneDig.YAxis.Scale.Mag = 0;
+            PaneDig.XAxis.Scale.Mag = 0;
+            PaneDig.X2Axis.Scale.Mag = 0;
+
+            PaneDig.YAxis.Scale.MinAuto = true;
+            PaneDig.YAxis.Scale.MaxAuto = true;
+
+            PaneDig.IsBoundedRanges = true;
+
+            _maxYAxisAuto = 0;
+            _minYAxisAuto = -maxMaskCount - 1;
+
+            PaneDig.X2Axis.Scale.Max = PaneDig.XAxis.Scale.Max;
+            PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
+
+            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxisAuto).ToString();
+            MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxisAuto).ToString();
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
-        }
-
-        private void ZedGraph_Resize(object sender, EventArgs e)
-        {
-            zedGraph.GraphPane.YAxis.Scale.Min = _minYAxis;
         }
 
         private void ResizeAxis()
@@ -445,8 +483,6 @@ namespace ScopeViewer
             Pane.YAxis.Scale.MaxAuto = true;
             Pane.XAxis.Scale.MinAuto = true;
             Pane.XAxis.Scale.MaxAuto = true;
-            Pane.X2Axis.Scale.MinAuto = true;
-            Pane.X2Axis.Scale.MaxAuto = true;
 
             zedGraph.IsShowHScrollBar = true;
             zedGraph.IsShowVScrollBar = true;
@@ -481,14 +517,10 @@ namespace ScopeViewer
         private void InitDrawGraph()
         {
             Pane = zedGraph.GraphPane;
-
+            
             Pane.XAxis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
-            Pane.X2Axis.ScaleFormatEvent += XAxis_ScaleFormatEvent;
 
             Pane.IsFontsScaled = false;
-
-
-           // Pane.PaneList.IsFontScaled = false;
 
             Pane.Legend.IsVisible = false;
             Pane.XAxis.Title.IsVisible = false;
@@ -496,8 +528,6 @@ namespace ScopeViewer
             Pane.YAxis.Title.IsVisible = false;
             Pane.YAxis.Scale.FontSpec.Size = 11;
             Pane.Title.IsVisible = false;
-           // Pane.XAxis.Type = AxisType.Date;
-           // Pane.XAxis.Scale.Format = "HH:mm:ss.fff";
   
             Pane.YAxis.MajorGrid.IsZeroLine = false;
             Pane.XAxis.MajorGrid.IsVisible = true;
@@ -505,12 +535,16 @@ namespace ScopeViewer
 
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
-            Pane.X2Axis.Scale.Mag = 0;
 
             Pane.YAxis.Scale.MinAuto = true;
             Pane.YAxis.Scale.MaxAuto = true;
 
             Pane.IsBoundedRanges = true;
+
+            _masterPane = zedGraph.MasterPane;
+            _masterPane.PaneList.Clear();
+            _masterPane.Add(Pane);
+            // Будем размещать добавленные графики в MasterPane
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -631,12 +665,8 @@ namespace ScopeViewer
             // Задаем выравнивание, относительно которого мы будем задавать координаты
             // В данном случае мы будем располагать легенду справа внизу
 
-            // pane.Legend.FontSpec = 10;
-
-
             Pane.Legend.FontSpec.Size = fontSize;
             Pane.Legend.IsVisible = show;
-
 
             // Вызываем метод AxisChange (), чтобы обновить данные об осях.
             zedGraph.AxisChange();
@@ -644,7 +674,6 @@ namespace ScopeViewer
         }
 
         private LineObj _stampTrigger;
-      //  private TextObj _stampTriggTextObj;
 
         public void LineStampTrigger()
         {  try
@@ -661,17 +690,6 @@ namespace ScopeViewer
                     Link = { Title = "StampTrigger" }
                 };
 
-             /*   _stampTriggTextObj = new TextObj(MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + "." + MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000"), timeStamp, 9*Pane.YAxis.Scale.Max/10)
-                {
-                    FontSpec =
-                    {
-                        Border = {IsVisible = false}
-                    },
-                    Link = {Title = "StampTrigger"}
-                };*/
-
-
-              //  Pane.GraphObjList.Add(_stampTriggTextObj);
                 Pane.GraphObjList.Add(_stampTrigger);
             }
             // ReSharper disable once EmptyGeneralCatchClause
@@ -831,25 +849,19 @@ namespace ScopeViewer
                 {
                     _stampTrigger.Location.Y1 = Pane.YAxis.Scale.Min;
                     _stampTrigger.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-               //     _stampTriggTextObj.IsVisible = !(Pane.YAxis.Scale.Max >= _stampTriggTextObj.Location.Y1) &&
-                //                                   !(Pane.YAxis.Scale.Min <= _stampTriggTextObj.Location.Y1);
 
                     if (_stampTrigger.Location.X <= Pane.XAxis.Scale.Min)
                     {
                         _stampTrigger.IsVisible = false;
-                   //     _stampTriggTextObj.IsVisible = false;
                     }
                     if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Max)
                     {
                         _stampTrigger.IsVisible = false;
-                    //    _stampTriggTextObj.IsVisible = false;
                     }
                     if (_stampTrigger.Location.X >= Pane.XAxis.Scale.Min &&
                         _stampTrigger.Location.X <= Pane.XAxis.Scale.Max)
                     {
                         _stampTrigger.IsVisible = true;
-                    //    _stampTriggTextObj.IsVisible = true;
-
                     }
                 }
             }           
@@ -1057,7 +1069,7 @@ namespace ScopeViewer
         {
             if (MaskMin_textBox.Text != "")
             {
-                _minYAxis = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+                _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
 
                 ScrollEvent();
 
@@ -1070,7 +1082,7 @@ namespace ScopeViewer
         {
             if (MaskMax_textBox.Text != "")
             {
-                _maxYAxis = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+                _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
 
                 ScrollEvent();
 
@@ -1081,7 +1093,7 @@ namespace ScopeViewer
 
         private void AutoRange_Button_Click(object sender, EventArgs e)
         {
-            _minYAxis = _minYAxisAuto;
+           /* _minYAxis = _minYAxisAuto;
             _maxYAxis = _maxYAxisAuto;
 
             MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
@@ -1090,7 +1102,7 @@ namespace ScopeViewer
             ScrollEvent();
 
             zedGraph.AxisChange();
-            zedGraph.Invalidate();
+            zedGraph.Invalidate();*/
         }
     }
 }
