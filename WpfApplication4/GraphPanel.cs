@@ -10,6 +10,7 @@ namespace ScopeViewer
     {
        // MasterPane _masterPane;
         public GraphPane Pane;
+        public GraphPane PaneDig;
         readonly List<LineItem> _myCurve = new List<LineItem>();
        // List<LineItem> myCurveTemp = new List<LineItem>();
 
@@ -219,8 +220,6 @@ namespace ScopeViewer
 
         private void AddAnalogChannel(int j, Color color)
         {
-            panel.Visible = false;
-
             AddCursorDig_button.Visible = false;
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
@@ -228,7 +227,6 @@ namespace ScopeViewer
             MaskMin_textBox.Visible = false;
             MaskMax_textBox.Visible = false;
             AutoRange_Button.Visible = false;
-            HidePanel_button.Visible = false;
             toolStripSeparator2.Visible = false;
 
             PointPairList list = new PointPairList();
@@ -268,10 +266,9 @@ namespace ScopeViewer
 
         private void AddDigitalChannel(int j, Color color)
         {
-            HidePanel_button.Visible = false;
-            panel.Visible = false;
+            zedGraph.IsShowPointValues = false;   //Отключил отображение точек 
 
-            BinaryMask binObj = new BinaryMask();
+            BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
             int binary = 0;
 
             DialogResult dlgr = binObj.ShowDialog();
@@ -296,14 +293,22 @@ namespace ScopeViewer
                 if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
                     MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
                 {
+                    list1.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
+                    list0.Add((i - 1 )/ MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+
                     double temp0 = line0;
                     double temp1 = line1;
                     line1 = temp0;
                     line0 = temp1;
-                }
 
-                list1.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
-                list0.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                    list1.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
+                    list0.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                }
+                if (i == MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount - 1)
+                {
+                    list1.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line1);
+                    list0.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line0);
+                }
             }
 
             LineItem newCurve1 = Pane.AddCurve(nameCh1, list1, color, SymbolType.None);
@@ -331,9 +336,6 @@ namespace ScopeViewer
             newCurveBase.IsVisible = false;
             _myCurve.Add(newCurveBase);
 
-            string[] row = { MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[0], "0" };
-            Mask_listView.Items.Add(new ListViewItem(row));
-
             int maxMaskCount = 0;
 
             if (binary == 0)
@@ -347,23 +349,41 @@ namespace ScopeViewer
 
             for (int l = 0; l < maxMaskCount; l++)
             {
-            //    ListTemp.Add(new PointPairList());
-
                 list = new PointPairList();
+                double line;
 
-                for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+                if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[0][j]) & 1 << l) == 1 << l)
                 {
-                    double line;
-                    if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
+                    line = -0.2 - 1 - l;
+                }
+                else
+                {
+                    line = -0.8 - 1 - l;
+                }
+
+                list.Add(0 / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+
+                for (int i = 1; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+                {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    if(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j] !=
+                       MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i - 1][j])
                     {
-                        line = -0.2 - 1 - l;
+                        list.Add((i - 1)/ MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
+                        if ((Convert.ToInt32(MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]) & 1 << l) == 1 << l)
+                        {
+                            line = -0.2 - 1 - l;
+                        }
+                        else
+                        {
+                            line = -0.8 - 1 - l;
+                        }
+                        list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
                     }
-                    else
+                    if (i == MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount - 1)
                     {
-                        line = -0.8 - 1 - l;
+                        list.Add((i - 1) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
                     }
-                    list.Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
-                  //  ListTemp[ListTemp.Count - 1].Add(i / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, line);
                 }
 
                 LineItem newCurve = Pane.AddCurve(nameCh1, list, color, SymbolType.None);
@@ -372,11 +392,6 @@ namespace ScopeViewer
                 _myCurve[_myCurve.Count - 1].Line.Width = 2;
             }
 
-            for (int l = 0; l < maxMaskCount; l++)
-            {
-                string[] str = { (1 + l).ToString("D"),"0"};
-                Mask_listView.Items.Add(new ListViewItem(str));
-            }
 
             zedGraph.Resize += ZedGraph_Resize;
 
@@ -1077,13 +1092,6 @@ namespace ScopeViewer
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
-
-        private void HidePanel_button_Click(object sender, EventArgs e)
-        {
-            panel.Visible = !panel.Visible;
-            HidePanel_button.Image = panel.Visible ? Properties.Resources.Show_Property_48_1_ : Properties.Resources.Delete_Property_48;
-        }
-
     }
 }
 

@@ -153,7 +153,7 @@ namespace ScopeViewer
                 Width = 20,
                 Height = 20,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 2, 0, 0),
+                Margin = new Thickness(3, 2, 0, 0),
                 ToolTip = "Цвет",
                 Fill = new SolidColorBrush(GenerateColor(_rngColor)),
             };
@@ -243,9 +243,9 @@ namespace ScopeViewer
             OpenClose.Add(new bool() );
 
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(NameLabel[NameLabel.Count - 1]);
-            LayoutPanel[LayoutPanel.Count - 1].Children.Add(ColorEllipse[ColorEllipse.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(VisibleCheckBox[VisibleCheckBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(SelectCheckBox[SelectCheckBox.Count - 1]);
+            LayoutPanel[LayoutPanel.Count - 1].Children.Add(ColorEllipse[ColorEllipse.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(TypeTypeComboBox[TypeTypeComboBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(TypeComboBox[TypeComboBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(SmoothCheckBox[SmoothCheckBox.Count - 1]);
