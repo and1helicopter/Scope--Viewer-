@@ -237,6 +237,8 @@ namespace ScopeViewer
 
         private void AddAnalogChannel(int j, Color color)
         {
+            
+
             AddCursorDig_button.Visible = false;
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
@@ -245,6 +247,8 @@ namespace ScopeViewer
             MaskMax_textBox.Visible = false;
             AutoRange_Button.Visible = false;
             toolStripSeparator2.Visible = false;
+
+            posTab_StripButton.Visible = false;
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -283,14 +287,17 @@ namespace ScopeViewer
 
         public void AddDigitalChannel(int numCh, int numOsc  ,Color color)
         {
+            if (PaneDig != null)
+            {
+                MessageBox.Show("Есть дискретный канал");
+                return;
+            }
+
             PaneDig = new GraphPane();
 
             _masterPane.Add(PaneDig);
-            using (Graphics g = CreateGraphics())
+            using (Graphics g = CreateGraphics())  //Расположение графиков в столбец
             {
-                // Графики будут размещены в 2 строки.
-                // В первой будет 1 столбца,
-                // Во второй - 1
                 _masterPane.SetLayout(g, true, new[] { 1, 1 });
             }
 
@@ -472,6 +479,54 @@ namespace ScopeViewer
             MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxisAuto).ToString();
             MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxisAuto).ToString();
 
+
+            PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X, Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
+                Pane.Chart.Rect.Width, Pane.Chart.Rect.Height - 15);
+
+            zedGraph.Resize += ZedGraph_Resize;
+            zedGraph.SizeChanged += ZedGraphOnSizeChanged;
+          
+            _posTabHoriz = true;
+            posTab_StripButton.Visible = true;
+            delateDig_toolStripButton.Visible = true;
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+
+            ChangedPos();
+        }
+
+        private void ZedGraphOnSizeChanged(object sender, EventArgs eventArgs)
+        {
+            ChangedPos();
+
+        }
+
+        private void ZedGraph_Resize(object sender, EventArgs e)
+        {
+            ChangedPos();
+        }
+
+
+
+        private void ChangedPos()
+        {
+            if(PaneDig != null)
+            {
+                if (_posTabHoriz)
+                {
+                    PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X,
+                        Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
+                        Pane.Chart.Rect.Width, Pane.Chart.Rect.Height - 15);
+                }
+                else
+                {
+                    PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X + Pane.Chart.Rect.Width + 75, 
+                        Pane.Chart.Rect.Y,
+                        Pane.Chart.Rect.Width, Pane.Chart.Rect.Height);
+                }
+            }
+            ScrollEvent();
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
@@ -500,18 +555,6 @@ namespace ScopeViewer
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
             _maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
             _minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
-        }
-
-        public void RemoveGraph(int i)
-        {
-            _myCurve.Remove(_myCurve[i]);
-            Pane.CurveList.Remove(Pane.CurveList[i]);
-            ListTemp.Remove(ListTemp[i]);
-            _digitalList.Remove(_digitalList[i]);
-
-            // Обновим график
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
         }
 
         private void InitDrawGraph()
@@ -546,9 +589,11 @@ namespace ScopeViewer
             _masterPane.Add(Pane);
             // Будем размещать добавленные графики в MasterPane
 
+
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
+
 
         public void GridAxisChange(bool statusChecked, int style, int xy)
         {
@@ -1093,7 +1138,8 @@ namespace ScopeViewer
 
         private void AutoRange_Button_Click(object sender, EventArgs e)
         {
-           /* _minYAxis = _minYAxisAuto;
+           /*
+            _minYAxis = _minYAxisAuto;
             _maxYAxis = _maxYAxisAuto;
 
             MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
@@ -1102,7 +1148,43 @@ namespace ScopeViewer
             ScrollEvent();
 
             zedGraph.AxisChange();
-            zedGraph.Invalidate();*/
+            zedGraph.Invalidate();
+            */
+        }
+
+        bool _posTabHoriz = true; 
+
+        private void posTab_StripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            _posTabHoriz = !_posTabHoriz;
+            posTab_StripButton.Image = _posTabHoriz ? Properties.Resources.Flip_Vertical_48 : Properties.Resources.Flip_Horizontal_48;
+
+            using (Graphics g = CreateGraphics())
+            {
+                _masterPane.SetLayout(g, _posTabHoriz, new[] { 1, 1 });
+            }
+
+            // Обновим график
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+
+            ChangedPos();
+        }
+
+        private void delateDig_toolStripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            _masterPane.PaneList.Remove(PaneDig);
+            using (Graphics g = CreateGraphics())
+            {
+                _masterPane.SetLayout(g, true, new[] { 1 });
+            }
+            PaneDig = null;
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+
+            delateDig_toolStripButton.Visible = false;
+            posTab_StripButton.Visible = false;
         }
     }
 }

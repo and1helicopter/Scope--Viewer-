@@ -283,6 +283,18 @@
   <ItemGroup>
     <None Include="Resources\Cutting Coupon-48.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Flip Horizontal-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Flip Vertical-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel 4 Digits-48 %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel 4 Digits-48 %283%29.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -83,6 +83,16 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Cancel_4_Digits_48__3_ {
+            get {
+                object obj = ResourceManager.GetObject("Cancel_4_Digits_48__3_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Cancel_4_Digits_48_1_ {
             get {
                 object obj = ResourceManager.GetObject("Cancel_4_Digits_48_1_", resourceCulture);
@@ -156,6 +166,26 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Expand_48 {
             get {
                 object obj = ResourceManager.GetObject("Expand_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Flip_Horizontal_48 {
+            get {
+                object obj = ResourceManager.GetObject("Flip_Horizontal_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Flip_Vertical_48 {
+            get {
+                object obj = ResourceManager.GetObject("Flip_Vertical_48", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

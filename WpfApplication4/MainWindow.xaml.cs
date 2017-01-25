@@ -500,15 +500,14 @@ namespace ScopeViewer
 
         private void AddDigitalChannel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            for (int k = 0; k < OscilChannelList.Count; k++)
+            for (int numOsc = 0; numOsc < OscilChannelList.Count; numOsc++)
             {
-                for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
+                for (int numCh = 0; numCh < OscilChannelList[numOsc].TypeComboBox.Count; numCh++)
                 {
-                    if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                    if (OscilChannelList[numOsc].SelectCheckBox[numCh].IsChecked == true)
                     {
-
-
-                        GraphPanelList[k].AddDigitalChannel(i,k, System.Drawing.Color.Blue);
+                        GraphPanelList[numOsc].AddDigitalChannel(numCh,numOsc, System.Drawing.Color.Blue);
+                        OscilChannelList[numOsc].SelectCheckBox[numCh].IsChecked = false;
                         break;
                     }
                 }

@@ -127,6 +127,9 @@
   <data name="Cancel_4_Digits_48_1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cancel 4 Digits-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Cancel_4_Digits_48__3_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cancel 4 Digits-48 (3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Chromatography_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Chromatography-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -147,6 +150,12 @@
   </data>
   <data name="Expand_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Expand-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Flip_Horizontal_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Flip Horizontal-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Flip_Vertical_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Flip Vertical-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Horizontal_Line_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Horizontal Line-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
