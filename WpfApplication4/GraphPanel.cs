@@ -249,6 +249,7 @@ namespace ScopeViewer
             toolStripSeparator2.Visible = false;
 
             posTab_StripButton.Visible = false;
+            delateDig_toolStripButton.Visible = false;
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
@@ -424,8 +425,6 @@ namespace ScopeViewer
                 _myCurve[_myCurve.Count - 1].Line.Width = 2;
             }
 
-            AddCursor.Visible = false;
-
             PaneDig.Border.Color = Color.White;
 
             PaneDig.YAxis.IsVisible = true;
@@ -489,6 +488,13 @@ namespace ScopeViewer
             _posTabHoriz = true;
             posTab_StripButton.Visible = true;
             delateDig_toolStripButton.Visible = true;
+            toolStripSeparator2.Visible = false;
+            Mask1_label.Visible = true;
+            Mask2_label.Visible = true;
+            MaskMin_textBox.Visible = true;
+            MaskMax_textBox.Visible = true;
+            AutoRange_Button.Visible = true;
+            toolStripSeparator2.Visible = false;
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -1185,6 +1191,13 @@ namespace ScopeViewer
 
             delateDig_toolStripButton.Visible = false;
             posTab_StripButton.Visible = false;
+            toolStripSeparator1.Visible = false;
+            Mask1_label.Visible = false;
+            Mask2_label.Visible = false;
+            MaskMin_textBox.Visible = false;
+            MaskMax_textBox.Visible = false;
+            AutoRange_Button.Visible = false;
+            toolStripSeparator2.Visible = false;
         }
     }
 }
