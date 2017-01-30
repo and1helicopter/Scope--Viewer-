@@ -239,7 +239,6 @@ namespace ScopeViewer
         {
             
 
-            AddCursorDig_button.Visible = false;
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
             Mask2_label.Visible = false;
@@ -290,8 +289,23 @@ namespace ScopeViewer
         {
             if (PaneDig != null)
             {
-                MessageBox.Show("Есть дискретный канал");
+                MessageBox.Show(@"Дискретный канал уже открыт!");
                 return;
+            }
+
+            if (CursorsCreate)          //Удалим Курсоры если оние есть
+            {
+                AddCoursorEvent();
+            }                   
+
+            BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
+            int binary = 0;
+
+            DialogResult dlgr = binObj.ShowDialog();
+
+            if (dlgr == DialogResult.OK)
+            {
+                binary = BinaryMask.BinnaryMask;
             }
 
             PaneDig = new GraphPane();
@@ -303,16 +317,6 @@ namespace ScopeViewer
             }
 
             zedGraph.IsShowPointValues = false;   //Отключил отображение точек 
-
-            BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
-            int binary = 0;
-
-            DialogResult dlgr = binObj.ShowDialog();
-
-            if (dlgr == DialogResult.OK)
-            {
-                binary = BinaryMask.BinnaryMask;
-            }
 
             PointPairList list1 = new PointPairList();
             PointPairList list0 = new PointPairList();
@@ -479,12 +483,15 @@ namespace ScopeViewer
             MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxisAuto).ToString();
 
 
-            PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X, Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
-                Pane.Chart.Rect.Width, Pane.Chart.Rect.Height - 15);
+            PaneDig.Chart.Rect = new RectangleF(
+                Pane.Chart.Rect.X,
+                Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
+                Pane.Chart.Rect.Width, 
+                Pane.Chart.Rect.Height - 15);
 
             zedGraph.Resize += ZedGraph_Resize;
             zedGraph.SizeChanged += ZedGraphOnSizeChanged;
-          
+
             _posTabHoriz = true;
             posTab_StripButton.Visible = true;
             delateDig_toolStripButton.Visible = true;
@@ -521,15 +528,19 @@ namespace ScopeViewer
             {
                 if (_posTabHoriz)
                 {
-                    PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X,
+                    PaneDig.Chart.Rect = new RectangleF(
+                        Pane.Chart.Rect.X,
                         Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
-                        Pane.Chart.Rect.Width, Pane.Chart.Rect.Height - 15);
+                        Pane.Chart.Rect.Width,
+                        Pane.Chart.Rect.Height - 15);
                 }
                 else
                 {
-                    PaneDig.Chart.Rect = new RectangleF(Pane.Chart.Rect.X + Pane.Chart.Rect.Width + 75, 
+                    PaneDig.Chart.Rect = new RectangleF(
+                        Pane.Chart.Rect.X + Pane.Chart.Rect.Width + 75, 
                         Pane.Chart.Rect.Y,
-                        Pane.Chart.Rect.Width, Pane.Chart.Rect.Height);
+                        Pane.Chart.Rect.Width, 
+                        Pane.Chart.Rect.Height);
                 }
             }
             ScrollEvent();
@@ -767,7 +778,8 @@ namespace ScopeViewer
         public int NumCursors;
         public LineObj Cursor1;
         public LineObj Cursor2;
-        public LineObj CursorDig;
+        public LineObj CursorDig1;
+        public LineObj CursorDig2;
 
 
         private int NumGraphPanel()
@@ -785,10 +797,12 @@ namespace ScopeViewer
             return j;
         }
 
-        public void CursorAdd()
+        private void CursorAdd()
         {
-            Cursor1 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min),
-                Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min),
+            Cursor1 = new LineObj(
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Min,
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/4 + Pane.XAxis.Scale.Min,
                 Pane.YAxis.Scale.Max)
             {
                 Line =
@@ -799,10 +813,11 @@ namespace ScopeViewer
                 },
                 Link = {Title = "Cursor1"}
             };
-            // Стиль линии - пунктирная
 
-            Cursor2 = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min),
-                Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min),
+            Cursor2 = new LineObj(
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Min,
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)*3/4 + Pane.XAxis.Scale.Min,
                 Pane.YAxis.Scale.Max)
             {
                 Line =
@@ -813,50 +828,67 @@ namespace ScopeViewer
                 },
                 Link = {Title = "Cursor2"}
             };
-            // Стиль линии - пунктирная
 
             // Добавим линию в список отображаемых объектов
             Pane.GraphObjList.Add(Cursor1);
             Pane.GraphObjList.Add(Cursor2);
 
-            CursorsCreate = true;
-
-            // Обновляем график
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-        }
-
-        public void CursorAddDig()
-        {
-            CursorDig = new LineObj(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min),
-                Pane.YAxis.Scale.Min, ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min),
-                Pane.YAxis.Scale.Max)
+            if (PaneDig != null)
             {
-                Line =
+                CursorDig1 = new LineObj(
+                    (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 4 + PaneDig.XAxis.Scale.Min,
+                    PaneDig.YAxis.Scale.Min, 
+                    (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 4 + PaneDig.XAxis.Scale.Min,
+                    PaneDig.YAxis.Scale.Max)
+                {
+                    Line =
                 {
                     Style = System.Drawing.Drawing2D.DashStyle.Solid,
-                    Color = Color.DarkGreen,
+                    Color = Color.Red,
                     Width = 2
                 },
-                Link = { Title = "CursorDigital" }
-            };
+                    Link = { Title = "CursorDig1" }
+                };
 
+                CursorDig2 = new LineObj(
+                    (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) * 3 / 4 + PaneDig.XAxis.Scale.Min,
+                    PaneDig.YAxis.Scale.Min, 
+                    (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) * 3 / 4 + PaneDig.XAxis.Scale.Min,
+                    PaneDig.YAxis.Scale.Max)
+                {
+                    Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.Blue,
+                    Width = 2
+                },
+                    Link = { Title = "CursorDig2" }
+                };
 
-            // Добавим линию в список отображаемых объектов
-            Pane.GraphObjList.Add(CursorDig);
-
-            CursorsCreate = true;
+                // Добавим линию в список отображаемых объектов
+                PaneDig.GraphObjList.Add(CursorDig1);
+                PaneDig.GraphObjList.Add(CursorDig2);
+            }
 
             // Обновляем график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
+
+            CursorsCreate = true;
         }
 
         private void CursorClear()
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2" || Pane.GraphObjList[i].Link.Title == "CursorDigital") { Pane.GraphObjList.Remove(Pane.GraphObjList[i]);}
+                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") { Pane.GraphObjList.Remove(Pane.GraphObjList[i]);}
+            }
+            if (PaneDig != null)
+            {
+                for (int i = PaneDig.GraphObjList.Count - 1; i >= 0; i--)
+                {
+                    if (PaneDig.GraphObjList[i].Link.Title == "CursorDig1" || PaneDig.GraphObjList[i].Link.Title == "CursorDig2") { PaneDig.GraphObjList.Remove(PaneDig.GraphObjList[i]); }
+                }
             }
             CursorsCreate = false;
 
@@ -868,16 +900,6 @@ namespace ScopeViewer
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (Pane.GraphObjList[i].Link.Title == "CursorDigital")
-                {
-                    CursorDig.Location.Y1 = Pane.YAxis.Scale.Min;
-                    CursorDig.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-
-                    if (CursorDig.Location.X <= Pane.XAxis.Scale.Min)
-                        CursorDig.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/100;
-                    if (CursorDig.Location.X >= Pane.XAxis.Scale.Max)
-                        CursorDig.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min)/100;
-                }
                 if (Pane.GraphObjList[i].Link.Title == "Cursor1")
                 {
                     Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
@@ -885,6 +907,15 @@ namespace ScopeViewer
 
                     if (Cursor1.Location.X <= Pane.XAxis.Scale.Min) Cursor1.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
                     if (Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
+
+                    if (PaneDig != null)
+                    {
+                        CursorDig1.Location.Y1 = PaneDig.YAxis.Scale.Min;
+                        CursorDig1.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
+
+                        if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig1.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
+                        if (CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
+                    }
                     continue;
                 }
                 if (Pane.GraphObjList[i].Link.Title == "Cursor2")
@@ -894,6 +925,15 @@ namespace ScopeViewer
 
                     if (Cursor2.Location.X <= Pane.XAxis.Scale.Min) Cursor2.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
                     if (Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
+
+                    if (PaneDig != null)
+                    {
+                        CursorDig2.Location.Y1 = PaneDig.YAxis.Scale.Min;
+                        CursorDig2.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
+
+                        if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig2.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
+                        if (CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
+                    }
                     continue;
                 }
                 if (Pane.GraphObjList[i].Link.Title == "StampTrigger")
@@ -923,16 +963,8 @@ namespace ScopeViewer
             double graphX, graphY;
             Pane.ReverseTransform(new PointF(e.X, e.Y), out graphX, out graphY);
 
-            if (Cursor1 != null || Cursor2 != null || CursorDig != null)
+            if (Cursor1 != null || Cursor2 != null)
             {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (CursorDig != null && CursorDig.Line.Width == 3)
-                {
-                    CursorDig.Location.X1 = graphX;
-                    UpdateCursor();
-                    zedGraph.Invalidate();
-                    Cursor = Cursors.VSplit;
-                }
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 // ReSharper disable once PossibleNullReferenceException
                 if (Cursor1 != null && Cursor1.Line.Width == 3)
@@ -941,6 +973,12 @@ namespace ScopeViewer
                     UpdateCursor();
                     zedGraph.Invalidate();
                     Cursor = Cursors.VSplit;
+                    if (PaneDig != null)
+                    {
+                        CursorDig1.Location.X1 = graphX;
+                        UpdateCursor();
+                        zedGraph.Invalidate();
+                    }
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -950,6 +988,12 @@ namespace ScopeViewer
                     UpdateCursor();
                     zedGraph.Invalidate();
                     Cursor = Cursors.VSplit;
+                    if (PaneDig != null)
+                    {
+                        CursorDig2.Location.X1 = graphX;
+                        UpdateCursor();
+                        zedGraph.Invalidate();
+                    }
                 }
             }
         }
@@ -959,54 +1003,76 @@ namespace ScopeViewer
             object nearestObject;
             int index;
             Pane.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out nearestObject, out index);
+
+            if (nearestObject == null)
+            {
+                if (PaneDig != null)
+                {
+                    PaneDig.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out nearestObject, out index);
+                }
+            }
+
             if (nearestObject != null && nearestObject.GetType() == typeof(LineObj))
             {
                 LineObj lineObject = (LineObj)nearestObject;
 
-                if (lineObject.Link.Title == "CursorDigital")
-                {
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if (CursorDig.Line.Width == 3)
-                    {
-                        CursorDig.Line.Width = 2;
-                    }
-                    else
-                    {
-                        CursorDig.Line.Width = 3;
-                    }
-                    OscilCursor.UpdateCursorDig(NumGraphPanel());
-                }
-                if (lineObject.Link.Title == "Cursor1")
+                if (lineObject.Link.Title == "Cursor1" || lineObject.Link.Title == "CursorDig1")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor1.Line.Width == 3)
                     {
                         Cursor1.Line.Width = 2;
+                        if (PaneDig != null)
+                        {
+                            CursorDig1.Line.Width = 2;
+                        }
                     }
                     else
                     {
                         Cursor1.Line.Width = 3;
                         Cursor2.Line.Width = 2;
+                        if (PaneDig != null)
+                        {
+                            CursorDig1.Line.Width = 3;
+                            CursorDig2.Line.Width = 2;
+                        }
                     }
                     OscilCursor.UpdateCursor(NumGraphPanel());
+                    if (PaneDig != null)
+                    {
+                        OscilCursor.UpdateCursorDig(NumGraphPanel());
+                    }
                 }
-                if (lineObject.Link.Title == "Cursor2")
+                if (lineObject.Link.Title == "Cursor2" || lineObject.Link.Title == "CursorDig2")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (Cursor2.Line.Width == 3)
                     {
                         Cursor2.Line.Width = 2;
+                        if (PaneDig != null)
+                        {
+                            CursorDig2.Line.Width = 2;
+                        }
                     }
                     else
                     {
                         Cursor1.Line.Width = 2;
                         Cursor2.Line.Width = 3;
+                        if (PaneDig != null)
+                        {
+                            CursorDig1.Line.Width = 2;
+                            CursorDig2.Line.Width = 3;
+                        }
                     }
                     OscilCursor.UpdateCursor(NumGraphPanel());
+                    if (PaneDig != null)
+                    {
+                        OscilCursor.UpdateCursorDig(NumGraphPanel());
+                    }
                 }
-
-                zedGraph.Invalidate();
             }
+
+            zedGraph.Invalidate();
         }
 
         private void AddCoursor_MouseDown(object sender, MouseEventArgs e)
@@ -1022,40 +1088,31 @@ namespace ScopeViewer
                 CursorAdd();
                 OscilCursor.AnalysisCursorAdd(NumGraphPanel());
                 MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[0]);
+                if (PaneDig != null)
+                {
+                    OscilCursor.AnalysisCursorAddDig(NumGraphPanel());
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[1]);
+                }
                 AddCursor.Image = Properties.Resources.Line_48_1_;
             }
             else
             {
                 CursorClear();
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
-                OscilCursor.AnalysisCursorClear();
+                if (PaneDig != null)
+                {
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[1]);
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
+                    OscilCursor.AnalysisCursorClearDig();
+                    OscilCursor.AnalysisCursorClear();
+                }
+                else
+                {
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
+                    OscilCursor.AnalysisCursorClear();
+                }
                 AddCursor.Image = Properties.Resources.Line_48_2_;
             }
         }
-
-        private void AddCursorDig_button_MouseDown(object sender, MouseEventArgs e)
-        {
-            AddCoursorDigEvent();
-        }
-        private void AddCoursorDigEvent()
-        {
-            if (CursorsCreate == false)
-            {
-                CursorClear();
-                CursorAddDig();
-                OscilCursor.AnalysisCursorAddDig(NumGraphPanel());
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[0]);
-                AddCursorDig_button.Image = Properties.Resources.Long_Position_48;
-            }
-            else
-            {
-               CursorClear();
-               MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
-               OscilCursor.AnalysisCursorClear();
-                AddCursorDig_button.Image = Properties.Resources.Long_Position_48_;
-            }
-        }
-
 
         public void DelCursor()
         {
@@ -1179,6 +1236,8 @@ namespace ScopeViewer
 
         private void delateDig_toolStripButton_MouseDown(object sender, MouseEventArgs e)
         {
+            AddCoursorEvent();
+
             _masterPane.PaneList.Remove(PaneDig);
             using (Graphics g = CreateGraphics())
             {
