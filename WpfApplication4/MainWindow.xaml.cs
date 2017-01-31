@@ -210,7 +210,7 @@ namespace ScopeViewer
                     _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
                     _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
                     _oscil.HistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
-                    _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+                    _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(1000 * _oscil.HistotyCount / _oscil.SampleRate));
                     str = sr.ReadLine();
                     if (str != null)
                     {

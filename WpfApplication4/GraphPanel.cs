@@ -21,6 +21,7 @@ namespace ScopeViewer
         double _maxYAxisAuto;
         double _minYAxisAuto;
         bool _scaleY;
+        bool _absOrRel;
 
         public GraphPanel()
         {
@@ -124,7 +125,6 @@ namespace ScopeViewer
             zedGraph.Invalidate();
         }
 
-
         public void ChangeDigitalList(int i, int j, int status)
         {
             _digitalList[i] = status != 0;
@@ -182,33 +182,34 @@ namespace ScopeViewer
 
         string XAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
         {
-            /*
-            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 86400)
+            if (_absOrRel)
             {
-                return string.Format("{0} H", val/3600);
-            }
-            if ((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) > 3600)
-            {
-                return string.Format("{0} m", val/60);
-            }*/
-           
-            if ((axis.Scale.Max - axis.Scale.Min) > 1)
-            {
-
-                return string.Format("{0} s", val);
-            }
-            if ((axis.Scale.Max - axis.Scale.Min) > 0.001)
-            {
-                return string.Format("{0} ms", val*1000);
-            }
-            if ((axis.Scale.Max - axis.Scale.Min) > 0.000001)
-            {
-                return string.Format("{0} \u03BCs", val*1000000);
+                //Абсолютное время
+                return string.Format("{0}:{1}:{2}.{3}",
+                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour.ToString("D2"),
+                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute.ToString("D2"),
+                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second.ToString("D2"),
+                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond.ToString("D3"));
             }
             else
             {
-                // Остальные числа просто преобразуем в строку
-                return string.Format("{0} ns", val*1000000000);
+                //Относительное время
+                if (axis.Scale.Max - axis.Scale.Min > 1)
+                {
+                    return string.Format("{0} s", val);
+                }
+                if (axis.Scale.Max - axis.Scale.Min > 0.001)
+                {
+                    return string.Format("{0} ms", val * 1000);
+                }
+                if (axis.Scale.Max - axis.Scale.Min > 0.000001)
+                {
+                    return string.Format("{0} \u03BCs", val * 1000000);
+                }
+                else
+                {
+                    return string.Format("{0} ns", val * 1000000000);
+                }
             }
         }
 
@@ -232,13 +233,10 @@ namespace ScopeViewer
                                    MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
 
             if (!dig) AddAnalogChannel(j, color);
-          //  if (dig)  AddDigitalChannel(j, color);
         }
 
         private void AddAnalogChannel(int j, Color color)
         {
-            
-
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
             Mask2_label.Visible = false;
@@ -444,7 +442,6 @@ namespace ScopeViewer
             PaneDig.YAxis.MajorGrid.DashOn = 1;
             PaneDig.YAxis.MajorGrid.DashOff = 0;
 
-
             PaneDig.YAxis.Scale.FontSpec.StringAlignment = StringAlignment.Center;
             PaneDig.YAxis.Scale.FontSpec.Angle = 80;
 
@@ -482,7 +479,6 @@ namespace ScopeViewer
             MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxisAuto).ToString();
             MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxisAuto).ToString();
 
-
             PaneDig.Chart.Rect = new RectangleF(
                 Pane.Chart.Rect.X,
                 Pane.Chart.Rect.Y + Pane.Chart.Rect.Height + 75,
@@ -512,15 +508,12 @@ namespace ScopeViewer
         private void ZedGraphOnSizeChanged(object sender, EventArgs eventArgs)
         {
             ChangedPos();
-
         }
 
         private void ZedGraph_Resize(object sender, EventArgs e)
         {
             ChangedPos();
         }
-
-
 
         private void ChangedPos()
         {
@@ -567,7 +560,6 @@ namespace ScopeViewer
             zedGraph.AxisChange();
             zedGraph.Invalidate();
 
-
             _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
             _maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
@@ -605,7 +597,6 @@ namespace ScopeViewer
             _masterPane.PaneList.Clear();
             _masterPane.Add(Pane);
             // Будем размещать добавленные графики в MasterPane
-
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -1257,6 +1248,16 @@ namespace ScopeViewer
             MaskMax_textBox.Visible = false;
             AutoRange_Button.Visible = false;
             toolStripSeparator2.Visible = false;
+        }
+
+        private void absOrRelTime_toolStripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            _absOrRel = !_absOrRel;
+            absOrRelTime_toolStripButton.Image = _absOrRel ? Properties.Resources.Cosine_50_5_ : Properties.Resources.Cosine_50_4_;
+            absOrRelTime_toolStripButton.ToolTipText = _absOrRel ? "Абсолютное время" : "Относительное время" ;
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
     }
 }

@@ -143,6 +143,26 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Cosine_50_4_ {
+            get {
+                object obj = ResourceManager.GetObject("Cosine_50_4_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cosine_50_5_ {
+            get {
+                object obj = ResourceManager.GetObject("Cosine_50_5_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Cutting_Coupon_48 {
             get {
                 object obj = ResourceManager.GetObject("Cutting_Coupon_48", resourceCulture);
