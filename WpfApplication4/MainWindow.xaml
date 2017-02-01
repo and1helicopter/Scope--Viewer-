@@ -126,8 +126,21 @@
                     <ImageBrush ImageSource="Resources/Chromatography-48.png" />
                 </Rectangle.Fill>
             </Rectangle>
-
-
+            <Rectangle
+                x:Name="UnionScope"
+                Width="28"
+                Height="28"
+                Margin="2,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                MouseDown="UnionScope_MouseDown"
+                MouseEnter="UnionScope_MouseEnter"
+                MouseLeave="UnionScope_MouseLeave"
+                ToolTip="Объединить осциллограммы">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/Line Chart-48(2).png" />
+                </Rectangle.Fill>
+            </Rectangle>
             <Rectangle
                 x:Name="AddDigitalChannel"
                 Width="28"
@@ -151,9 +164,10 @@
         <xcad:DockingManager
             Grid.Row="1"
             Grid.Column="5"
-            AllowMixedOrientation="True" Background="#FFE8E2E2">
+            AllowMixedOrientation="True"
+            Background="#FFE8E2E2">
             <xcad:DockingManager.Theme>
-                <xcad:GenericTheme/>
+                <xcad:GenericTheme />
             </xcad:DockingManager.Theme>
             <xcad:LayoutRoot x:Name="LayoutRoot">
                 <xcad:LayoutPanel Orientation="Horizontal">

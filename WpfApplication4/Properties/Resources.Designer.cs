@@ -103,9 +103,9 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Chromatography_48 {
+        internal static System.Drawing.Bitmap Chromatography_48_1_ {
             get {
-                object obj = ResourceManager.GetObject("Chromatography_48", resourceCulture);
+                object obj = ResourceManager.GetObject("Chromatography_48_1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Chromatography_48_1_ {
+        internal static System.Drawing.Bitmap Chromatography_48_2 {
             get {
-                object obj = ResourceManager.GetObject("Chromatography_48_1_", resourceCulture);
+                object obj = ResourceManager.GetObject("Chromatography_48_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -276,6 +276,26 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Line_Chart_48 {
             get {
                 object obj = ResourceManager.GetObject("Line_Chart_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Line_Chart_48_2_ {
+            get {
+                object obj = ResourceManager.GetObject("Line_Chart_48_2_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Line_Chart_48_3_ {
+            get {
+                object obj = ResourceManager.GetObject("Line_Chart_48_3_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

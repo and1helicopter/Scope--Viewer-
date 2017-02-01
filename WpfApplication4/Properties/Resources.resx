@@ -130,11 +130,11 @@
   <data name="Cancel_4_Digits_48__3_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cancel 4 Digits-48 (3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Chromatography_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Chromatography-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Chromatography_48_1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Chromatography-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Chromatography_48_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Chromatography-48_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Close_Window_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close Window-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -186,6 +186,12 @@
   </data>
   <data name="Line_Chart_481" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Line Chart-48.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Line_Chart_48_2_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Line Chart-48(2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Line_Chart_48_3_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Line Chart-48(3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Long_Position_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Long Position-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

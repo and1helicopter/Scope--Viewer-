@@ -212,12 +212,6 @@
     <Resource Include="Resources\Close Window-48.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Chromatography-48%281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Chromatography-48.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Line-48%281%29.png" />
   </ItemGroup>
   <ItemGroup>
@@ -260,12 +254,6 @@
     <Resource Include="Resources\Services-48.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Cancel 4 Digits-48%281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Cancel 4 Digits-48.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Available Updates-48.png" />
   </ItemGroup>
   <ItemGroup>
@@ -300,6 +288,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Cosine-50%285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line Chart-48%283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Line Chart-48%282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Cancel 4 Digits-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Cancel 4 Digits-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Chromatography-48_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Chromatography-48.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

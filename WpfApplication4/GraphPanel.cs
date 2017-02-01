@@ -242,7 +242,6 @@ namespace ScopeViewer
             Mask2_label.Visible = false;
             MaskMin_textBox.Visible = false;
             MaskMax_textBox.Visible = false;
-            AutoRange_Button.Visible = false;
             toolStripSeparator2.Visible = false;
 
             posTab_StripButton.Visible = false;
@@ -496,7 +495,6 @@ namespace ScopeViewer
             Mask2_label.Visible = true;
             MaskMin_textBox.Visible = true;
             MaskMax_textBox.Visible = true;
-            AutoRange_Button.Visible = true;
             toolStripSeparator2.Visible = false;
 
             zedGraph.AxisChange();
@@ -1028,10 +1026,10 @@ namespace ScopeViewer
                             CursorDig2.Line.Width = 2;
                         }
                     }
-                    OscilCursor.UpdateCursor(NumGraphPanel());
+                    OscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
                     if (PaneDig != null)
                     {
-                        OscilCursor.UpdateCursorDig(NumGraphPanel());
+                        OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
                     }
                 }
                 if (lineObject.Link.Title == "Cursor2" || lineObject.Link.Title == "CursorDig2")
@@ -1055,10 +1053,10 @@ namespace ScopeViewer
                             CursorDig2.Line.Width = 3;
                         }
                     }
-                    OscilCursor.UpdateCursor(NumGraphPanel());
+                    OscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
                     if (PaneDig != null)
                     {
-                        OscilCursor.UpdateCursorDig(NumGraphPanel());
+                        OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
                     }
                 }
             }
@@ -1190,22 +1188,6 @@ namespace ScopeViewer
             }
         }
 
-        private void AutoRange_Button_Click(object sender, EventArgs e)
-        {
-           /*
-            _minYAxis = _minYAxisAuto;
-            _maxYAxis = _maxYAxisAuto;
-
-            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxis).ToString();
-            MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxis).ToString();
-
-            ScrollEvent();
-
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
-            */
-        }
-
         bool _posTabHoriz = true; 
 
         private void posTab_StripButton_MouseDown(object sender, MouseEventArgs e)
@@ -1246,7 +1228,6 @@ namespace ScopeViewer
             Mask2_label.Visible = false;
             MaskMin_textBox.Visible = false;
             MaskMax_textBox.Visible = false;
-            AutoRange_Button.Visible = false;
             toolStripSeparator2.Visible = false;
         }
 

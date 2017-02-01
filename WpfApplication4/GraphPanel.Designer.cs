@@ -46,7 +46,6 @@ namespace ScopeViewer
             this.MaskMax_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
-            this.AutoRange_Button = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.absOrRelTime_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
@@ -61,7 +60,7 @@ namespace ScopeViewer
             this.zedGraph.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.zedGraph.IsShowPointValues = true;
             this.zedGraph.IsSynchronizeXAxes = true;
-            this.zedGraph.Location = new System.Drawing.Point(0, 36);
+            this.zedGraph.Location = new System.Drawing.Point(0, 33);
             this.zedGraph.Margin = new System.Windows.Forms.Padding(0);
             this.zedGraph.Name = "zedGraph";
             this.zedGraph.ScrollGrace = 0D;
@@ -71,7 +70,7 @@ namespace ScopeViewer
             this.zedGraph.ScrollMinX = 0D;
             this.zedGraph.ScrollMinY = 0D;
             this.zedGraph.ScrollMinY2 = 0D;
-            this.zedGraph.Size = new System.Drawing.Size(809, 435);
+            this.zedGraph.Size = new System.Drawing.Size(809, 438);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
             this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
@@ -99,12 +98,11 @@ namespace ScopeViewer
             this.MaskMax_textBox,
             this.Mask2_label,
             this.MaskMin_textBox,
-            this.AutoRange_Button,
             this.toolStripSeparator2,
             this.absOrRelTime_toolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(809, 36);
+            this.toolStrip1.Size = new System.Drawing.Size(809, 33);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -117,7 +115,7 @@ namespace ScopeViewer
             this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
             this.AddCursor.Name = "AddCursor";
-            this.AddCursor.Size = new System.Drawing.Size(34, 34);
+            this.AddCursor.Size = new System.Drawing.Size(30, 30);
             this.AddCursor.Text = "Добавить курсоры";
             this.AddCursor.ToolTipText = "Добавить курсоры ";
             this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
@@ -239,17 +237,6 @@ namespace ScopeViewer
             this.MaskMin_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
             this.MaskMin_textBox.TextChanged += new System.EventHandler(this.MaskMin_textBox_TextChanged);
             // 
-            // AutoRange_Button
-            // 
-            this.AutoRange_Button.AutoSize = false;
-            this.AutoRange_Button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AutoRange_Button.Image = global::ScopeViewer.Properties.Resources.Available_Updates_48;
-            this.AutoRange_Button.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AutoRange_Button.Name = "AutoRange_Button";
-            this.AutoRange_Button.Size = new System.Drawing.Size(30, 30);
-            this.AutoRange_Button.Text = "Сбросить";
-            this.AutoRange_Button.Click += new System.EventHandler(this.AutoRange_Button_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -258,12 +245,14 @@ namespace ScopeViewer
             // absOrRelTime_toolStripButton
             // 
             this.absOrRelTime_toolStripButton.AutoSize = false;
+            this.absOrRelTime_toolStripButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.absOrRelTime_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.absOrRelTime_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Cosine_50_4_;
             this.absOrRelTime_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.absOrRelTime_toolStripButton.Name = "absOrRelTime_toolStripButton";
             this.absOrRelTime_toolStripButton.Size = new System.Drawing.Size(30, 30);
             this.absOrRelTime_toolStripButton.Text = "Относительное время";
+            this.absOrRelTime_toolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
             this.absOrRelTime_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.absOrRelTime_toolStripButton_MouseDown);
             // 
             // GraphPanel
@@ -291,7 +280,6 @@ namespace ScopeViewer
         private ToolStripButton StampTrigger;
         private ToolStripButton ScaleButton;
         private ToolStripTextBox MaskMin_textBox;
-        private ToolStripButton AutoRange_Button;
         private ToolStripLabel Mask1_label;
         private ToolStripTextBox MaskMax_textBox;
         private ToolStripLabel Mask2_label;

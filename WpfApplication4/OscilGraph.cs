@@ -18,7 +18,7 @@ namespace ScopeViewer
         private Rectangle _closeButton ;
         public DockPanel LayoutOscilPanel;
 
-        private readonly List<Border> PanelBorder = new List<Border>();
+        private readonly List<Border> _panelBorder = new List<Border>();
         public List<DockPanel> LayoutPanel = new List<DockPanel>();
         public List<Label> NameLabel = new List<Label>();
         public List<Ellipse> ColorEllipse = new List<Ellipse>();
@@ -124,7 +124,7 @@ namespace ScopeViewer
                 BorderThickness = new Thickness(1.0),
                 Margin = new Thickness(-200, 0, 0, 0)
             };
-            PanelBorder.Add(panelBorder);
+            _panelBorder.Add(panelBorder);
 
             DockPanel layoutPanel = new DockPanel
             {
@@ -251,7 +251,7 @@ namespace ScopeViewer
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(SmoothCheckBox[SmoothCheckBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(StepTypeComboBox[StepTypeComboBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(WidthCheckBox[WidthCheckBox.Count - 1]);
-            LayoutPanel[LayoutPanel.Count - 1].Children.Add(PanelBorder[PanelBorder.Count - 1]);
+            LayoutPanel[LayoutPanel.Count - 1].Children.Add(_panelBorder[_panelBorder.Count - 1]);
         }
 
         private void click_LayoutPanel(object sender, MouseButtonEventArgs e)
@@ -391,122 +391,5 @@ namespace ScopeViewer
         {
             ((Rectangle)sender).Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Close Window-48.png")));
         }
-
-
-
-
-        /*
-        private void Graph_Checked1(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < _showAllCheckBox.Count; i++)
-            {
-                if (_showAllCheckBox[i].IsChecked == true)
-                {
-                    for (int j = 0; j < ClearChannel[i].Count; j++)
-                    {
-                        int k = ClearChannel[i][j];
-                        VisibleCheckBox[k].IsChecked = true;
-                        ChangeSomething(k, TypeComboBox[k].SelectedIndex, StepTypeComboBox[k].SelectedIndex, GraphPanel.Pane.CurveList[k].Color);
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < ClearChannel[i].Count; j++)
-                    {
-                        int k = ClearChannel[i][j];
-                        VisibleCheckBox[ClearChannel[i][j]].IsChecked = false;
-                        ChangeSomething(k, TypeComboBox[k].SelectedIndex, StepTypeComboBox[k].SelectedIndex, GraphPanel.Pane.CurveList[k].Color);
-                    }
-                }
-            }
-        }
-
-        private void Graph_Checked(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < _selectAllCheckBox.Count; i++)
-            {
-                if (_selectAllCheckBox[i].IsChecked == true)
-                {
-                    for (int j = 0; j < ClearChannel[i].Count; j++)
-                    {
-                        SelectCheckBox[ClearChannel[i][j]].IsChecked = true;
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < ClearChannel[i].Count; j++)
-                    {
-                        SelectCheckBox[ClearChannel[i][j]].IsChecked = false;
-                    }
-                }
-            }
-        }
-
-
-
-        private void OscilConfigClear(int i)
-        {
-            LayoutOscilPanel[i].Children.Remove(OscilName[i]);
-            LayoutOscilPanel[i].Children.Remove(_showAllCheckBox[i]);
-            LayoutOscilPanel[i].Children.Remove(_selectAllCheckBox[i]);
-            LayoutOscilPanel[i].Children.Remove(_closeButton[i]);
-
-            GraphStackPanel.Children.Remove(LayoutOscilPanel[i]);
-
-            OscilName.Remove(OscilName[i]);
-            _showAllCheckBox.Remove(_showAllCheckBox[i]);
-            _selectAllCheckBox.Remove(_selectAllCheckBox[i]);
-            _closeButton.Remove(_closeButton[i]);
-            LayoutOscilPanel.Remove(LayoutOscilPanel[i]);
-
-            MainWindow.Graph.StampTriggerClear();
-            MainWindow.StampTriggerCreate = false;
-
-            MainWindow.Graph.CursorClear();
-            MainWindow.AnalysisObj.AnalysisCursorClear();
-            MainWindow.CursorCreate = false;
-
-            MainWindow.Graph.ResizeAxis();
-        }
-
-        private void GraphConfigClear(int i)
-        {
-
-            LayoutPanel[i].Children.Remove(NameLabel[i]);
-            LayoutPanel[i].Children.Remove(ColorEllipse[i]);
-            LayoutPanel[i].Children.Remove(VisibleCheckBox[i]);
-            LayoutPanel[i].Children.Remove(SelectCheckBox[i]);
-            LayoutPanel[i].Children.Remove(TypeTypeComboBox[i]);
-            LayoutPanel[i].Children.Remove(TypeComboBox[i]);
-            LayoutPanel[i].Children.Remove(SmoothCheckBox[i]);
-            LayoutPanel[i].Children.Remove(StepTypeComboBox[i]);
-            LayoutPanel[i].Children.Remove(PanelBorder[i]);
-            LayoutPanel[i].Children.Remove(WidthCheckBox[i]);
-
-            GraphStackPanel.Children.Remove(LayoutPanel[i]);
-
-            OpenClose.Remove(OpenClose[i]);
-
-            NameLabel.Remove(NameLabel[i]);
-            ColorEllipse.Remove(ColorEllipse[i]);
-            VisibleCheckBox.Remove(VisibleCheckBox[i]);
-            SelectCheckBox.Remove(SelectCheckBox[i]);
-            TypeTypeComboBox.Remove(TypeTypeComboBox[i]);
-            TypeComboBox.Remove(TypeComboBox[i]);
-            SmoothCheckBox.Remove(SmoothCheckBox[i]);
-            StepTypeComboBox.Remove(StepTypeComboBox[i]);
-            WidthCheckBox.Remove(WidthCheckBox[i]);
-            PanelBorder.Remove(PanelBorder[i]);
-            LayoutPanel.Remove(LayoutPanel[i]);
-        }
-
-        
-
-
-
-
-
-
-*/
     }
 }

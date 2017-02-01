@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -232,6 +233,7 @@ namespace ScopeViewer
                         }
                     }
                     _oscil.NumCount = Convert.ToUInt32(_oscil.Data.Count);
+                    _oscil.StampDateEnd = _oscil.StampDateTrigger.AddMilliseconds( 1000 * (_oscil.NumCount - _oscil.HistotyCount) / _oscil.SampleRate);
                     for (int i = 0; i < _oscil.ChannelCount; i++)
                     {
                         _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
@@ -295,6 +297,7 @@ namespace ScopeViewer
                     }
                     _oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
                     _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
+                   // _oscil.StampDateEnd = _oscil.StampDateTrigger.AddMilliseconds(1000 * (_oscil.NumCount - _oscil.HistotyCount) / _oscil.SampleRate);
                     sr.Close();
 
                     var namefile = Path.GetFileNameWithoutExtension(ofd.FileName);
@@ -426,17 +429,16 @@ namespace ScopeViewer
 
                     i++;
             }
-
-
         }
 
         private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //Создание новой осциллограммы OscilList
-            _oscil = new Oscil();
-
-            _oscil.OscilNames += 1;
-
+            _oscil = new Oscil
+            {
+                OscilNames = "Осциллограмма составная"
+            };
+            
             for (int k = 0; k < OscilChannelList.Count; k++)
             {
                 for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
@@ -446,7 +448,7 @@ namespace ScopeViewer
                         _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
                         _oscil.Dimension.Add(OscilList[k].Dimension[i]);
 
-                        if (_oscil.ChannelCount > 0 && ((_oscil.SampleRate != OscilList[k].SampleRate) || (_oscil.HistotyCount != OscilList[k].HistotyCount) || (_oscil.NumCount != OscilList[k].NumCount)))
+                        if (_oscil.ChannelCount > 0 && ((Math.Abs(_oscil.SampleRate - OscilList[k].SampleRate) > 0) || (Math.Abs(_oscil.HistotyCount - OscilList[k].HistotyCount) > 0) || (_oscil.NumCount != OscilList[k].NumCount)))
                         {
                             MessageBox.Show("Каналы не совместимы", "Ошибка",MessageBoxButton.OK);
                             return;
@@ -454,17 +456,11 @@ namespace ScopeViewer
 
                         if(_oscil.ChannelCount == 0)
                         {
-                            // StampDateStart;
-                            // StampDateTrigger;
-                            // StampDateEnd;
-                            // SampleRate;
-                            // HistotyCount;
-
                             _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
                             _oscil.SampleRate = OscilList[k].SampleRate;
                             _oscil.HistotyCount = OscilList[k].HistotyCount;
                             _oscil.NumCount = OscilList[k].NumCount;
-                            _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(100 * _oscil.HistotyCount / _oscil.SampleRate));
+                            _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(1000 * _oscil.HistotyCount / _oscil.SampleRate));
 
                             for (int j = 0; j < _oscil.NumCount; j++)
                                 _oscil.Data.Add(new List<double>());
@@ -490,7 +486,7 @@ namespace ScopeViewer
 
         private void AddGraph_MouseEnter(object sender, MouseEventArgs e)
         {
-            AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48(1).png")));
+            AddGraph.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Chromatography-48_2.png")));
         }
 
         private void AddGraph_MouseLeave(object sender, MouseEventArgs e)
@@ -523,6 +519,132 @@ namespace ScopeViewer
         {
             AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Cancel 4 Digits-48.png")));
         }
-    
+
+        int maxGapCount = 10;
+
+        private void UnionScope_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            List<int> scopeIndex1 = new List<int>();
+            List<int> scopeIndex2 = new List<int>();
+            int scope1 = 0;
+            int scope2 = 0;
+
+            //Формируем список объединяйимых каналов
+            for (int k = 0; k < OscilChannelList.Count; k++)
+            {
+                if (scopeIndex2.Count == 0 && scopeIndex1.Count != 0)
+                {
+                    for (int i = 0; i < OscilChannelList[k].SelectCheckBox.Count; i++)
+                    {
+                        if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                        {
+                            scope2 = k;
+                            scopeIndex2.Add(i);
+                        }
+                    }
+                }
+                if (scopeIndex1.Count == 0)
+                {
+                    for (int i = 0; i < OscilChannelList[k].SelectCheckBox.Count; i++)
+                    {
+                        if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                        {
+                            scope1 = k;
+                            scopeIndex1.Add(i);
+                        }
+                    }
+                }
+            }
+
+            //Проверка на соответствие друг-другу списка объединяймых параметров
+            if (scope1 == scope2)
+            {
+                MessageBox.Show("Нечего объединять", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error );
+                return;
+            }
+            if (Math.Abs(OscilList[scope1].SampleRate - OscilList[scope2].SampleRate) > 0)  //Проверка на совпадение частоты выборки 
+            {
+                MessageBox.Show("Каналы не совместимы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error );
+                return;
+            }
+            if (!scopeIndex1.SequenceEqual(scopeIndex2)) //Проверка на соответствие каналов к объединению
+            {
+                MessageBox.Show("Выбранные каналы неляьзя объеденить", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error );
+                return;
+            }
+
+            double time1 = Math.Abs(OscilList[scope1].StampDateEnd.Second - OscilList[scope2].StampDateStart.Second + (double)(OscilList[scope1].StampDateEnd.Millisecond - OscilList[scope2].StampDateStart.Millisecond) / 1000);
+            double time2 = Math.Abs(OscilList[scope2].StampDateEnd.Second - OscilList[scope1].StampDateStart.Second + (double)(OscilList[scope2].StampDateEnd.Millisecond - OscilList[scope1].StampDateStart.Millisecond) / 1000);
+
+
+            if (time1 > maxGapCount / OscilList[scope1].SampleRate && time2 > maxGapCount / OscilList[scope1].SampleRate) //Проверка на временной отсуп между двумя осциллограммами 
+            {
+                MessageBox.Show("Интервал времени между объединяймыми каналами слишком велик", "Ошибка", MessageBoxButton.OK,MessageBoxImage.Error );
+                return;
+            }
+
+            //Объединение
+            int firstScope = OscilList[scope1].StampDateTrigger < OscilList[scope2].StampDateTrigger ? scope1 : scope2;
+            int secondScope = OscilList[scope1].StampDateTrigger > OscilList[scope2].StampDateTrigger ? scope1 : scope2;
+            int numCountTemp = Convert.ToInt32(((OscilList[secondScope].StampDateStart.Second - OscilList[firstScope].StampDateEnd.Second) 
+                + (double)(OscilList[secondScope].StampDateStart.Millisecond - OscilList[firstScope].StampDateEnd.Millisecond)/1000) * OscilList[firstScope].SampleRate);
+
+            _oscil = new Oscil
+            {
+                OscilNames = "Осциллограмма объединенная",
+                StampDateTrigger = OscilList[firstScope].StampDateTrigger,
+                StampDateStart = OscilList[firstScope].StampDateTrigger.AddMilliseconds(-(1000 * OscilList[firstScope].HistotyCount / OscilList[firstScope].SampleRate)),
+                StampDateEnd = OscilList[firstScope].StampDateTrigger.AddMilliseconds(1000 * (OscilList[firstScope].NumCount + OscilList[secondScope].NumCount - OscilList[firstScope].HistotyCount) / OscilList[firstScope].SampleRate),
+                SampleRate = OscilList[firstScope].SampleRate,
+                HistotyCount = OscilList[firstScope].HistotyCount,
+                NumCount = OscilList[firstScope].NumCount + OscilList[secondScope].NumCount + Convert.ToUInt32(numCountTemp)
+            };
+
+            for (int j = 0; j < _oscil.NumCount; j++)
+            {
+                _oscil.Data.Add(new List<double>());
+            }
+
+            foreach (int scopeIndex in scopeIndex1)
+            {
+                _oscil.ChannelNames.Add(OscilList[firstScope].ChannelNames[scopeIndex]);
+                _oscil.Dimension.Add(OscilList[firstScope].Dimension[scopeIndex]);
+                _oscil.TypeChannel.Add(OscilList[firstScope].TypeChannel[scopeIndex]);
+
+                for (int j = 0; j < OscilList[firstScope].NumCount; j++)
+                {
+                    _oscil.Data[j].Add(OscilList[firstScope].Data[j][scopeIndex]);
+                }
+
+                for (int j = 0; j < numCountTemp; j++)
+                {
+                    _oscil.Data[j + Convert.ToInt32(OscilList[firstScope].NumCount)].Add(OscilList[firstScope].Data[OscilList[firstScope].Data.Count - 1][scopeIndex]);
+                }
+
+                for (int j = 0; j < OscilList[secondScope].NumCount; j++)
+                {
+                    _oscil.Data[j + numCountTemp + Convert.ToInt32(OscilList[firstScope].NumCount)].Add(OscilList[secondScope].Data[j][scopeIndex]);
+                }
+
+                _oscil.ChannelCount += 1;
+            }
+
+            OscilList.Add(_oscil);
+            AddOscilChannnel(_oscil, false);
+
+            //Очищаем список объединяйимых каналов
+            scopeIndex1.Clear();
+            scopeIndex2.Clear();
+        }
+
+        private void UnionScope_MouseEnter(object sender, MouseEventArgs e)
+        {
+            UnionScope.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line Chart-48(3).png")));
+        }
+
+        private void UnionScope_MouseLeave(object sender, MouseEventArgs e)
+        {
+            UnionScope.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line Chart-48(2).png")));
+        }
     }
 }

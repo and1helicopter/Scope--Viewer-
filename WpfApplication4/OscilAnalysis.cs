@@ -383,7 +383,7 @@ namespace ScopeViewer
             _nameValue2LabelDig.Clear();
         }
 
-        public void UpdateCursor(int numOsc)
+        public void UpdateCursor(int numOsc, bool absOrRel)
         {
             for (int j = 0; j < MainWindow.GraphPanelList[numOsc].Pane.CurveList.Count; j++)
             {
@@ -412,15 +412,47 @@ namespace ScopeViewer
             double x1 = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
             double x2 = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
 
-            _nameStatuslLabel[1].Content = x1.ToString("F6") + " сек";
-            _nameStatuslLabel[1].ToolTip = (int)x1 + " сек " + (int)((x1 - (int)x1) * 1000) + " мс " +
-                    (int)((x1 * 1000 - (int)(x1 * 1000)) * 1000) + " мкс " + (int)((x1 * 1000000 - (int)(x1 * 1000000)) * 1000) + " нс";
-            _nameStatuslLabel[2].Content = x2.ToString("F6") + " сек";
-            _nameStatuslLabel[2].ToolTip = (int)x2 + " сек " + (int)((x2 - (int)x2) * 1000) + " мс " +
-                    (int)((x2 * 1000 - (int)(x2 * 1000)) * 1000) + " мкс " + (int)((x2 * 1000000 - (int)(x2 * 1000000)) * 1000) + " нс";
+            if (absOrRel)
+            {
+                //Abs time
+                _nameStatuslLabel[1].Content =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                _nameStatuslLabel[1].ToolTip =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+
+                _nameStatuslLabel[2].Content =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                _nameStatuslLabel[2].ToolTip =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+            }
+            else
+            {
+                //Relativ time
+                _nameStatuslLabel[1].Content = x1.ToString("F6") + " сек";
+                _nameStatuslLabel[1].ToolTip = (int) x1 + " сек " + (int) ((x1 - (int) x1)*1000) + " мс " +
+                                               (int) ((x1*1000 - (int) (x1*1000))*1000) + " мкс " +
+                                               (int) ((x1*1000000 - (int) (x1*1000000))*1000) + " нс";
+                _nameStatuslLabel[2].Content = x2.ToString("F6") + " сек";
+                _nameStatuslLabel[2].ToolTip = (int) x2 + " сек " + (int) ((x2 - (int) x2)*1000) + " мс " +
+                                               (int) ((x2*1000 - (int) (x2*1000))*1000) + " мкс " +
+                                               (int) ((x2*1000000 - (int) (x2*1000000))*1000) + " нс";
+            }
+
         }
 
-        public void UpdateCursorDig(int numOsc)
+        public void UpdateCursorDig(int numOsc, bool absOrRel)
         {
             for (int j = 2; j < MainWindow.GraphPanelList[numOsc].PaneDig.CurveList.Count; j++)
             {
@@ -447,9 +479,28 @@ namespace ScopeViewer
 
             double x1 = MainWindow.GraphPanelList[numOsc].CursorDig1.Location.X;
 
-            _nameStatuslLabelDig[0].Content = x1.ToString("F1") + " сек";
-            _nameStatuslLabelDig[0].ToolTip = (int)x1 + " сек " + (int)((x1 - (int)x1) * 1000) + " мс " +
-                    (int)((x1 * 1000 - (int)(x1 * 1000)) * 1000) + " мкс " + (int)((x1 * 1000000 - (int)(x1 * 1000000)) * 1000) + " нс";
+            if (absOrRel)
+            {
+                //Abs time
+                _nameStatuslLabelDig[0].Content =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                _nameStatuslLabelDig[0].ToolTip =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+            }
+            else
+            {
+                //Relativ time
+                _nameStatuslLabelDig[0].Content = x1.ToString("F1") + " сек";
+                _nameStatuslLabelDig[0].ToolTip = (int) x1 + " сек " + (int) ((x1 - (int) x1)*1000) + " мс " +
+                                                  (int) ((x1*1000 - (int) (x1*1000))*1000) + " мкс " +
+                                                  (int) ((x1*1000000 - (int) (x1*1000000))*1000) + " нс";
+            }
 
             for (int j = 2; j < MainWindow.GraphPanelList[numOsc].PaneDig.CurveList.Count; j++)
             {
@@ -475,10 +526,30 @@ namespace ScopeViewer
             }
 
             double x2 = MainWindow.GraphPanelList[numOsc].CursorDig2.Location.X;
+            if (absOrRel)
+            {
+                //Abs time
+                _nameStatuslLabelDig[1].Content =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                _nameStatuslLabelDig[1].ToolTip =
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+            }
+            else
+            {
+                //Relativ time
+                _nameStatuslLabelDig[1].Content = x2.ToString("F1") + " сек";
+                _nameStatuslLabelDig[1].ToolTip = (int) x2 + " сек " + (int) ((x2 - (int) x2)*1000) + " мс " +
+                                                  (int) ((x2*1000 - (int) (x2*1000))*1000) + " мкс " +
+                                                  (int) ((x2*1000000 - (int) (x2*1000000))*1000) + " нс";
+            }
 
-            _nameStatuslLabelDig[1].Content = x2.ToString("F1") + " сек";
-            _nameStatuslLabelDig[1].ToolTip = (int)x2 + " сек " + (int)((x2 - (int)x2) * 1000) + " мс " +
-                    (int)((x2 * 1000 - (int)(x2 * 1000)) * 1000) + " мкс " + (int)((x2 * 1000000 - (int)(x2 * 1000000)) * 1000) + " нс";
+
         }
 
         private void click_LayoutPanelCursor(object sender, MouseButtonEventArgs e)
