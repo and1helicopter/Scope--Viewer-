@@ -163,9 +163,29 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Cutting_Coupon_48 {
+        internal static System.Drawing.Bitmap Cut_Apply {
             get {
-                object obj = ResourceManager.GetObject("Cutting_Coupon_48", resourceCulture);
+                object obj = ResourceManager.GetObject("Cut_Apply", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cutting_Add {
+            get {
+                object obj = ResourceManager.GetObject("Cutting_Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cutting_Remove {
+            get {
+                object obj = ResourceManager.GetObject("Cutting_Remove", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -346,6 +366,16 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Resize_48 {
             get {
                 object obj = ResourceManager.GetObject("Resize_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Save_as_48_1_ {
+            get {
+                object obj = ResourceManager.GetObject("Save_as_48_1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

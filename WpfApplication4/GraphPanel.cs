@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using ZedGraph;
 
@@ -943,6 +944,70 @@ namespace ScopeViewer
                     {
                         _stampTrigger.IsVisible = true;
                     }
+                    continue;
+                }
+
+                if (Pane.GraphObjList[i].Link.Title == "LeftLine" || Pane.GraphObjList[i].Link.Title == "RightLine")
+                {
+                    _leftLineCut.Location.Y1 = Pane.YAxis.Scale.Min;
+                    _leftLineCut.Location.Height = Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min;
+                    _rightLineCut.Location.Y1 = Pane.YAxis.Scale.Min;
+                    _rightLineCut.Location.Height = Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min;
+
+                    _boxCut.Location.Y1 = Pane.YAxis.Scale.Max;
+                    _boxCut.Location.Height = Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min;
+                    _boxCut.Location.X = _leftLineCut.Location.X;
+                    _boxCut.Location.Width = _rightLineCut.Location.X - _leftLineCut.Location.X;
+
+                    if (_leftLineCut.Location.X > Pane.XAxis.Scale.Min &&
+                        _rightLineCut.Location.X < Pane.XAxis.Scale.Max)
+                    { 
+                        _boxCut.IsVisible = true;
+                        _rightLineCut.IsVisible = true;
+                        _leftLineCut.IsVisible = true;
+                    }
+
+                    if (_leftLineCut.Location.X <= Pane.XAxis.Scale.Min &&
+                        _rightLineCut.Location.X < Pane.XAxis.Scale.Max)
+                    {
+                        _boxCut.IsVisible = true;
+                        _rightLineCut.IsVisible = true;
+                        _leftLineCut.IsVisible = false;
+                        _boxCut.Location.X = Pane.XAxis.Scale.Min;
+                        _boxCut.Location.Width = _rightLineCut.Location.X - Pane.XAxis.Scale.Min;
+                    }
+
+                    if (_leftLineCut.Location.X > Pane.XAxis.Scale.Min &&
+                        _rightLineCut.Location.X >= Pane.XAxis.Scale.Max)
+                    {
+                        _boxCut.IsVisible = true;
+                        _rightLineCut.IsVisible = false;
+                        _leftLineCut.IsVisible = true;
+                        _boxCut.Location.X = _leftLineCut.Location.X;
+                        _boxCut.Location.Width = Pane.XAxis.Scale.Max - _leftLineCut.Location.X;
+                    }
+
+                    if (_leftLineCut.Location.X <= Pane.XAxis.Scale.Min && 
+                        _rightLineCut.Location.X >= Pane.XAxis.Scale.Max)
+                    {
+                        _boxCut.IsVisible = true;
+                        _rightLineCut.IsVisible = false;
+                        _leftLineCut.IsVisible = false;
+                        _boxCut.Location.X = Pane.XAxis.Scale.Min;
+                        _boxCut.Location.Width = Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min;
+                    }
+
+                    if (_leftLineCut.Location.X <= Pane.XAxis.Scale.Min &&
+                        _rightLineCut.Location.X <= Pane.XAxis.Scale.Min 
+                        ||
+                        _leftLineCut.Location.X >= Pane.XAxis.Scale.Max &&
+                        _rightLineCut.Location.X >= Pane.XAxis.Scale.Max)
+                    {
+                        _boxCut.IsVisible = false;
+                        _rightLineCut.IsVisible = false;
+                        _leftLineCut.IsVisible = false;
+                    }
+
                 }
             }           
         }
@@ -952,7 +1017,7 @@ namespace ScopeViewer
             double graphX, graphY;
             Pane.ReverseTransform(new PointF(e.X, e.Y), out graphX, out graphY);
 
-            if (Cursor1 != null || Cursor2 != null)
+            if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 // ReSharper disable once PossibleNullReferenceException
@@ -982,6 +1047,26 @@ namespace ScopeViewer
                         CursorDig2.Location.X1 = graphX;
                         UpdateCursor();
                         zedGraph.Invalidate();
+                    }
+                }
+
+                if (_leftLineCut != null || _rightLineCut != null)
+                {
+
+                    if (_leftLineCut != null && Math.Abs(_leftLineCut.Line.Width - 3) < 1)
+                    {
+                        _leftLineCut.Location.X1 = graphX;
+                        UpdateCursor();
+                        zedGraph.Invalidate();
+                        Cursor = Cursors.VSplit;
+                    }
+
+                    if (_rightLineCut != null && Math.Abs(_rightLineCut.Line.Width - 3) < 1)
+                    {
+                        _rightLineCut.Location.X1 = graphX;
+                        UpdateCursor();
+                        zedGraph.Invalidate();
+                        Cursor = Cursors.VSplit;
                     }
                 }
             }
@@ -1032,6 +1117,7 @@ namespace ScopeViewer
                         OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
                     }
                 }
+
                 if (lineObject.Link.Title == "Cursor2" || lineObject.Link.Title == "CursorDig2")
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -1057,6 +1143,32 @@ namespace ScopeViewer
                     if (PaneDig != null)
                     {
                         OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                    }
+                }
+
+                if (lineObject.Link.Title == "LeftLine")
+                {
+                    if (Math.Abs(_leftLineCut.Line.Width - 2) > 0)
+                    {
+                        _leftLineCut.Line.Width = 2;
+                    }
+                    else
+                    {
+                        _rightLineCut.Line.Width = 2;
+                        _leftLineCut.Line.Width = 3;
+                    }
+                }
+
+                if (lineObject.Link.Title == "RightLine")
+                {
+                    if (Math.Abs(_rightLineCut.Line.Width - 2) > 0)
+                    {
+                        _rightLineCut.Line.Width = 2;
+                    }
+                    else
+                    {
+                        _leftLineCut.Line.Width = 2;
+                        _rightLineCut.Line.Width = 3;
                     }
                 }
             }
@@ -1239,6 +1351,247 @@ namespace ScopeViewer
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
+        }
+
+        BoxObj _boxCut;
+        LineObj _leftLineCut;
+        LineObj _rightLineCut;
+        bool _createCutBox;
+
+        private void Cut_StripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!_createCutBox)
+            {
+                AddCutBox();
+            }
+            else
+            {
+
+                DelCutBox();
+            }
+
+            ApplyCut_StripButton.Visible = !_createCutBox;
+            Cut_StripButton.Image = !_createCutBox ? Properties.Resources.Cutting_Remove : Properties.Resources.Cutting_Add;
+            Cut_StripButton.ToolTipText = !_createCutBox ? "Закрыть область" : "Добавить область";
+
+            _createCutBox = !_createCutBox;
+
+        }
+
+        private void AddCutBox()
+        {
+            _leftLineCut = new LineObj(
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Min,
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Max)
+            {
+                Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.DarkSlateBlue,
+                    Width = 2
+                },
+                Link = { Title = "LeftLine" }
+            };
+
+            _rightLineCut = new LineObj(
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Min,
+                (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min,
+                Pane.YAxis.Scale.Max)
+            {
+                Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.DarkSlateBlue,
+                    Width = 2
+                },
+                Link = { Title = "RightLine" }
+            };
+
+            // Добавим линию в список отображаемых объектов
+            Pane.GraphObjList.Add(_leftLineCut);
+            Pane.GraphObjList.Add(_rightLineCut);
+
+
+            _boxCut = new BoxObj(
+                _leftLineCut.Location.X,
+                Pane.YAxis.Scale.Max,
+                _rightLineCut.Location.X - _leftLineCut.Location.X,
+                Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min,
+                Color.Empty,
+                Color.AliceBlue)
+            {
+                Location =
+                {
+                    CoordinateFrame = CoordType.AxisXYScale,
+                    AlignH = AlignH.Left,
+                    AlignV = AlignV.Top
+                },
+                ZOrder = ZOrder.E_BehindCurves
+            };
+
+            // place the _boxCut behind the axis items, so the grid is drawn on top of it
+            Pane.GraphObjList.Add(_boxCut);
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+        }
+
+        private void DelCutBox()
+        {
+            Pane.GraphObjList.Remove(_leftLineCut);
+            Pane.GraphObjList.Remove(_rightLineCut);
+            Pane.GraphObjList.Remove(_boxCut);
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+        }
+
+        private void ApplyCut_StripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            //Формируем новую осциллограмму 
+            int numLeft = 0;
+            int numRight = ListTemp[0].Count;
+            double hisCount = MainWindow.OscilList[NumGraphPanel()].HistotyCount;
+
+            for (int j = ListTemp[0].Count - 1; j >= 0; j--)
+            {
+                if (ListTemp[0][j].X > _rightLineCut.Location.X)   //Правая сторона
+                {
+                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data.RemoveAt(j);
+                }
+                else if (ListTemp[0][j].X < _leftLineCut.Location.X)   //Левая сторона
+                {
+                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data.RemoveAt(j);
+                }
+            }
+
+            foreach (PointPairList listTemp in ListTemp)
+            {
+                for (int j = listTemp.Count - 1; j >= 0; j--)
+                {
+                    if (listTemp[j].X >= _rightLineCut.Location.X)
+                    {
+                        numRight = j;
+                    }
+                    if (listTemp[j].X >= _leftLineCut.Location.X)
+                    {
+                        numLeft = j;
+                    }
+                    if (listTemp[j].X > _rightLineCut.Location.X)   //Правая сторона
+                    {
+                        listTemp.RemoveAt(j);
+                    }  
+                    else if (listTemp[j].X < _leftLineCut.Location.X)   //Левая сторона
+                    {
+                        listTemp.RemoveAt(j);
+                    }
+                }
+            }
+
+            if (hisCount > numRight)
+            {
+                hisCount = 0;
+            }
+            else
+            {
+                hisCount = hisCount - numLeft;
+            }
+
+            foreach (PointPairList listTemp in ListTemp)
+            {
+                for (int j =  0; j < listTemp.Count; j++)
+                {
+                    listTemp[j].X = j / MainWindow.OscilList[NumGraphPanel()].SampleRate;
+                }
+            }
+
+            MainWindow.OscilList[NumGraphPanel()].NumCount = Convert.ToUInt32(ListTemp[0].Count);
+            MainWindow.OscilList[NumGraphPanel()].HistotyCount = hisCount > 0 ? hisCount : 0;
+            MainWindow.OscilList[NumGraphPanel()].StampDateTrigger =
+                MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(1000 * (numLeft + MainWindow.OscilList[NumGraphPanel()].HistotyCount) / MainWindow.OscilList[NumGraphPanel()].SampleRate);
+            MainWindow.OscilList[NumGraphPanel()].StampDateStart =
+                MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.AddMilliseconds(-(1000 * MainWindow.OscilList[NumGraphPanel()].HistotyCount / MainWindow.OscilList[NumGraphPanel()].SampleRate));
+            MainWindow.OscilList[NumGraphPanel()].StampDateEnd =
+                MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.AddMilliseconds(1000 * (MainWindow.OscilList[NumGraphPanel()].NumCount - MainWindow.OscilList[NumGraphPanel()].HistotyCount) / MainWindow.OscilList[NumGraphPanel()].SampleRate);
+
+
+
+            ResizeAxis();
+
+            ApplyCut_StripButton.Visible = false;
+            Cut_StripButton.Image = Properties.Resources.Cutting_Add;
+            _createCutBox = false;
+
+            DelCutBox();
+
+        }
+
+        private void SaveScope_toolStripButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                DefaultExt = @".txt",
+                Filter = @"Text Files (*.txt)|*.txt"
+            };
+
+            if (sfd.ShowDialog() != DialogResult.OK) { return; }
+
+            // Save to .txt
+
+            StreamWriter sw;
+
+            try
+            {
+                sw = File.CreateText(sfd.FileName);
+            }
+            catch
+            {
+                MessageBox.Show(@"Ошибка при создании файла!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                DateTime dateTemp = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger;
+                sw.WriteLine(dateTemp.ToString("dd'/'MM'/'yyyy HH:mm:ss.fff000"));                  //Штамп времени
+                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].SampleRate);                     //Частота выборки (частота запуска осциллогрофа/ делитель)
+                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].HistotyCount);                   //Предыстория 
+                sw.WriteLine(FileHeaderLine());                                                     //Формирование заголовка (подписи названия каналов)
+                for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].NumCount; i++)            //Формирование строк всех загруженных данных (отсортированых с предысторией)
+                {
+                    sw.WriteLine(FileParamLine(i));
+                }
+
+            }
+            catch
+            {
+                MessageBox.Show(@"Ошибка при записи в файл!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            sw.Close();
+        }
+
+        private string FileHeaderLine()
+        {
+            string str = " " + "\t";
+            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].ChannelCount; i++)
+            {
+                str = str + MainWindow.OscilList[NumGraphPanel()].ChannelNames[i] + "\t";
+            }
+            return str;
+        }
+
+        private string FileParamLine(int numLine)
+        {
+            string str = numLine + "\t";
+            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].Data[numLine].Count; i++)
+            {
+                str = str + MainWindow.OscilList[NumGraphPanel()].Data[numLine][i] + "\t";
+            }
+            return str;
         }
     }
 }

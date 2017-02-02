@@ -269,9 +269,6 @@
     <Resource Include="Resources\Long Position-48_.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cutting Coupon-48.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Flip Horizontal-48.png" />
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +303,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Chromatography-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Cut_Apply.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cutting Coupon-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Cutting_Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Cutting_Remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save as-48%281%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

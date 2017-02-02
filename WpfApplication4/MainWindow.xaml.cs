@@ -340,13 +340,17 @@ namespace ScopeViewer
 
             oscilGraph.OscilConfigAdd(oscil.OscilNames);
             for (int i = 0; i < oscil.ChannelCount; i++)
+            {
                 oscilGraph.GraphConfigAdd(oscil.ChannelNames[i], oscil.Dimension[i], oscil.TypeChannel[i]);
-
+            }
+                
             OscilChannelList.Add(oscilGraph);
 
             GraphObj.GraphStackPanel.Children.Add(oscilGraph.LayoutOscilPanel);
             for (int i = 0; i < oscil.ChannelCount; i++)
+            {
                 GraphObj.GraphStackPanel.Children.Add(oscilGraph.LayoutPanel[i]);
+            }
 
             GraphPanelList.Add(new GraphPanel());
 
