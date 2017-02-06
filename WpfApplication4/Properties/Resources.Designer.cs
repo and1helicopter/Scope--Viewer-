@@ -73,36 +73,6 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Cancel_4_Digits_48 {
-            get {
-                object obj = ResourceManager.GetObject("Cancel_4_Digits_48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Cancel_4_Digits_48__3_ {
-            get {
-                object obj = ResourceManager.GetObject("Cancel_4_Digits_48__3_", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Cancel_4_Digits_48_1_ {
-            get {
-                object obj = ResourceManager.GetObject("Cancel_4_Digits_48_1_", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Chromatography_48_1_ {
             get {
                 object obj = ResourceManager.GetObject("Chromatography_48_1_", resourceCulture);
@@ -196,6 +166,36 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Delete_Property_48 {
             get {
                 object obj = ResourceManager.GetObject("Delete_Property_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dig_Add {
+            get {
+                object obj = ResourceManager.GetObject("Dig_Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dig_Cancel {
+            get {
+                object obj = ResourceManager.GetObject("Dig_Cancel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dig_Leave {
+            get {
+                object obj = ResourceManager.GetObject("Dig_Leave", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -406,6 +406,46 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Show_Property_48_1_ {
             get {
                 object obj = ResourceManager.GetObject("Show_Property_48_1_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Stocks_Add {
+            get {
+                object obj = ResourceManager.GetObject("Stocks_Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Stocks_Rem {
+            get {
+                object obj = ResourceManager.GetObject("Stocks_Rem", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Watch_Add {
+            get {
+                object obj = ResourceManager.GetObject("Watch_Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Watch_Rem {
+            get {
+                object obj = ResourceManager.GetObject("Watch_Rem", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

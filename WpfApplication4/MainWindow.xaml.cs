@@ -40,6 +40,7 @@ namespace ScopeViewer
         public static Graph GraphObj = new Graph();
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static Analysis AnalysisObj = new Analysis();
+        
 
         Settings _settingsObj;
 
@@ -54,7 +55,7 @@ namespace ScopeViewer
             {
                 From = 0,
                 To = 250,
-                Duration = new Duration(TimeSpan.FromSeconds(0.01))
+                Duration = new Duration(TimeSpan.FromSeconds(0.02))
             };
             ConfigPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, openAnimation);
         }
@@ -64,7 +65,7 @@ namespace ScopeViewer
             {
                 From = 250,
                 To = 0,
-                Duration = new Duration(TimeSpan.FromSeconds(0.01))
+                Duration = new Duration(TimeSpan.FromSeconds(0.02))
             };
             ConfigPanel.BeginAnimation(ColumnDefinition.MinWidthProperty, closeAnimation);
         }
@@ -516,12 +517,12 @@ namespace ScopeViewer
 
         private void AddDigitalChannel_MouseEnter(object sender, MouseEventArgs e)
         {
-            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Cancel 4 Digits-48(1).png")));
+            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Dig_Leave.png")));
         }
 
         private void AddDigitalChannel_MouseLeave(object sender, MouseEventArgs e)
         {
-            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Cancel 4 Digits-48.png")));
+            AddDigitalChannel.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Dig_Add.png")));
         }
 
         int maxGapCount = 10;

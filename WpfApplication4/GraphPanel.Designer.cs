@@ -28,25 +28,26 @@ namespace ScopeViewer
         public void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphPanel));
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.AddCursor = new System.Windows.Forms.ToolStripButton();
+            this.StampTrigger = new System.Windows.Forms.ToolStripButton();
+            this.ScaleButton = new System.Windows.Forms.ToolStripButton();
             this.StampTime_label = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.Cut_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.ApplyCut_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.SaveScope_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Mask1_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMax_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.AddCursor = new System.Windows.Forms.ToolStripButton();
-            this.StampTrigger = new System.Windows.Forms.ToolStripButton();
-            this.ScaleButton = new System.Windows.Forms.ToolStripButton();
-            this.Cut_StripButton = new System.Windows.Forms.ToolStripButton();
-            this.ApplyCut_StripButton = new System.Windows.Forms.ToolStripButton();
-            this.SaveScope_toolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
-            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.absOrRelTime_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -91,20 +92,61 @@ namespace ScopeViewer
             this.ApplyCut_StripButton,
             this.SaveScope_toolStripButton,
             this.toolStripSeparator3,
-            this.posTab_StripButton,
-            this.delateDig_toolStripButton,
+            this.absOrRelTime_toolStripButton,
             this.toolStripSeparator1,
             this.Mask1_label,
             this.MaskMax_textBox,
             this.Mask2_label,
             this.MaskMin_textBox,
             this.toolStripSeparator2,
-            this.absOrRelTime_toolStripButton});
+            this.posTab_StripButton,
+            this.delateDig_toolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(809, 33);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // AddCursor
+            // 
+            this.AddCursor.AutoSize = false;
+            this.AddCursor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.AddCursor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AddCursor.Image = global::ScopeViewer.Properties.Resources.Stocks_Add;
+            this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
+            this.AddCursor.Name = "AddCursor";
+            this.AddCursor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.AddCursor.Size = new System.Drawing.Size(30, 30);
+            this.AddCursor.Text = "Добавить курсоры";
+            this.AddCursor.ToolTipText = "Добавить курсоры ";
+            this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
+            // 
+            // StampTrigger
+            // 
+            this.StampTrigger.AutoSize = false;
+            this.StampTrigger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.StampTrigger.Image = global::ScopeViewer.Properties.Resources.Watch_Add;
+            this.StampTrigger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StampTrigger.Name = "StampTrigger";
+            this.StampTrigger.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.StampTrigger.Size = new System.Drawing.Size(30, 30);
+            this.StampTrigger.Text = "Штамп времени ";
+            this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
+            // 
+            // ScaleButton
+            // 
+            this.ScaleButton.AutoSize = false;
+            this.ScaleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ScaleButton.Image = global::ScopeViewer.Properties.Resources.Width_48;
+            this.ScaleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ScaleButton.Name = "ScaleButton";
+            this.ScaleButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ScaleButton.Size = new System.Drawing.Size(30, 30);
+            this.ScaleButton.Text = "Изменить размер";
+            this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
             // 
             // StampTime_label
             // 
@@ -118,87 +160,6 @@ namespace ScopeViewer
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 33);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
-            // 
-            // Mask1_label
-            // 
-            this.Mask1_label.Name = "Mask1_label";
-            this.Mask1_label.Size = new System.Drawing.Size(21, 30);
-            this.Mask1_label.Text = "От";
-            // 
-            // MaskMax_textBox
-            // 
-            this.MaskMax_textBox.Name = "MaskMax_textBox";
-            this.MaskMax_textBox.Size = new System.Drawing.Size(20, 33);
-            this.MaskMax_textBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.MaskMax_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
-            this.MaskMax_textBox.TextChanged += new System.EventHandler(this.MaskMax_textBox_TextChanged);
-            // 
-            // Mask2_label
-            // 
-            this.Mask2_label.Name = "Mask2_label";
-            this.Mask2_label.Size = new System.Drawing.Size(20, 30);
-            this.Mask2_label.Text = "до";
-            // 
-            // MaskMin_textBox
-            // 
-            this.MaskMin_textBox.Name = "MaskMin_textBox";
-            this.MaskMin_textBox.Size = new System.Drawing.Size(20, 33);
-            this.MaskMin_textBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.MaskMin_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
-            this.MaskMin_textBox.TextChanged += new System.EventHandler(this.MaskMin_textBox_TextChanged);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
-            // 
-            // AddCursor
-            // 
-            this.AddCursor.AutoSize = false;
-            this.AddCursor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.AddCursor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AddCursor.Image = global::ScopeViewer.Properties.Resources.Line_48_2_;
-            this.AddCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AddCursor.Margin = new System.Windows.Forms.Padding(1);
-            this.AddCursor.Name = "AddCursor";
-            this.AddCursor.Size = new System.Drawing.Size(30, 30);
-            this.AddCursor.Text = "Добавить курсоры";
-            this.AddCursor.ToolTipText = "Добавить курсоры ";
-            this.AddCursor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddCoursor_MouseDown);
-            // 
-            // StampTrigger
-            // 
-            this.StampTrigger.AutoSize = false;
-            this.StampTrigger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.StampTrigger.Image = global::ScopeViewer.Properties.Resources.Horizontal_Line_48_2_;
-            this.StampTrigger.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.StampTrigger.Name = "StampTrigger";
-            this.StampTrigger.Size = new System.Drawing.Size(30, 30);
-            this.StampTrigger.Text = "Штамп времени ";
-            this.StampTrigger.MouseDown += new System.Windows.Forms.MouseEventHandler(this.StampTrigger_MouseDown);
-            // 
-            // ScaleButton
-            // 
-            this.ScaleButton.AutoSize = false;
-            this.ScaleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ScaleButton.Image = global::ScopeViewer.Properties.Resources.Width_48;
-            this.ScaleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ScaleButton.Margin = new System.Windows.Forms.Padding(0);
-            this.ScaleButton.Name = "ScaleButton";
-            this.ScaleButton.Size = new System.Drawing.Size(30, 30);
-            this.ScaleButton.Text = "Изменить размер";
-            this.ScaleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.ScaleButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScaleButton_MouseDown);
             // 
             // Cut_StripButton
             // 
@@ -240,6 +201,11 @@ namespace ScopeViewer
             this.SaveScope_toolStripButton.Text = "Сохранить осциллограмму";
             this.SaveScope_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SaveScope_toolStripButton_MouseDown);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
+            // 
             // posTab_StripButton
             // 
             this.posTab_StripButton.AutoSize = false;
@@ -247,6 +213,7 @@ namespace ScopeViewer
             this.posTab_StripButton.Image = global::ScopeViewer.Properties.Resources.Flip_Horizontal_48;
             this.posTab_StripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.posTab_StripButton.Name = "posTab_StripButton";
+            this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
             this.posTab_StripButton.Text = "Расположение ";
             this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
@@ -255,12 +222,51 @@ namespace ScopeViewer
             // 
             this.delateDig_toolStripButton.AutoSize = false;
             this.delateDig_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.delateDig_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Cancel_4_Digits_48__3_;
+            this.delateDig_toolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("delateDig_toolStripButton.Image")));
             this.delateDig_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
+            this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
             this.delateDig_toolStripButton.Text = "toolStripButton1";
             this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
+            // 
+            // Mask1_label
+            // 
+            this.Mask1_label.Name = "Mask1_label";
+            this.Mask1_label.Size = new System.Drawing.Size(21, 30);
+            this.Mask1_label.Text = "От";
+            // 
+            // MaskMax_textBox
+            // 
+            this.MaskMax_textBox.Name = "MaskMax_textBox";
+            this.MaskMax_textBox.Size = new System.Drawing.Size(20, 33);
+            this.MaskMax_textBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MaskMax_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
+            this.MaskMax_textBox.TextChanged += new System.EventHandler(this.MaskMax_textBox_TextChanged);
+            // 
+            // Mask2_label
+            // 
+            this.Mask2_label.Name = "Mask2_label";
+            this.Mask2_label.Size = new System.Drawing.Size(20, 30);
+            this.Mask2_label.Text = "до";
+            // 
+            // MaskMin_textBox
+            // 
+            this.MaskMin_textBox.Name = "MaskMin_textBox";
+            this.MaskMin_textBox.Size = new System.Drawing.Size(20, 33);
+            this.MaskMin_textBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MaskMin_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
+            this.MaskMin_textBox.TextChanged += new System.EventHandler(this.MaskMin_textBox_TextChanged);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
             // 
             // absOrRelTime_toolStripButton
             // 

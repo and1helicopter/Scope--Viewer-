@@ -120,6 +120,25 @@
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="delateDig_toolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKmSURBVGhD7VgxSxxBFLa1E9s0KdIK/oEQixQ5bORAEFKY
+        gO2FFEeK2IiFaHVoIVamSWUKU6UNWNldlRRJcWUgzRFEEJvn+3b3re9m3+xdQnZmEvaDb9id2Xf7vtn3
+        3szcHP3jaAXERisgNloBsdEKiI1WQGy0AmLjPxZwcU70mIdT5asVouFnj4CrMVFnwTZMiesPPQLeruUP
+        bC4RfThMk4WIqoCzQT74dJ7o/b5tnAJNAT9G96FzsGUbpsKKAMQ9EgMDvSe2UUqsCDjdyTtXF9MOHeGE
+        AC5HWegg7gc92wD8eEL0bUg0/kl0/Su/DjmuWQpA6Lxczjv6z+yHhV8uM70TGH0NN65ZCjh6nd9sPJoe
+        OpgVF7c34cY1SwFS8yHAelAzSQEIIV7Rso7trv2wEDHpQsdp0+OapQAASVx00PEb20AoL8HMID6ReCHH
+        hRMCAMkFlFHLICRnKeMVAYBUo9ALGRzud4i6D/JSXjiXEfux3edVm2KcWwVsJcSwbj34m8R78NXlvT5C
+        nA7vop9bB6E2c/htfGlxcFbiS8G+uOfWgOyJmtxO/4nzQmw0i2tuDaC0aoMQlPxziS2O73DFNtx6EPJI
+        iS+OSZPwFcJx+KG3+Xrs07saAU1Bdr1CLKJwXiAixHmBLjBC75m4SUh+afJMTgAitPPA3ouqHfdxGxiu
+        E0JXhIblPMiTwW1AWGGgaYnwOQ96/5VoCnXVzY15gZvYmrVVqCm41QT0OS/wiQgeQoCcP4SW8wgbK7G1
+        HcgVjdvAgGPaCbeM6pjXIuTcrm2jlFHAXXVFhJWwEGE5j+0/g68iYFo1cuk6r74a30WCuyL/DlXO8F1E
+        1JVIiwg9J+G5NzK+8xnY2l64RH7oZC/AI4kAM4vEhBjEOGYbJRehBpEmiO4AiyVUHWS/pnkAAAAASUVO
+        RK5CYII=
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>54</value>
   </metadata>

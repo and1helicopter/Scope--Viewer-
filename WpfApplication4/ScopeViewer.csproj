@@ -48,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Line Chart-48.ico</ApplicationIcon>
@@ -120,6 +121,11 @@
     <Compile Include="Oscil.cs" />
     <Compile Include="OscilAnalysis.cs" />
     <Compile Include="OscilGraph.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings.xaml.cs">
@@ -160,11 +166,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -178,6 +179,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -233,13 +235,7 @@
     <Resource Include="Resources\Open Folder-48.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Resize-48.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Services-48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Width-48.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Expand-48.png" />
@@ -269,18 +265,6 @@
     <Resource Include="Resources\Long Position-48_.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Flip Horizontal-48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Flip Vertical-48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Cancel 4 Digits-48 %282%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Cancel 4 Digits-48 %283%29.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Cosine-50%284%29.png" />
   </ItemGroup>
   <ItemGroup>
@@ -291,12 +275,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Line Chart-48%282%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Cancel 4 Digits-48%281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Cancel 4 Digits-48.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Chromatography-48_2.png" />
@@ -318,6 +296,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Save as-48%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Stocks_Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Stocks_Rem.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Watch_Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Watch_Rem.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Width-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Resize-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Flip Horizontal-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Flip Vertical-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dig_Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Dig_Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Dig_Leave.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

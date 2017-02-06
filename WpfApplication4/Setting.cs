@@ -6,7 +6,7 @@ namespace ScopeViewer
 {
     public static class Setting
     {
-        public static string XmlFileName = "ViewerSettings.xml";
+        private static string XmlFileName = "ViewerSettings.xml";
 
         public static bool ShowDigital;
         public static int PointInLine;

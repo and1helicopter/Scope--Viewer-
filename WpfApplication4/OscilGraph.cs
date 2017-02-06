@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,29 +20,29 @@ namespace ScopeViewer
         public DockPanel LayoutOscilPanel;
 
         private readonly List<Border> _panelBorder = new List<Border>();
-        public List<DockPanel> LayoutPanel = new List<DockPanel>();
-        public List<Label> NameLabel = new List<Label>();
-        public List<Ellipse> ColorEllipse = new List<Ellipse>();
-        public List<CheckBox> VisibleCheckBox = new List<CheckBox>();
-        public List<CheckBox> SelectCheckBox = new List<CheckBox>();
+        public readonly List<DockPanel> LayoutPanel = new List<DockPanel>();
+        public readonly List<Label> NameLabel = new List<Label>();
+        public readonly List<Ellipse> ColorEllipse = new List<Ellipse>();
+        public readonly List<CheckBox> VisibleCheckBox = new List<CheckBox>();
+        public readonly List<CheckBox> SelectCheckBox = new List<CheckBox>();
 
-        public List<ComboBox> TypeTypeComboBox = new List<ComboBox>();
-        public List<ComboBox> TypeComboBox = new List<ComboBox>();
-        public List<CheckBox> SmoothCheckBox = new List<CheckBox>();
+        public readonly List<ComboBox> TypeTypeComboBox = new List<ComboBox>();
+        public readonly List<ComboBox> TypeComboBox = new List<ComboBox>();
+        public readonly List<CheckBox> SmoothCheckBox = new List<CheckBox>();
         
-        public List<bool> OpenClose = new List<bool>();
-        public List<ComboBox> StepTypeComboBox = new List<ComboBox>();
-        public List<CheckBox> WidthCheckBox = new List<CheckBox>();
+        public readonly List<bool> OpenClose = new List<bool>();
+        public readonly List<ComboBox> StepTypeComboBox = new List<ComboBox>();
+        public readonly List<CheckBox> WidthCheckBox = new List<CheckBox>();
 
-        readonly Random _rngColor = new Random();
+        private readonly Random _rngColor = new Random();
 
 
-        readonly string[] _typeType = new string[] {
+        private readonly string[] _typeType = {
             "Analog",
             "Digital"
         };
 
-        readonly string[] _styleType = new string[] {
+        private readonly string[] _styleType = {
             "Solid",
             "Dash",
             "DashDot",
@@ -86,8 +87,7 @@ namespace ScopeViewer
                 ToolTip = "Выбрать все каналы",
                 Margin = new Thickness(0, 8, 0, 0)
             };
-            //  _selectAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked;
-            //  _selectAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked;
+            _selectAllCheckBox.Click += SelectAllCheckBox_Click;
 
             _showAllCheckBox = new CheckBox
             {
@@ -95,8 +95,7 @@ namespace ScopeViewer
                 Margin = new Thickness(0, 8, 0, 0),
                 IsChecked = true
             };
-            //    _showAllCheckBox[LayoutOscilPanel.Count - 1].Checked += Graph_Checked1;
-            //  _showAllCheckBox[LayoutOscilPanel.Count - 1].Unchecked += Graph_Checked1;
+            _showAllCheckBox.Click += ShowAllCheckBox_Click;
 
             _closeButton = new Rectangle
             {
@@ -106,6 +105,7 @@ namespace ScopeViewer
                 Width = 16,
                 Height = 16
             };
+
             _closeButton.MouseEnter += Graph_MouseEnter;
             _closeButton.MouseLeave += Graph_MouseLeave;
             _closeButton.MouseDown += Graph_MouseDown;
@@ -114,6 +114,46 @@ namespace ScopeViewer
             LayoutOscilPanel.Children.Add(_showAllCheckBox);
             LayoutOscilPanel.Children.Add(_selectAllCheckBox);
             LayoutOscilPanel.Children.Add(_closeButton);
+        }
+
+        private void ShowAllCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (_showAllCheckBox.IsChecked == true)
+            {
+                foreach (var checkBox in VisibleCheckBox)
+                {
+                    checkBox.IsChecked = true;
+                }
+            }
+            else
+            {
+                foreach (var checkBox in VisibleCheckBox)
+                {
+                    checkBox.IsChecked = false;
+                }
+            }
+            for (int i = 0; i < SelectCheckBox.Count; i++)
+            {
+                click_graph(i);
+            }
+        }
+
+        private void SelectAllCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectAllCheckBox.IsChecked == true)
+            {
+                foreach (var checkBox in SelectCheckBox)
+                {
+                    checkBox.IsChecked = true;
+                }
+            }
+            else
+            {
+                foreach (var checkBox in SelectCheckBox)
+                {
+                    checkBox.IsChecked = false;
+                }
+            }
         }
 
         public void GraphConfigAdd(string nameChannel, string dimensionChannel, bool typeChannel)
@@ -169,8 +209,10 @@ namespace ScopeViewer
                 Margin = new Thickness(0, 5, 0, 0),
                 ToolTip = "Отображать"
             };
+            visibleCheckBox.Checked += VisibleCheckBox_Checked;
+            visibleCheckBox.Unchecked += VisibleCheckBox_Unchecked;
+            visibleCheckBox.Click += click_checkedButton;
             VisibleCheckBox.Add(visibleCheckBox);
-            VisibleCheckBox[VisibleCheckBox.Count - 1].Click += click_checkedButton;
 
             CheckBox selectCheckBox = new CheckBox
             {
@@ -180,7 +222,10 @@ namespace ScopeViewer
                 Margin = new Thickness(0, 5, 0, 0),
                 ToolTip = "Выбрать"
             };
+            selectCheckBox.Checked += selectCheckBox_Checked;
+            selectCheckBox.Unchecked += selectCheckBox_Unchecked;
             SelectCheckBox.Add(selectCheckBox);
+            
 
             ComboBox typeTypeComboBox = new ComboBox
             {
@@ -254,6 +299,32 @@ namespace ScopeViewer
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(_panelBorder[_panelBorder.Count - 1]);
         }
 
+        private void VisibleCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _showAllCheckBox.IsChecked = false;
+        }
+
+        private void VisibleCheckBox_Checked(object sender, RoutedEventArgs routedEventArgs)
+        {
+            if (VisibleCheckBox.Count == VisibleCheckBox.Count(checkBox => checkBox.IsChecked == true))
+            {
+                _showAllCheckBox.IsChecked = true;
+            }
+        }
+
+        private void selectCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+               _selectAllCheckBox.IsChecked = false;
+        }
+
+        private void selectCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (SelectCheckBox.Count == SelectCheckBox.Count(checkBox => checkBox.IsChecked == true))
+            {
+                _selectAllCheckBox.IsChecked = true;
+            }
+        }
+
         private void click_LayoutPanel(object sender, MouseButtonEventArgs e)
         {
             for (int i = 0; i < OpenClose.Count; i++)
@@ -298,11 +369,11 @@ namespace ScopeViewer
                 ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, color, l);
             }
         }
-
+        
         private void click_checkedButton(object sender, EventArgs e)
         {
-            //Нужно определить в каком графике произошел вызов 
             int j = 0, l = 0;
+
             for (int k = 0; k < MainWindow.OscilChannelList.Count; k++)
             {
                 for (int i = 0; i < MainWindow.OscilChannelList[k].VisibleCheckBox.Count; i++)
@@ -317,6 +388,18 @@ namespace ScopeViewer
             }
 
             ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+        }
+
+        private void click_graph(int j)
+        {
+            for (int k = 0; k < MainWindow.OscilChannelList.Count; k++)
+            {
+                if(MainWindow.OscilChannelList[k] == this)
+                {
+                    var l = k;
+                    ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+                }
+            }
         }
 
         private void TypeChange(object sender, SelectionChangedEventArgs e)

@@ -113,14 +113,14 @@ namespace ScopeViewer
         
         // Создадим список точек   
         public readonly List<PointPairList> ListTemp;
-        public static int PointInLine = 250;
+        private static int _pointInLine = 250;
         private readonly List<bool> _digitalList = new List<bool>();
-        public static bool ShowDigital;
+        private static bool _showDigital;
  
         public void PointInLineChange(int point, bool showDigital)
         {
-            PointInLine = point;
-            ShowDigital = showDigital;
+            _pointInLine = point;
+            _showDigital = showDigital;
             UpdateGraph();
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -168,8 +168,8 @@ namespace ScopeViewer
                         }
                     }
                     // ReSharper disable once PossibleLossOfFraction
-                    int sum = Convert.ToInt32((double)((stopIndex - startIndex) / PointInLine));
-                    if (sum == 0 || (ShowDigital && _digitalList[i])) sum = 1;
+                    int sum = Convert.ToInt32((double)((stopIndex - startIndex) / _pointInLine));
+                    if (sum == 0 || (_showDigital && _digitalList[i])) sum = 1;
 
                     for (int j = startIndex; j < stopIndex; j += sum)
                     {
@@ -181,48 +181,47 @@ namespace ScopeViewer
             catch { }
         }
 
-        string XAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
+        private string XAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
         {
             if (_absOrRel)
             {
                 //Абсолютное время
-                return string.Format("{0}:{1}:{2}.{3}",
-                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour.ToString("D2"),
-                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute.ToString("D2"),
-                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second.ToString("D2"),
-                    MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond.ToString("D3"));
+                return
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Hour.ToString("D2")}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Minute.ToString("D2")}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Second.ToString("D2")}." +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Millisecond.ToString("D3")}";
             }
             else
             {
                 //Относительное время
                 if (axis.Scale.Max - axis.Scale.Min > 1)
                 {
-                    return string.Format("{0} s", val);
+                    return $"{val} s";
                 }
                 if (axis.Scale.Max - axis.Scale.Min > 0.001)
                 {
-                    return string.Format("{0} ms", val * 1000);
+                    return $"{val*1000} ms";
                 }
                 if (axis.Scale.Max - axis.Scale.Min > 0.000001)
                 {
-                    return string.Format("{0} \u03BCs", val * 1000000);
+                    return $"{val*1000000} \u03BCs";
                 }
                 else
                 {
-                    return string.Format("{0} ns", val * 1000000000);
+                    return $"{val*1000000000} ns";
                 }
             }
         }
 
-        string YAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
+        private string YAxis_ScaleFormatEvent(GraphPane pane, Axis axis, double val, int index)
         {
             PaneDig.YAxis.MinorGrid.IsVisible = false;
             PaneDig.YAxis.Scale.MinorStep = 1.0;
             PaneDig.YAxis.MajorGrid.IsVisible = true;
             PaneDig.YAxis.Scale.MajorStep = 1.0;
 
-
-            return string.Format("{0}", val * -1);
+            return $"{val*-1}";
         }
 
         public void AddGraph(int j, Color color, bool dig)
@@ -238,13 +237,13 @@ namespace ScopeViewer
 
         private void AddAnalogChannel(int j, Color color)
         {
+            //Скроем инструменты, которые позволяют пользоватся представлением дискретного канала 
             toolStripSeparator1.Visible = false;
             Mask1_label.Visible = false;
             Mask2_label.Visible = false;
             MaskMin_textBox.Visible = false;
             MaskMax_textBox.Visible = false;
             toolStripSeparator2.Visible = false;
-
             posTab_StripButton.Visible = false;
             delateDig_toolStripButton.Visible = false;
 
@@ -256,7 +255,7 @@ namespace ScopeViewer
 
             // Заполняем список точек. Приращение по оси X 
             // ReSharper disable once PossibleLossOfFraction
-            int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / PointInLine));
+            int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / _pointInLine));
             if (sum == 0) sum = 1;
             // DateTime tempTime;
 
@@ -291,10 +290,15 @@ namespace ScopeViewer
                 return;
             }
 
-            if (CursorsCreate)          //Удалим Курсоры если оние есть
+            if (_cursorsCreate)          //Удалим Курсоры если оние есть
             {
                 AddCoursorEvent();
-            }                   
+            }
+
+            if (_stampTriggerCreate)
+            {
+                StampTriggerEvent();
+            }                 
 
             BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
             int binary = 0;
@@ -472,6 +476,9 @@ namespace ScopeViewer
 
             _maxYAxisAuto = 0;
             _minYAxisAuto = -maxMaskCount - 1;
+
+            PaneDig.XAxis.Scale.Max = Pane.XAxis.Scale.Max;
+            PaneDig.XAxis.Scale.Min = Pane.XAxis.Scale.Min;
 
             PaneDig.X2Axis.Scale.Max = PaneDig.XAxis.Scale.Max;
             PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
@@ -726,9 +733,11 @@ namespace ScopeViewer
         }
 
         private LineObj _stampTrigger;
+        private LineObj _stampTriggerDig;
 
-        public void LineStampTrigger()
-        {  try
+        private void LineStampTrigger()
+        {
+            try
             {
                 double timeStamp = MainWindow.OscilList[NumGraphPanel()].HistotyCount / MainWindow.OscilList[NumGraphPanel()].SampleRate;
                 _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max)
@@ -736,20 +745,37 @@ namespace ScopeViewer
                     Line =
                 {
                     Style = System.Drawing.Drawing2D.DashStyle.DashDot,
-                    Color = Color.Chocolate,
+                    Color = Color.LimeGreen,
                     Width = 2
                 },
                     Link = { Title = "StampTrigger" }
                 };
 
                 Pane.GraphObjList.Add(_stampTrigger);
+
+                if (PaneDig != null)
+                {
+                    _stampTriggerDig = new LineObj(timeStamp, PaneDig.YAxis.Scale.Min, timeStamp, PaneDig.YAxis.Scale.Max)
+                    {
+                        Line =
+                    {
+                        Style = System.Drawing.Drawing2D.DashStyle.DashDot,
+                        Color = Color.LimeGreen,
+                        Width = 2
+                    },
+                        Link = { Title = "StampTriggerDig" }
+                    };
+
+                    PaneDig.GraphObjList.Add(_stampTriggerDig);
+                }
+
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch
             { }
         }
 
-        public void StampTriggerClear()
+        private void StampTriggerClear()
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
@@ -759,19 +785,28 @@ namespace ScopeViewer
                 }
             }
 
+            if (PaneDig != null)
+            {
+                for (int i = PaneDig.GraphObjList.Count - 1; i >= 0; i--)
+                {
+                    if (PaneDig.GraphObjList[i].Link.Title == "StampTriggerDig")
+                    {
+                        PaneDig.GraphObjList.Remove(PaneDig.GraphObjList[i]);
+                    }
+                }
+            }
+
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
 
-        public OscilAnalysis OscilCursor = new OscilAnalysis();
-        public bool CursorsCreate;
-        public int NumCursors;
+        private readonly OscilAnalysis _oscilCursor = new OscilAnalysis();
+        private bool _cursorsCreate;
         public LineObj Cursor1;
         public LineObj Cursor2;
         public LineObj CursorDig1;
         public LineObj CursorDig2;
-
-
+        
         private int NumGraphPanel()
         {
             //Определяем номер рабочей GraphPanel 
@@ -860,11 +895,11 @@ namespace ScopeViewer
                 PaneDig.GraphObjList.Add(CursorDig2);
             }
 
+            _cursorsCreate = true;
+
             // Обновляем график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
-
-            CursorsCreate = true;
         }
 
         private void CursorClear()
@@ -880,7 +915,7 @@ namespace ScopeViewer
                     if (PaneDig.GraphObjList[i].Link.Title == "CursorDig1" || PaneDig.GraphObjList[i].Link.Title == "CursorDig2") { PaneDig.GraphObjList.Remove(PaneDig.GraphObjList[i]); }
                 }
             }
-            CursorsCreate = false;
+            _cursorsCreate = false;
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -944,6 +979,25 @@ namespace ScopeViewer
                     {
                         _stampTrigger.IsVisible = true;
                     }
+                    if (PaneDig != null)
+                    {
+                        _stampTriggerDig.Location.Y1 = PaneDig.YAxis.Scale.Min;
+                        _stampTriggerDig.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
+
+                        if (_stampTriggerDig.Location.X <= PaneDig.XAxis.Scale.Min)
+                        {
+                            _stampTriggerDig.IsVisible = false;
+                        }
+                        if (_stampTriggerDig.Location.X >= PaneDig.XAxis.Scale.Max)
+                        {
+                            _stampTriggerDig.IsVisible = false;
+                        }
+                        if (_stampTriggerDig.Location.X >= PaneDig.XAxis.Scale.Min &&
+                            _stampTriggerDig.Location.X <= PaneDig.XAxis.Scale.Max)
+                        {
+                            _stampTriggerDig.IsVisible = true;
+                        }
+                    }
                     continue;
                 }
 
@@ -958,6 +1012,11 @@ namespace ScopeViewer
                     _boxCut.Location.Height = Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min;
                     _boxCut.Location.X = _leftLineCut.Location.X;
                     _boxCut.Location.Width = _rightLineCut.Location.X - _leftLineCut.Location.X;
+
+                    if ( _leftLineCut.Location.X > _rightLineCut.Location.X )
+                    {
+                        _leftLineCut.Location.X = _rightLineCut.Location.X;
+                    }
 
                     if (_leftLineCut.Location.X > Pane.XAxis.Scale.Min &&
                         _rightLineCut.Location.X < Pane.XAxis.Scale.Max)
@@ -1007,7 +1066,6 @@ namespace ScopeViewer
                         _rightLineCut.IsVisible = false;
                         _leftLineCut.IsVisible = false;
                     }
-
                 }
             }           
         }
@@ -1053,17 +1111,24 @@ namespace ScopeViewer
                 if (_leftLineCut != null || _rightLineCut != null)
                 {
 
-                    if (_leftLineCut != null && Math.Abs(_leftLineCut.Line.Width - 3) < 1)
+                    if (_rightLineCut != null && Math.Abs(_rightLineCut.Line.Width - 3) < 1)
                     {
-                        _leftLineCut.Location.X1 = graphX;
+                        if (_leftLineCut != null && _leftLineCut.Location.X1 > graphX)
+                        {
+                            _rightLineCut.Location.X1 = _leftLineCut.Location.X1;
+                        }
+                        else
+                        {
+                            _rightLineCut.Location.X1 = graphX;
+                        }
                         UpdateCursor();
                         zedGraph.Invalidate();
                         Cursor = Cursors.VSplit;
                     }
 
-                    if (_rightLineCut != null && Math.Abs(_rightLineCut.Line.Width - 3) < 1)
+                    if (_leftLineCut != null && Math.Abs(_leftLineCut.Line.Width - 3) < 1)
                     {
-                        _rightLineCut.Location.X1 = graphX;
+                        _leftLineCut.Location.X1 = graphX;
                         UpdateCursor();
                         zedGraph.Invalidate();
                         Cursor = Cursors.VSplit;
@@ -1111,10 +1176,10 @@ namespace ScopeViewer
                             CursorDig2.Line.Width = 2;
                         }
                     }
-                    OscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+                    _oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
                     if (PaneDig != null)
                     {
-                        OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                        _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
                     }
                 }
 
@@ -1139,10 +1204,10 @@ namespace ScopeViewer
                             CursorDig2.Line.Width = 3;
                         }
                     }
-                    OscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+                    _oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
                     if (PaneDig != null)
                     {
-                        OscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                        _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
                     }
                 }
 
@@ -1183,44 +1248,44 @@ namespace ScopeViewer
 
         private void AddCoursorEvent()
         {
-            if (CursorsCreate == false)
+            if (_cursorsCreate == false)
             {
                 CursorClear();
                 CursorAdd();
-                OscilCursor.AnalysisCursorAdd(NumGraphPanel());
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[0]);
+                _oscilCursor.AnalysisCursorAdd(NumGraphPanel());
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[0]);
                 if (PaneDig != null)
                 {
-                    OscilCursor.AnalysisCursorAddDig(NumGraphPanel());
-                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(OscilCursor.LayoutPanel[1]);
+                    _oscilCursor.AnalysisCursorAddDig(NumGraphPanel());
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[1]);
                 }
-                AddCursor.Image = Properties.Resources.Line_48_1_;
+                AddCursor.Image = Properties.Resources.Stocks_Rem;
             }
             else
             {
                 CursorClear();
                 if (PaneDig != null)
                 {
-                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[1]);
-                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
-                    OscilCursor.AnalysisCursorClearDig();
-                    OscilCursor.AnalysisCursorClear();
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[1]);
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                    _oscilCursor.AnalysisCursorClearDig();
+                    _oscilCursor.AnalysisCursorClear();
                 }
                 else
                 {
-                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
-                    OscilCursor.AnalysisCursorClear();
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                    _oscilCursor.AnalysisCursorClear();
                 }
-                AddCursor.Image = Properties.Resources.Line_48_2_;
+                AddCursor.Image = Properties.Resources.Stocks_Add;
             }
         }
 
         public void DelCursor()
         {
-            if (CursorsCreate)
+            if (_cursorsCreate)
             {
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(OscilCursor.LayoutPanel[0]);
-                OscilCursor.AnalysisCursorClear();
+                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                _oscilCursor.AnalysisCursorClear();
             }
         }
 
@@ -1237,13 +1302,13 @@ namespace ScopeViewer
                 StampTriggerClear();
                 LineStampTrigger();
                 _stampTriggerCreate = true;
-                StampTrigger.Image = Properties.Resources.Horizontal_Line_48;
+                StampTrigger.Image = Properties.Resources.Watch_Rem;
             }
             else
             {
                 StampTriggerClear();
                 _stampTriggerCreate = false;
-                StampTrigger.Image = Properties.Resources.Horizontal_Line_48_2_;
+                StampTrigger.Image = Properties.Resources.Watch_Add;
             }
         }
 
@@ -1321,7 +1386,19 @@ namespace ScopeViewer
 
         private void delateDig_toolStripButton_MouseDown(object sender, MouseEventArgs e)
         {
-            AddCoursorEvent();
+            CloseDigChannel();
+        }
+
+        private void CloseDigChannel()
+        {
+            if (_cursorsCreate)          //Удалим Курсоры если оние есть
+            {
+                AddCoursorEvent();
+            }
+            if (_stampTriggerCreate)
+            {
+                StampTriggerEvent();
+            }
 
             _masterPane.PaneList.Remove(PaneDig);
             using (Graphics g = CreateGraphics())
@@ -1332,7 +1409,7 @@ namespace ScopeViewer
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
-
+            
             delateDig_toolStripButton.Visible = false;
             posTab_StripButton.Visible = false;
             toolStripSeparator1.Visible = false;
@@ -1380,6 +1457,11 @@ namespace ScopeViewer
 
         private void AddCutBox()
         {
+            if (PaneDig != null)
+            {
+                CloseDigChannel();
+            }
+
             _leftLineCut = new LineObj(
                 (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min,
                 Pane.YAxis.Scale.Min,
@@ -1517,7 +1599,14 @@ namespace ScopeViewer
             MainWindow.OscilList[NumGraphPanel()].StampDateEnd =
                 MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.AddMilliseconds(1000 * (MainWindow.OscilList[NumGraphPanel()].NumCount - MainWindow.OscilList[NumGraphPanel()].HistotyCount) / MainWindow.OscilList[NumGraphPanel()].SampleRate);
 
+            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + @"." +
+                       MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
 
+            if (_stampTriggerCreate)
+            {
+                StampTriggerClear();
+                LineStampTrigger();
+            }
 
             ResizeAxis();
 
