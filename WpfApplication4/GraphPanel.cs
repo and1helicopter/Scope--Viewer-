@@ -1423,7 +1423,7 @@ namespace ScopeViewer
         private void absOrRelTime_toolStripButton_MouseDown(object sender, MouseEventArgs e)
         {
             _absOrRel = !_absOrRel;
-            absOrRelTime_toolStripButton.Image = _absOrRel ? Properties.Resources.Cosine_50_5_ : Properties.Resources.Cosine_50_4_;
+            absOrRelTime_toolStripButton.Image = _absOrRel ? Properties.Resources.Time_abs : Properties.Resources.Time_rel;
             absOrRelTime_toolStripButton.ToolTipText = _absOrRel ? "Абсолютное время" : "Относительное время" ;
 
             zedGraph.AxisChange();

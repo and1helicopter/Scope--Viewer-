@@ -13,20 +13,6 @@ namespace ScopeViewer
     /// </summary>
     public partial class Settings 
     {
-
-        // ReSharper disable once UnusedMember.Local
-        string[] _styleTypeMajor = new string[] {
-            "Dot",
-            "Dash",
-            "Solid"
-        };
-
-        // ReSharper disable once UnusedMember.Local
-        string[] _styleTypeMinor = new string[] {
-            "Dot",
-            "Dash"
-        };
-
         public Settings()
         {
             InitializeComponent();
@@ -69,8 +55,27 @@ namespace ScopeViewer
             xmlOut.WriteEndElement();
 
             // ReSharper disable once RedundantToStringCall
-            xmlOut.WriteStartElement("PointInLine", (PointInLineTextBox.Text).ToString());
-            xmlOut.WriteEndElement();
+            if (PointInLineComboBox.SelectedIndex == 0)
+            {
+                xmlOut.WriteStartElement("PointInLine", (100).ToString());
+                xmlOut.WriteEndElement();
+            }
+            else if (PointInLineComboBox.SelectedIndex == 1)
+            {
+                xmlOut.WriteStartElement("PointInLine", (300).ToString());
+                xmlOut.WriteEndElement();
+            }
+            else if (PointInLineComboBox.SelectedIndex == 2)
+            {
+                xmlOut.WriteStartElement("PointInLine", (800).ToString());
+                xmlOut.WriteEndElement();
+            }
+            else
+            {
+                xmlOut.WriteStartElement("PointInLine", (100000).ToString());
+                xmlOut.WriteEndElement();
+            }
+
 
             xmlOut.WriteStartElement("XMinor", (XMinorComboBox.SelectedIndex).ToString());
             xmlOut.WriteEndElement();
@@ -208,16 +213,45 @@ namespace ScopeViewer
         private void LineInChash()
         {
             ShowDigitalCheckBox.IsChecked = Setting.ShowDigital;
-            PointInLineTextBox.Text = Convert.ToString(Setting.PointInLine);
-            foreach (GraphPanel t in MainWindow.GraphPanelList)
+            //    PointInLineTextBox.Text = Convert.ToString(Setting.PointInLine);
+
+            if (Setting.PointInLine <= 100)
             {
-                if (Setting.PointInLine < 50)
+                foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
-                    t.PointInLineChange(50, Setting.ShowDigital);
-                    Setting.PointInLine = 50;
-                    PointInLineTextBox.Text = Setting.PointInLine.ToString();
+                    PointInLineComboBox.SelectedIndex = 0;
+                    t.PointInLineChange(100, Setting.ShowDigital);
+                    Setting.PointInLine = 100;
                 }
-                else t.PointInLineChange(Setting.PointInLine, Setting.ShowDigital);
+            }
+
+            else if (Setting.PointInLine <= 300)
+            {
+                foreach (GraphPanel t in MainWindow.GraphPanelList)
+                {
+                    PointInLineComboBox.SelectedIndex = 1;
+                    t.PointInLineChange(300, Setting.ShowDigital);
+                    Setting.PointInLine = 300;
+                }
+            }
+
+            else if (Setting.PointInLine <= 800)
+            {
+                foreach (GraphPanel t in MainWindow.GraphPanelList)
+                {
+                    PointInLineComboBox.SelectedIndex = 2;
+                    t.PointInLineChange(800, Setting.ShowDigital);
+                    Setting.PointInLine = 800;
+                }
+            }
+
+            if (Setting.PointInLine > 800)
+            {
+                foreach (GraphPanel t in MainWindow.GraphPanelList)
+                {
+                    PointInLineComboBox.SelectedIndex = 3;
+                    t.PointInLineChange(100000, Setting.ShowDigital);
+                }
             }
         }
 

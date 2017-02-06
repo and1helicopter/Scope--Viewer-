@@ -32,31 +32,21 @@
             Grid.Column="1"
             Margin="0,5,10,30"
             HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch">
+            VerticalContentAlignment="Stretch"
+            IsHitTestVisible="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <TabItem
                 Width="54"
                 Height="20"
                 Margin="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Header="TabItem1"
-                Visibility="Collapsed">
+                Header="TabItem1">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="89*" />
                         <ColumnDefinition Width="311*" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
-                        x:Name="PointInLineTextBox"
-                        Grid.Column="1"
-                        Width="120"
-                        Height="20"
-                        Margin="181,58,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        FontStretch="ExtraExpanded"
-                        TextAlignment="Right"
-                        TextWrapping="Wrap" />
                     <Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
@@ -95,7 +85,7 @@
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Content="Точек на канал:"
+                        Content="Уровень детализации:"
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
@@ -384,6 +374,19 @@
                         Content=""
                         GroupName="Position"
                         TabIndex="3" />
+                    <ComboBox
+                        x:Name="PointInLineComboBox"
+                        Grid.Column="1"
+                        Width="120"
+                        Margin="181,61,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        SelectedIndex="1">
+                        <ComboBoxItem Content="Низкий" />
+                        <ComboBoxItem Content="Средний" />
+                        <ComboBoxItem Content="Высокий" />
+                        <ComboBoxItem Content="Полный" />
+                    </ComboBox>
                 </Grid>
             </TabItem>
             <TabItem

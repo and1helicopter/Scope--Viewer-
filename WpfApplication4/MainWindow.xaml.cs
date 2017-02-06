@@ -15,7 +15,6 @@ using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Xceed.Wpf.AvalonDock.Layout;
 
-
 namespace ScopeViewer
 {
     /// <summary>
@@ -411,6 +410,7 @@ namespace ScopeViewer
         {
             _settingsObj = new Settings();
             _settingsObj.UpdatePointPerChannelTextBox();
+            _settingsObj.Topmost = true;
             _settingsObj.Show();
         }
 
@@ -441,44 +441,45 @@ namespace ScopeViewer
             //Создание новой осциллограммы OscilList
             _oscil = new Oscil
             {
-                OscilNames = "Осциллограмма составная"
+                OscilNames = "Осциллограмма"
             };
             
-            for (int k = 0; k < OscilChannelList.Count; k++)
+            for (var k = 0; k < OscilChannelList.Count; k++)
             {
-                for (int i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
+                for (var i = 0; i < OscilChannelList[k].TypeComboBox.Count; i++)
                 {
-                    if (OscilChannelList[k].SelectCheckBox[i].IsChecked == true)
+                    if (OscilChannelList[k].SelectCheckBox[i].IsChecked != true) continue;
+                    _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
+                    _oscil.Dimension.Add(OscilList[k].Dimension[i]);
+
+                    if (_oscil.ChannelCount > 0 && ((Math.Abs(_oscil.SampleRate - OscilList[k].SampleRate) > 0) || (Math.Abs(_oscil.HistotyCount - OscilList[k].HistotyCount) > 0) || (_oscil.NumCount != OscilList[k].NumCount)))
                     {
-                        _oscil.ChannelNames.Add(OscilList[k].ChannelNames[i]);
-                        _oscil.Dimension.Add(OscilList[k].Dimension[i]);
+                        MessageBox.Show("Каналы не совместимы", "Ошибка",MessageBoxButton.OK);
+                        return;
+                    }
 
-                        if (_oscil.ChannelCount > 0 && ((Math.Abs(_oscil.SampleRate - OscilList[k].SampleRate) > 0) || (Math.Abs(_oscil.HistotyCount - OscilList[k].HistotyCount) > 0) || (_oscil.NumCount != OscilList[k].NumCount)))
-                        {
-                            MessageBox.Show("Каналы не совместимы", "Ошибка",MessageBoxButton.OK);
-                            return;
-                        }
-
-                        if(_oscil.ChannelCount == 0)
-                        {
-                            _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
-                            _oscil.SampleRate = OscilList[k].SampleRate;
-                            _oscil.HistotyCount = OscilList[k].HistotyCount;
-                            _oscil.NumCount = OscilList[k].NumCount;
-                            _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(1000 * _oscil.HistotyCount / _oscil.SampleRate));
-
-                            for (int j = 0; j < _oscil.NumCount; j++)
-                                _oscil.Data.Add(new List<double>());
-                        }
-
-                        _oscil.ChannelCount += 1;
-                        _oscil.TypeChannel.Add(OscilList[k].TypeChannel[i]);
+                    if(_oscil.ChannelCount == 0)
+                    {
+                        _oscil.StampDateTrigger = OscilList[k].StampDateTrigger;
+                        _oscil.SampleRate = OscilList[k].SampleRate;
+                        _oscil.HistotyCount = OscilList[k].HistotyCount;
+                        _oscil.NumCount = OscilList[k].NumCount;
+                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(1000 * _oscil.HistotyCount / _oscil.SampleRate));
+                        _oscil.StampDateEnd =
+                            _oscil.StampDateTrigger.AddMilliseconds(1000 * (_oscil.NumCount - _oscil.HistotyCount)/_oscil.SampleRate);
 
                         for (int j = 0; j < _oscil.NumCount; j++)
-                        {
-                            _oscil.Data[j].Add(OscilList[k].Data[j][i]);
-                        }
+                            _oscil.Data.Add(new List<double>());
                     }
+
+                    _oscil.ChannelCount += 1;
+                    _oscil.TypeChannel.Add(OscilList[k].TypeChannel[i]);
+
+                    for (int j = 0; j < _oscil.NumCount; j++)
+                    {
+                        _oscil.Data[j].Add(OscilList[k].Data[j][i]);
+                    }
+                    OscilChannelList[k].SelectCheckBox[i].IsChecked = false;
                 }
             }
 
@@ -545,6 +546,7 @@ namespace ScopeViewer
                         {
                             scope2 = k;
                             scopeIndex2.Add(i);
+                            OscilChannelList[k].SelectCheckBox[i].IsChecked = false;
                         }
                     }
                 }
@@ -556,6 +558,7 @@ namespace ScopeViewer
                         {
                             scope1 = k;
                             scopeIndex1.Add(i);
+                            OscilChannelList[k].SelectCheckBox[i].IsChecked = false;
                         }
                     }
                 }

@@ -40,15 +40,15 @@ namespace ScopeViewer
             this.ApplyCut_StripButton = new System.Windows.Forms.ToolStripButton();
             this.SaveScope_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
-            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.absOrRelTime_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Mask1_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMax_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.absOrRelTime_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -206,29 +206,18 @@ namespace ScopeViewer
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
             // 
-            // posTab_StripButton
+            // absOrRelTime_toolStripButton
             // 
-            this.posTab_StripButton.AutoSize = false;
-            this.posTab_StripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.posTab_StripButton.Image = global::ScopeViewer.Properties.Resources.Flip_Horizontal_48;
-            this.posTab_StripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.posTab_StripButton.Name = "posTab_StripButton";
-            this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
-            this.posTab_StripButton.Text = "Расположение ";
-            this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
-            // 
-            // delateDig_toolStripButton
-            // 
-            this.delateDig_toolStripButton.AutoSize = false;
-            this.delateDig_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.delateDig_toolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("delateDig_toolStripButton.Image")));
-            this.delateDig_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
-            this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
-            this.delateDig_toolStripButton.Text = "toolStripButton1";
-            this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
+            this.absOrRelTime_toolStripButton.AutoSize = false;
+            this.absOrRelTime_toolStripButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.absOrRelTime_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.absOrRelTime_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Time_rel;
+            this.absOrRelTime_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.absOrRelTime_toolStripButton.Name = "absOrRelTime_toolStripButton";
+            this.absOrRelTime_toolStripButton.Size = new System.Drawing.Size(30, 30);
+            this.absOrRelTime_toolStripButton.Text = "Относительное время";
+            this.absOrRelTime_toolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.absOrRelTime_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.absOrRelTime_toolStripButton_MouseDown);
             // 
             // toolStripSeparator1
             // 
@@ -268,18 +257,29 @@ namespace ScopeViewer
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
             // 
-            // absOrRelTime_toolStripButton
+            // posTab_StripButton
             // 
-            this.absOrRelTime_toolStripButton.AutoSize = false;
-            this.absOrRelTime_toolStripButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.absOrRelTime_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.absOrRelTime_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Cosine_50_4_;
-            this.absOrRelTime_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.absOrRelTime_toolStripButton.Name = "absOrRelTime_toolStripButton";
-            this.absOrRelTime_toolStripButton.Size = new System.Drawing.Size(30, 30);
-            this.absOrRelTime_toolStripButton.Text = "Относительное время";
-            this.absOrRelTime_toolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.absOrRelTime_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.absOrRelTime_toolStripButton_MouseDown);
+            this.posTab_StripButton.AutoSize = false;
+            this.posTab_StripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.posTab_StripButton.Image = global::ScopeViewer.Properties.Resources.Flip_Horizontal_48;
+            this.posTab_StripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.posTab_StripButton.Name = "posTab_StripButton";
+            this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
+            this.posTab_StripButton.Text = "Расположение ";
+            this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
+            // 
+            // delateDig_toolStripButton
+            // 
+            this.delateDig_toolStripButton.AutoSize = false;
+            this.delateDig_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.delateDig_toolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("delateDig_toolStripButton.Image")));
+            this.delateDig_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
+            this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
+            this.delateDig_toolStripButton.Text = "toolStripButton1";
+            this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
             // 
             // GraphPanel
             // 
