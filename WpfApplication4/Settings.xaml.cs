@@ -20,18 +20,6 @@ namespace ScopeViewer
             UpdateSetting();
         }
 
-        public void UpdatePointPerChannelTextBox()
-        {
-         //   PointPerChannelTextBox.Text = Convert.ToString(GraphPanel.PointInLine);
-        }
-
-        private void update_Click(object sender, RoutedEventArgs e)
-        {
-            SaveSetting();
-            ReadSetting();
-            UpdateSetting();
-        }
-
         private void SaveSetting()
         {
             SaveFileDialog sfd = new SaveFileDialog
@@ -57,22 +45,22 @@ namespace ScopeViewer
             // ReSharper disable once RedundantToStringCall
             if (PointInLineComboBox.SelectedIndex == 0)
             {
-                xmlOut.WriteStartElement("PointInLine", (100).ToString());
+                xmlOut.WriteStartElement("PointInLine", (150).ToString());
                 xmlOut.WriteEndElement();
             }
             else if (PointInLineComboBox.SelectedIndex == 1)
             {
-                xmlOut.WriteStartElement("PointInLine", (300).ToString());
+                xmlOut.WriteStartElement("PointInLine", (400).ToString());
                 xmlOut.WriteEndElement();
             }
             else if (PointInLineComboBox.SelectedIndex == 2)
             {
-                xmlOut.WriteStartElement("PointInLine", (800).ToString());
+                xmlOut.WriteStartElement("PointInLine", (1000).ToString());
                 xmlOut.WriteEndElement();
             }
             else
             {
-                xmlOut.WriteStartElement("PointInLine", (100000).ToString());
+                xmlOut.WriteStartElement("PointInLine", (1000000).ToString());
                 xmlOut.WriteEndElement();
             }
 
@@ -215,42 +203,42 @@ namespace ScopeViewer
             ShowDigitalCheckBox.IsChecked = Setting.ShowDigital;
             //    PointInLineTextBox.Text = Convert.ToString(Setting.PointInLine);
 
-            if (Setting.PointInLine <= 100)
+            if (Setting.PointInLine <= 150)
             {
                 foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
                     PointInLineComboBox.SelectedIndex = 0;
-                    t.PointInLineChange(100, Setting.ShowDigital);
-                    Setting.PointInLine = 100;
+                    t.PointInLineChange(150, Setting.ShowDigital);
+                    Setting.PointInLine = 150;
                 }
             }
 
-            else if (Setting.PointInLine <= 300)
+            else if (Setting.PointInLine <= 400)
             {
                 foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
                     PointInLineComboBox.SelectedIndex = 1;
-                    t.PointInLineChange(300, Setting.ShowDigital);
-                    Setting.PointInLine = 300;
+                    t.PointInLineChange(400, Setting.ShowDigital);
+                    Setting.PointInLine = 400;
                 }
             }
 
-            else if (Setting.PointInLine <= 800)
+            else if (Setting.PointInLine <= 1000)
             {
                 foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
                     PointInLineComboBox.SelectedIndex = 2;
-                    t.PointInLineChange(800, Setting.ShowDigital);
-                    Setting.PointInLine = 800;
+                    t.PointInLineChange(1000, Setting.ShowDigital);
+                    Setting.PointInLine = 1000;
                 }
             }
 
-            if (Setting.PointInLine > 800)
+            if (Setting.PointInLine > 1000)
             {
                 foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
                     PointInLineComboBox.SelectedIndex = 3;
-                    t.PointInLineChange(100000, Setting.ShowDigital);
+                    t.PointInLineChange(1000000, Setting.ShowDigital);
                 }
             }
         }
@@ -259,6 +247,12 @@ namespace ScopeViewer
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {     
             TabControl.SelectedIndex = ((TreeViewItem)e.NewValue).TabIndex;
+        }
+        private void update_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSetting();
+            ReadSetting();
+            UpdateSetting();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -272,6 +266,11 @@ namespace ScopeViewer
             ReadSetting();
             UpdateSetting();
             Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow.SettingsObj = null;
         }
     }
 }

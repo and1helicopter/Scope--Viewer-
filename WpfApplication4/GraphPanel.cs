@@ -284,21 +284,26 @@ namespace ScopeViewer
 
         public void AddDigitalChannel(int numCh, int numOsc  ,Color color)
         {
-            if (PaneDig != null)
+            if (PaneDig != null)         //Проверка на откыртый канал
             {
                 MessageBox.Show(@"Дискретный канал уже открыт!");
                 return;
             }
 
-            if (_cursorsCreate)          //Удалим Курсоры если оние есть
+            if (_cursorsCreate)          //Удалим Курсоры, если оние есть
             {
                 AddCoursorEvent();
             }
 
-            if (_stampTriggerCreate)
+            if (_stampTriggerCreate)     //Удалим штамп времени, если есть
             {
                 StampTriggerEvent();
-            }                 
+            }
+
+            if (_createCutBox)           //Закрываем меню: "Вырезать"
+            {
+                CutEvent();
+            }               
 
             BinaryMask binObj = new BinaryMask();  //Вызов окна выбора маски 
             int binary = 0;
@@ -310,7 +315,7 @@ namespace ScopeViewer
                 binary = BinaryMask.BinnaryMask;
             }
 
-            PaneDig = new GraphPane();
+            PaneDig = new GraphPane();   
 
             _masterPane.Add(PaneDig);
             using (Graphics g = CreateGraphics())  //Расположение графиков в столбец
@@ -745,7 +750,7 @@ namespace ScopeViewer
                     Line =
                 {
                     Style = System.Drawing.Drawing2D.DashStyle.DashDot,
-                    Color = Color.LimeGreen,
+                    Color = Color.DarkGreen,
                     Width = 2
                 },
                     Link = { Title = "StampTrigger" }
@@ -760,7 +765,7 @@ namespace ScopeViewer
                         Line =
                     {
                         Style = System.Drawing.Drawing2D.DashStyle.DashDot,
-                        Color = Color.LimeGreen,
+                        Color = Color.DarkGreen,
                         Width = 2
                     },
                         Link = { Title = "StampTriggerDig" }
@@ -1437,6 +1442,11 @@ namespace ScopeViewer
 
         private void Cut_StripButton_MouseDown(object sender, MouseEventArgs e)
         {
+            CutEvent();
+        }
+
+        private void CutEvent()
+        {
             if (!_createCutBox)
             {
                 AddCutBox();
@@ -1452,7 +1462,6 @@ namespace ScopeViewer
             Cut_StripButton.ToolTipText = !_createCutBox ? "Закрыть область" : "Добавить область";
 
             _createCutBox = !_createCutBox;
-
         }
 
         private void AddCutBox()
@@ -1509,9 +1518,10 @@ namespace ScopeViewer
                 {
                     CoordinateFrame = CoordType.AxisXYScale,
                     AlignH = AlignH.Left,
-                    AlignV = AlignV.Top
+                    AlignV = AlignV.Top,
                 },
-                ZOrder = ZOrder.E_BehindCurves
+                
+                ZOrder = ZOrder.F_BehindGrid  //В каком слое расположена область 
             };
 
             // place the _boxCut behind the axis items, so the grid is drawn on top of it

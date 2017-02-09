@@ -8,6 +8,7 @@
     Title="MainWindow"
     Width="800"
     Height="550"
+    Closing="Window_Closing"
     Icon="Resources/Line Chart-48.ico"
     mc:Ignorable="d">
     <!--  Loaded="Window_Loaded"  -->
@@ -25,12 +26,13 @@
                 MinWidth="32 px"
                 MaxWidth="32 px" />
             <ColumnDefinition Width="2" />
-            <ColumnDefinition x:Name="PanelForGraph" />
+            <ColumnDefinition x:Name="PanelForGraph" Width="517*" />
+            <ColumnDefinition Width="163*" />
         </Grid.ColumnDefinitions>
         <Menu
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="6"
+            Grid.ColumnSpan="7"
             Height="30"
             Margin="0,0,0,0"
             VerticalAlignment="Top">
@@ -95,6 +97,7 @@
         <ScrollViewer
             Grid.Row="1"
             Grid.Column="1"
+            Grid.ColumnSpan="2"
             Height="Auto"
             Margin="0,0,2,0"
             VerticalContentAlignment="Stretch"
@@ -107,8 +110,6 @@
         <Border
             Grid.Row="1"
             Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="0,0,32,0"
             Background="WhiteSmoke" />
         <StackPanel Grid.Row="1" Grid.Column="3">
             <Rectangle
@@ -164,6 +165,7 @@
         <xcad:DockingManager
             Grid.Row="1"
             Grid.Column="5"
+            Grid.ColumnSpan="2"
             AllowMixedOrientation="True"
             Background="#FFE8E2E2">
             <xcad:DockingManager.Theme>

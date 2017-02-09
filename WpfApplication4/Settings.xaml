@@ -7,6 +7,7 @@
     Title="Настройки"
     Width="631.936"
     Height="473"
+    Closing="Window_Closing"
     Icon="Resources/Services-48.ico"
     mc:Ignorable="d">
     <Grid Margin="0">

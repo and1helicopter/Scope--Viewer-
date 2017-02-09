@@ -28,7 +28,7 @@ namespace ScopeViewer
         }
 
         Oscil _oscil = new Oscil();
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+
         public static List<Oscil> OscilList = new List<Oscil>();
         public static List<OscilGraph> OscilChannelList = new List<OscilGraph>();
         public static List<GraphPanel> GraphPanelList = new List<GraphPanel>();
@@ -41,7 +41,7 @@ namespace ScopeViewer
         public static Analysis AnalysisObj = new Analysis();
         
 
-        Settings _settingsObj;
+        public static Settings SettingsObj;
 
         bool _openWindow;
         bool _graphButtonStatus;
@@ -297,7 +297,9 @@ namespace ScopeViewer
                     }
                     _oscil.StampDateStart = DateTime.Parse(sr.ReadLine());
                     _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
-                   // _oscil.StampDateEnd = _oscil.StampDateTrigger.AddMilliseconds(1000 * (_oscil.NumCount - _oscil.HistotyCount) / _oscil.SampleRate);
+                    _oscil.HistotyCount = Convert.ToInt32((_oscil.StampDateTrigger.Second - _oscil.StampDateStart.Second + 
+                        (double)(_oscil.StampDateTrigger.Millisecond - _oscil.StampDateStart.Millisecond) / 1000) * _oscil.SampleRate);
+                    _oscil.StampDateEnd = _oscil.StampDateTrigger.AddMilliseconds(1000 * (_oscil.NumCount - _oscil.HistotyCount) / _oscil.SampleRate);
                     sr.Close();
 
                     var namefile = Path.GetFileNameWithoutExtension(ofd.FileName);
@@ -408,10 +410,11 @@ namespace ScopeViewer
 
         private void settings_Click(object sender, RoutedEventArgs e)
         {
-            _settingsObj = new Settings();
-            _settingsObj.UpdatePointPerChannelTextBox();
-            _settingsObj.Topmost = true;
-            _settingsObj.Show();
+            SettingsObj = new Settings
+            {
+                Topmost = true
+            };
+            SettingsObj.Show();
         }
 
         public static void DelateOscil(int i)
@@ -653,6 +656,11 @@ namespace ScopeViewer
         private void UnionScope_MouseLeave(object sender, MouseEventArgs e)
         {
             UnionScope.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Line Chart-48(2).png")));
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = SettingsObj != null;
         }
     }
 }
