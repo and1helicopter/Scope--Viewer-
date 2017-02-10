@@ -1,4 +1,4 @@
-﻿<Window
+﻿<Window x:Name="Main"
     x:Class="ScopeViewer.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,7 +10,7 @@
     Height="550"
     Closing="Window_Closing"
     Icon="Resources/Line Chart-48.ico"
-    mc:Ignorable="d">
+    mc:Ignorable="d" SizeChanged="Main_SizeChanged">
     <!--  Loaded="Window_Loaded"  -->
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>

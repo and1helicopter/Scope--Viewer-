@@ -20,6 +20,98 @@ namespace ScopeViewer
             UpdateSetting();
         }
 
+        public static void SaveSettingBase()
+        {
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                FileName = "ViewerSettings.xml"
+            };
+
+            FileStream fs = new FileStream(sfd.FileName, FileMode.Create);
+            XmlTextWriter xmlOut = new XmlTextWriter(fs, Encoding.Unicode)
+            {
+                Formatting = Formatting.Indented
+            };
+
+            xmlOut.WriteStartDocument();
+            xmlOut.WriteStartElement("Setup");
+            /////////////////////////////////////////
+            //Settings menu Graph
+            xmlOut.WriteStartElement("Graph");
+            /////////////////////////////////////////
+            xmlOut.WriteStartElement("ShowDigital", (Setting.ShowDigital).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("PointInLine", (Setting.PointInLine).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("XMinor", (Setting.XMinor).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("XMinorShow", (Setting.XMinorShow).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("YMinor", (Setting.YMinor).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("YMinorShow", (Setting.YMinorShow).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("XMajor", (Setting.XMajor).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("XMajorShow", (Setting.XMajorShow).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("YMajor", (Setting.YMajor).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("YMajorShow", (Setting.YMajorShow).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("ShowLegend", (Setting.ShowLegend).ToString());
+            xmlOut.WriteEndElement();
+
+            // ReSharper disable once SpecifyACultureInStringConversionExplicitly
+            xmlOut.WriteStartElement("SizeLegend", (Setting.SizeLegend).ToString());
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("Position", (Setting.Position).ToString());
+            xmlOut.WriteEndElement();
+
+            /////////////////////////////////////////
+            xmlOut.WriteEndElement();
+
+            /////////////////////////////////////////
+            //Settings Window Application
+            xmlOut.WriteStartElement("Window");
+            /////////////////////////////////////////
+            xmlOut.WriteStartElement("WindowHeight", (MainWindow.MainWindowHeight).ToString("####"));
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("WindowWidth", (MainWindow.MainWindowWidth).ToString("####"));
+            xmlOut.WriteEndElement();
+
+            if (MainWindow.MainWindowState == 1)
+            {
+                xmlOut.WriteStartElement("WondowState", (MainWindow.MainWindowState).ToString());
+                xmlOut.WriteEndElement();
+            }
+            else
+            {
+                xmlOut.WriteStartElement("WondowState", (MainWindow.MainWindowState).ToString());
+                xmlOut.WriteEndElement();
+            }
+
+            ///////////////////////////////////////// 
+            xmlOut.WriteEndElement();
+            /////////////////////////////////////////
+            xmlOut.WriteEndElement();
+            xmlOut.WriteEndDocument();
+            xmlOut.Close();
+            fs.Close();
+        }
+
         private void SaveSetting()
         {
             SaveFileDialog sfd = new SaveFileDialog
@@ -118,8 +210,31 @@ namespace ScopeViewer
                     xmlOut.WriteEndElement();
                 }
             }
+            /////////////////////////////////////////
+            xmlOut.WriteEndElement();
 
             /////////////////////////////////////////
+            //Settings Window Application
+            xmlOut.WriteStartElement("Window");
+            /////////////////////////////////////////
+            xmlOut.WriteStartElement("WindowHeight", (MainWindow.MainWindowHeight).ToString("####"));
+            xmlOut.WriteEndElement();
+
+            xmlOut.WriteStartElement("WindowWidth", (MainWindow.MainWindowWidth).ToString("####"));
+            xmlOut.WriteEndElement();
+
+            if (MainWindow.MainWindowState == 1)
+            {
+                xmlOut.WriteStartElement("WondowState", (MainWindow.MainWindowState).ToString());
+                xmlOut.WriteEndElement();
+            }
+            else
+            {
+                xmlOut.WriteStartElement("WondowState", (MainWindow.MainWindowState).ToString());
+                xmlOut.WriteEndElement();
+            }
+
+            ///////////////////////////////////////// 
             xmlOut.WriteEndElement();
             /////////////////////////////////////////
             xmlOut.WriteEndElement();

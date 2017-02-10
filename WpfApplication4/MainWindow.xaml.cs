@@ -25,9 +25,39 @@ namespace ScopeViewer
         public MainWindow()
         {
             InitializeComponent();
+
+            SrartSettings();
+        }
+
+        private void SrartSettings()
+        {
+            //Проверка на существование настроек
+            Setting.InitSetting();
+
+            WindowState = Setting.WondowState == 1 ? WindowState.Maximized : WindowState.Minimized;
+            MainWindowState = Setting.WondowState == 1 ? 1 : 0;
+
+            if (Setting.WindowHeight != 0 || Setting.WindowWidth != 0)
+            {
+                Height = Setting.WindowHeight;
+                Width = Setting.WindowWidth;
+                MainWindowHeight = Height;
+                MainWindowWidth = Width;
+            }
+        }
+
+        private void Main_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            MainWindowHeight = Height;
+            MainWindowWidth = Width;
+            MainWindowState = WindowState == WindowState.Maximized ? 1 : 0;
         }
 
         Oscil _oscil = new Oscil();
+
+        public static double MainWindowHeight;
+        public static double MainWindowWidth;
+        public static int MainWindowState;
 
         public static List<Oscil> OscilList = new List<Oscil>();
         public static List<OscilGraph> OscilChannelList = new List<OscilGraph>();
@@ -184,6 +214,12 @@ namespace ScopeViewer
 
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!Setting.LoadSetting)
+            {
+                MessageBox.Show("Не удалось открыть файл настроек!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning );
+                return;
+            }
+
             OpenFileDialog ofd = new OpenFileDialog
             {
                 DefaultExt = ".txt",
@@ -661,6 +697,7 @@ namespace ScopeViewer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = SettingsObj != null;
+            Settings.SaveSettingBase();
         }
     }
 }
