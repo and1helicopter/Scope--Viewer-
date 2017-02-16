@@ -26,8 +26,6 @@ namespace ScopeViewer
         public static int WindowWidth;
         public static int WondowState;
 
-
-
         public static bool LoadSetting;
 
         static void LoadNameFromXml(string paramName, XmlDocument doc, out int str)
@@ -89,7 +87,7 @@ namespace ScopeViewer
                 WondowState = 0;
 
                 Settings.SaveSettingBase();
-                }
+            }
 
             LoadNameFromXml("ShowDigital", doc, out ShowDigital);
             LoadNameFromXml("PointInLine", doc, out PointInLine);

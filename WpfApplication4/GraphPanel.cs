@@ -13,12 +13,8 @@ namespace ScopeViewer
         public GraphPane Pane;
         public GraphPane PaneDig;
         readonly List<LineItem> _myCurve = new List<LineItem>();
-       // List<LineItem> myCurveTemp = new List<LineItem>();
 
-        double _maxXAxis = 1000;
-        double _minXAxis = -1000;
-        double _maxYAxis = 1000;
-        double _minYAxis = -1000;
+        double _maxXAxis, _minXAxis, _maxYAxis, _minYAxis;
         double _maxYAxisAuto;
         double _minYAxisAuto;
         bool _scaleY;
@@ -554,7 +550,6 @@ namespace ScopeViewer
 
         private void ResizeAxis()
         {
-            // Включим сглаживание
             Pane.YAxis.Scale.MinAuto = true;
             Pane.YAxis.Scale.MaxAuto = true;
             Pane.XAxis.Scale.MinAuto = true;
@@ -564,17 +559,38 @@ namespace ScopeViewer
             zedGraph.IsShowVScrollBar = true;
             zedGraph.IsAutoScrollRange = true;
 
+            _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
+            _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
+
+            if (_maxYAxis < zedGraph.GraphPane.YAxis.Scale.Max)
+            {
+                _maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
+            }
+
+            if (_minYAxis > zedGraph.GraphPane.YAxis.Scale.Min)
+            {
+                _minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
+            }
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (zedGraph.GraphPane.YAxis.Scale.Max == 0)
+            {
+                _maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
+                            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+            }
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (zedGraph.GraphPane.YAxis.Scale.Min == 0)
+            {
+                _minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
+                            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+            }
+
             // Обновим график
             zedGraph.AxisChange();
             zedGraph.Invalidate();
             UpdateGraph();
             zedGraph.AxisChange();
-            zedGraph.Invalidate();
-
-            _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
-            _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
-            _maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
-            _minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
         }
 
         private void InitDrawGraph()
@@ -1626,6 +1642,12 @@ namespace ScopeViewer
 
             DelCutBox();
 
+        }
+
+        //При наведении курсора на панаель инструментов, отображаем его как стандартный
+        private void toolStrip1_MouseEnter(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
         }
 
         private void SaveScope_toolStripButton_MouseDown(object sender, MouseEventArgs e)

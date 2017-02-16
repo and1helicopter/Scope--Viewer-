@@ -155,8 +155,7 @@ namespace ScopeViewer
                 xmlOut.WriteStartElement("PointInLine", (1000000).ToString());
                 xmlOut.WriteEndElement();
             }
-
-
+            
             xmlOut.WriteStartElement("XMinor", (XMinorComboBox.SelectedIndex).ToString());
             xmlOut.WriteEndElement();
 
@@ -291,27 +290,27 @@ namespace ScopeViewer
             }
         }
 
-       private void AxisChange()
-       {
-           foreach (GraphPanel t in MainWindow.GraphPanelList)
-           {
-               XMinorCheckBox.IsChecked = Setting.XMinorShow;
-               XMinorComboBox.SelectedIndex = Setting.XMinor;
-               t.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
+        private void AxisChange()
+        {
+            foreach (GraphPanel t in MainWindow.GraphPanelList)
+            {
+                XMinorCheckBox.IsChecked = Setting.XMinorShow;
+                XMinorComboBox.SelectedIndex = Setting.XMinor;
+                t.GridAxisChange(Setting.XMinorShow, Setting.XMinor, 0);
 
-               XMajorCheckBox.IsChecked = Setting.XMajorShow;
-               XMajorComboBox.SelectedIndex = Setting.XMajor;
-               t.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
+                XMajorCheckBox.IsChecked = Setting.XMajorShow;
+                XMajorComboBox.SelectedIndex = Setting.XMajor;
+                t.GridAxisChange(Setting.XMajorShow, Setting.XMajor, 1);
 
-               YMinorCheckBox.IsChecked = Setting.YMinorShow;
-               YMinorComboBox.SelectedIndex = Setting.YMinor;
-               t.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
+                YMinorCheckBox.IsChecked = Setting.YMinorShow;
+                YMinorComboBox.SelectedIndex = Setting.YMinor;
+                t.GridAxisChange(Setting.YMinorShow, Setting.YMinor, 2);
 
-               YMajorCheckBox.IsChecked = Setting.YMajorShow;
-               YMajorComboBox.SelectedIndex = Setting.YMajor;
-               t.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
-           }
-       }
+                YMajorCheckBox.IsChecked = Setting.YMajorShow;
+                YMajorComboBox.SelectedIndex = Setting.YMajor;
+                t.GridAxisChange(Setting.YMajorShow, Setting.YMajor, 3);
+            }
+        }
 
         private void LineInChash()
         {
@@ -358,11 +357,11 @@ namespace ScopeViewer
             }
         }
 
-
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {     
             TabControl.SelectedIndex = ((TreeViewItem)e.NewValue).TabIndex;
         }
+
         private void update_Click(object sender, RoutedEventArgs e)
         {
             SaveSetting();
@@ -387,5 +386,12 @@ namespace ScopeViewer
         {
             MainWindow.SettingsObj = null;
         }
+
+        /*
+        private void ShowDigitalCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            Setting.ShowDigital = ShowDigitalCheckBox.IsChecked == true;
+        }
+        */
     }
 }

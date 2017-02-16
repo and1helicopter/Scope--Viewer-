@@ -40,7 +40,7 @@
                 Width="90"
                 VerticalContentAlignment="Center"
                 Click="openButton_Click"
-                Header="Открыть">
+                Header="Открыть" ToolTip="Открыть осциллограмму ">
                 <MenuItem.Icon>
                     <Image
                         Width="16"
@@ -52,7 +52,7 @@
                 Width="90"
                 Height="28"
                 Click="settings_Click"
-                Header="Настройки">
+                Header="Настройки" ToolTip="Настройки приложения">
                 <MenuItem.Icon>
                     <Image
                         Width="16"
@@ -77,7 +77,7 @@
             FontSize="14"
             Foreground="#FF2196F3"
             RenderTransformOrigin="1,1"
-            ToolTip="Настройка графика" />
+            ToolTip="Настройка каналов" />
         <Button
             x:Name="AnalysisButton"
             Grid.Row="1"
@@ -93,7 +93,7 @@
             Content="Анализ"
             FontSize="14"
             Foreground="#FF2196F3"
-            ToolTip="Настройка графика" />
+            ToolTip="Результаты анализа" />
         <ScrollViewer
             Grid.Row="1"
             Grid.Column="1"

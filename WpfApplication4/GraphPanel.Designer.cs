@@ -106,6 +106,7 @@ namespace ScopeViewer
             this.toolStrip1.Size = new System.Drawing.Size(809, 33);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip1.MouseEnter += new System.EventHandler(this.toolStrip1_MouseEnter);
             // 
             // AddCursor
             // 
@@ -170,7 +171,7 @@ namespace ScopeViewer
             this.Cut_StripButton.Name = "Cut_StripButton";
             this.Cut_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Cut_StripButton.Size = new System.Drawing.Size(30, 30);
-            this.Cut_StripButton.Text = "Обрезать";
+            this.Cut_StripButton.Text = "Обрезать участок осциллограммы";
             this.Cut_StripButton.ToolTipText = "Обрезать участок осциллограммы";
             this.Cut_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Cut_StripButton_MouseDown);
             // 
@@ -183,8 +184,8 @@ namespace ScopeViewer
             this.ApplyCut_StripButton.Name = "ApplyCut_StripButton";
             this.ApplyCut_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ApplyCut_StripButton.Size = new System.Drawing.Size(30, 30);
-            this.ApplyCut_StripButton.Text = "Апименить";
-            this.ApplyCut_StripButton.ToolTipText = "Применить ";
+            this.ApplyCut_StripButton.Text = "Применить ";
+            this.ApplyCut_StripButton.ToolTipText = "Обрезать участок осциллограммы";
             this.ApplyCut_StripButton.Visible = false;
             this.ApplyCut_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ApplyCut_StripButton_MouseDown);
             // 
@@ -278,7 +279,7 @@ namespace ScopeViewer
             this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
             this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
-            this.delateDig_toolStripButton.Text = "toolStripButton1";
+            this.delateDig_toolStripButton.Text = "Убрать цифровой канал";
             this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
             // 
             // GraphPanel

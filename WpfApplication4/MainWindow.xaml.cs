@@ -34,7 +34,7 @@ namespace ScopeViewer
             //Проверка на существование настроек
             Setting.InitSetting();
 
-            WindowState = Setting.WondowState == 1 ? WindowState.Maximized : WindowState.Minimized;
+            WindowState = Setting.WondowState == 1 ? WindowState.Maximized : WindowState.Normal;
             MainWindowState = Setting.WondowState == 1 ? 1 : 0;
 
             if (Setting.WindowHeight != 0 || Setting.WindowWidth != 0)
@@ -69,7 +69,6 @@ namespace ScopeViewer
         public static Graph GraphObj = new Graph();
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static Analysis AnalysisObj = new Analysis();
-        
 
         public static Settings SettingsObj;
 
