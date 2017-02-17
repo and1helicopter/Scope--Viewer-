@@ -133,6 +133,12 @@
     <Compile Include="GraphPanel.Designer.cs">
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenOldFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenOldFormat.Designer.cs">
+      <DependentUpon>OpenOldFormat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Oscil.cs" />
     <Compile Include="OscilAnalysis.cs" />
     <Compile Include="OscilGraph.cs" />
@@ -191,6 +197,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GraphPanel.resx">
       <DependentUpon>GraphPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenOldFormat.resx">
+      <DependentUpon>OpenOldFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

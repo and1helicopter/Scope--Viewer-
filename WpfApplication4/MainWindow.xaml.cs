@@ -7,13 +7,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 using Xceed.Wpf.AvalonDock.Layout;
+using MessageBox = System.Windows.MessageBox;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace ScopeViewer
 {
@@ -278,8 +281,72 @@ namespace ScopeViewer
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    try
+                    {
+                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
+                        _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
+                        _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());             //Строка штампа времени осциллограммы 
+
+                        OpenOldFormat openOldObj = new OpenOldFormat();                      //Запускам выбор параметров для осциллограммы старой версии
+
+                        double sampleRate = 0;
+                        double historyPercent = 0;
+
+                        DialogResult dlgr = openOldObj.ShowDialog();
+
+                        if (dlgr == System.Windows.Forms.DialogResult.OK)
+                        {
+                            sampleRate = OpenOldFormat.SampleRate;
+                            historyPercent = OpenOldFormat.HistoryPercent;
+                        }
+
+
+                        sr.ReadLine(); // Пропускам строку
+                        str = sr.ReadLine(); // Строка названия каналов
+                        if (str != null)
+                        {
+                            string[] str1 = str.Split('\t');
+                            for (int i = 1; i < str1.Length - 1; i++) _oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                        }
+                        _oscil.ChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
+
+                        for (int i = 0; i < 8; i++)
+                        {
+                            sr.ReadLine();
+                        }
+
+                        for (int j = 0; !sr.EndOfStream; j++)
+                        {
+                            str = sr.ReadLine();
+                            if (str != null)
+                            {
+                                string[] str2 = str.Split('\t');
+                                _oscil.Data.Add(new List<double>());
+                                for (int i = 1; i < str2.Length - 1; i++)
+                                {
+                                    _oscil.Data[j].Add(Convert.ToDouble(str2[i]));
+                                }
+                            }
+                        }
+                        _oscil.NumCount = Convert.ToUInt32(_oscil.Data.Count);
+
+                        _oscil.SampleRate = sampleRate;     //Частота выборки 
+                        _oscil.HistotyCount = _oscil.NumCount * historyPercent / 100;   //колличество на предысторию 
+                        _oscil.StampDateStart = _oscil.StampDateTrigger.AddMilliseconds(-(1000 * _oscil.HistotyCount / _oscil.SampleRate));
+                        _oscil.StampDateEnd = _oscil.StampDateTrigger.AddMilliseconds(1000 * (_oscil.NumCount - _oscil.HistotyCount) / _oscil.SampleRate);
+
+                        for (int i = 0; i < _oscil.ChannelCount; i++)
+                        {
+                            _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
+                            _oscil.Dimension.Add("NONE");
+                        }
+                        sr.Close();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
             }
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinaryMask));
             this.OK_button = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -79,6 +80,7 @@
             this.Controls.Add(this.OK_button);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.Name = "BinaryMask";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
