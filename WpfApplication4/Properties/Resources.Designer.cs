@@ -233,6 +233,16 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Height_48 {
+            get {
+                object obj = ResourceManager.GetObject("Height_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Horizontal_Line_48 {
             get {
                 object obj = ResourceManager.GetObject("Horizontal_Line_48", resourceCulture);

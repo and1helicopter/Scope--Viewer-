@@ -182,30 +182,59 @@ namespace ScopeViewer
             if (_absOrRel)
             {
                 //Абсолютное время
-                return
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Hour.ToString("D2")}:" +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Minute.ToString("D2")}:" +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Second.ToString("D2")}." +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val*1000).Millisecond.ToString("D3")}";
+                if (axis.Scale.Max - axis.Scale.Min > 5)
+                {
+                    return
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}";
+                }
+                if (axis.Scale.Max - axis.Scale.Min > 0.005)
+                {
+                    return
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}";
+                }
+                if (axis.Scale.Max - axis.Scale.Min > 0.000005)
+                {
+                    return
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
+                        $"'{(int) (val * 1000000) % 1000:D3}";
+                }
+                else
+                {
+                    return
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
+                        $"'{(int)(val * 1000000) % 1000:D3}"+
+                        $"\"{(uint)((val * 1000000000) % 1000):D3}";
+                }
             }
             else
             {
                 //Относительное время
-                if (axis.Scale.Max - axis.Scale.Min > 1)
+                if (axis.Scale.Max - axis.Scale.Min > 5)
                 {
                     return $"{val} s";
                 }
-                if (axis.Scale.Max - axis.Scale.Min > 0.001)
+                if (axis.Scale.Max - axis.Scale.Min > 0.005)
                 {
-                    return $"{val*1000} ms";
+                    return $"{(int)(val*1000)/1000}.{(int)(val*1000)%1000:D3} ms";
                 }
-                if (axis.Scale.Max - axis.Scale.Min > 0.000001)
+                if (axis.Scale.Max - axis.Scale.Min > 0.000005)
                 {
-                    return $"{val*1000000} \u03BCs";
+                    return $"{(int)(val * 1000) / 1000}.{(int)(val * 1000) % 1000:D3}'{(int)(val * 1000000)%1000:D3} \u03BCs";
                 }
                 else
                 {
-                    return $"{val*1000000000} ns";
+                    return $"{(int)(val * 1000) / 1000}.{(int)(val * 1000) % 1000:D3}'{(int)(val * 1000000) % 1000:D3}\"{(uint)((val * 1000000000)%1000):D3} ns";
                 }
             }
         }
@@ -1333,23 +1362,34 @@ namespace ScopeViewer
             }
         }
 
-        private bool _changeScale;
+        private int _changeScale = 1;
 
         private void ScaleButton_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_changeScale == false)
+            if (_changeScale == 0)
             {
                 ChangeScale();
-                _changeScale = true;
-                zedGraph.IsEnableVZoom = true;
-                ScaleButton.Image = Properties.Resources.Resize_48;
-            }
-            else
-            {
-                ChangeScale();
+                _changeScale = 1;
                 zedGraph.IsEnableVZoom = false;
-                _changeScale = false;
+                zedGraph.IsEnableHZoom = true;
                 ScaleButton.Image = Properties.Resources.Width_48;
+                return;
+            }
+            if (_changeScale == 1)
+            {
+                ChangeScale();
+                _changeScale = 2;
+                zedGraph.IsEnableVZoom = true;
+                zedGraph.IsEnableHZoom = true;
+                ScaleButton.Image = Properties.Resources.Resize_48;
+                return;
+            }
+            if (_changeScale == 2)
+            {
+                _changeScale = 0;
+                zedGraph.IsEnableHZoom = false;
+                zedGraph.IsEnableVZoom = true;
+                ScaleButton.Image = Properties.Resources.Height_48;
             }
         }
         private void Mask_KeyPress(object sender, KeyPressEventArgs e)
