@@ -465,9 +465,10 @@ namespace ScopeViewer
             LayoutDocumentList[LayoutDocumentList.Count - 1].Content = WindowsFormsHostList[WindowsFormsHostList.Count - 1];
             LayoutDocumentList[LayoutDocumentList.Count - 1].Title = oscil.OscilNames;
             LayoutDocumentList[LayoutDocumentList.Count - 1].CanFloat = true;
-            LayoutDocumentList[LayoutDocumentList.Count - 1].CanClose = false;
-            
-            LayoutGraph.Children.Add(LayoutDocumentList[LayoutDocumentList.Count - 1]);
+            LayoutDocumentList[LayoutDocumentList.Count - 1].CanClose = true;
+            LayoutDocumentList[LayoutDocumentList.Count - 1].Closed += OnClosed;
+
+          LayoutGraph.Children.Add(LayoutDocumentList[LayoutDocumentList.Count - 1]);
             WindowsFormsHostList[WindowsFormsHostList.Count - 1].Child = GraphPanelList[GraphPanelList.Count - 1];
 
             for (int i = 0; i < OscilChannelList[OscilChannelList.Count - 1].NameLabel.Count; i++)
@@ -475,6 +476,33 @@ namespace ScopeViewer
                 SolidColorBrush brush = (SolidColorBrush) OscilChannelList[OscilChannelList.Count - 1].ColorEllipse[i].Fill;
                 System.Drawing.Color color = System.Drawing.Color.FromArgb(brush.Color.A, brush.Color.R, brush.Color.G, brush.Color.B);
                 GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color, dig);
+            }
+        }
+
+        private void OnClosed(object sender, EventArgs eventArgs)
+        {
+           for (int i = 0; i < LayoutDocumentList.Count; i++)
+            {
+                if (Equals(LayoutDocumentList[i], (LayoutDocument)sender))
+                {
+
+                    OscilList.Remove(OscilList[i]);
+                    GraphPanelList[i].DelCursor();
+
+                    GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutOscilPanel);
+                    for (int j = OscilChannelList[i].LayoutPanel.Count - 1; j >= 0; j--)
+                        GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutPanel[j]);
+                    OscilChannelList.Remove(OscilChannelList[i]);
+                    GraphPanelList.Remove(GraphPanelList[i]);
+                    WindowsFormsHostList.Remove(WindowsFormsHostList[i]);
+                    LayoutDocumentList.Remove(LayoutDocumentList[i]);
+
+                    while (i < OscilChannelList.Count)
+                    {
+                        OscilChannelList[i].OscilName.Content = "Осциллограмма №" + (i + 1);
+                        i++;
+                    }
+                }
             }
         }
 
@@ -521,24 +549,7 @@ namespace ScopeViewer
 
         public static void DelateOscil(int i)
         {
-            OscilList.Remove(OscilList[i]);
-            GraphPanelList[i].DelCursor();
-
-            GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutOscilPanel);
-            for (int j = OscilChannelList[i].LayoutPanel.Count - 1; j >= 0; j--)
-                GraphObj.GraphStackPanel.Children.Remove(OscilChannelList[i].LayoutPanel[j]);
-            OscilChannelList.Remove(OscilChannelList[i]);
-            GraphPanelList.Remove(GraphPanelList[i]);
-            WindowsFormsHostList.Remove(WindowsFormsHostList[i]);
             LayoutDocumentList[i].Close();
-            LayoutDocumentList.Remove(LayoutDocumentList[i]);
-
-            while (i < OscilChannelList.Count)
-            {
-                OscilChannelList[i].OscilName.Content = "Осциллограмма №" + (i + 1);
-
-                    i++;
-            }
         }
 
         private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
