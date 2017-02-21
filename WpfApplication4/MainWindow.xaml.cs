@@ -611,7 +611,7 @@ namespace ScopeViewer
             {
                 for (int numCh = 0; numCh < OscilChannelList[numOsc].TypeComboBox.Count; numCh++)
                 {
-                    if (OscilChannelList[numOsc].SelectCheckBox[numCh].IsChecked == true)
+                    if (OscilChannelList[numOsc].SelectCheckBox[numCh].IsChecked == true && OscilChannelList[numOsc].TypeTypeComboBox[numCh].Text == "Digital")
                     {
                         GraphPanelList[numOsc].AddDigitalChannel(numCh,numOsc, System.Drawing.Color.Blue);
                         OscilChannelList[numOsc].SelectCheckBox[numCh].IsChecked = false;

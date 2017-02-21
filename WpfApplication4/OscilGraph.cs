@@ -186,6 +186,7 @@ namespace ScopeViewer
                 ToolTip = "Название канала:\n" + nameChannel + ", " + dimensionChannel,
                 Margin = new Thickness(0, 0, 0, 0)
             };
+            nameLabel.Foreground = typeChannel ? new SolidColorBrush(Color.FromRgb(255, 50, 50)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
             NameLabel.Add(nameLabel);
 
             Ellipse colorEllipse = new Ellipse
@@ -419,6 +420,7 @@ namespace ScopeViewer
                 }
             }
 
+            NameLabel[j].Foreground = TypeTypeComboBox[j].Text == "Digital" ? new SolidColorBrush(Color.FromRgb(0, 0, 0)): new SolidColorBrush(Color.FromRgb(255, 50, 50));
             MainWindow.GraphPanelList[l].ChangeDigitalList(j, l, TypeTypeComboBox[j].SelectedIndex);
         }
 

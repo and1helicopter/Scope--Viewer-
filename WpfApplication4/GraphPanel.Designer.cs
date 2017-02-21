@@ -49,6 +49,7 @@ namespace ScopeViewer
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
             this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,14 +94,15 @@ namespace ScopeViewer
             this.SaveScope_toolStripButton,
             this.toolStripSeparator3,
             this.absOrRelTime_toolStripButton,
+            this.toolStripSeparator2,
+            this.posTab_StripButton,
+            this.delateDig_toolStripButton,
             this.toolStripSeparator1,
             this.Mask1_label,
             this.MaskMax_textBox,
             this.Mask2_label,
             this.MaskMin_textBox,
-            this.toolStripSeparator2,
-            this.posTab_StripButton,
-            this.delateDig_toolStripButton});
+            this.toolStripSeparator5});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(809, 33);
@@ -282,6 +284,11 @@ namespace ScopeViewer
             this.delateDig_toolStripButton.Text = "Убрать цифровой канал";
             this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
             // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 33);
+            // 
             // GraphPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +328,7 @@ namespace ScopeViewer
         private ToolStripButton absOrRelTime_toolStripButton;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton SaveScope_toolStripButton;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
 

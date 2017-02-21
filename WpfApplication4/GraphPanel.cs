@@ -214,7 +214,7 @@ namespace ScopeViewer
                         $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
                         $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
                         $"'{(int)(val * 1000000) % 1000:D3}"+
-                        $"\"{(uint)((val * 1000000000) % 1000):D3}";
+                        $"\"{(uint)((val * 1000000000)%1000):D3}";
                 }
             }
             else
@@ -246,7 +246,12 @@ namespace ScopeViewer
             PaneDig.YAxis.MajorGrid.IsVisible = true;
             PaneDig.YAxis.Scale.MajorStep = 1.0;
 
-            return $"{val*-1}";
+            if (Math.Abs(val) < 1)
+            {
+                return "";
+            }
+            if (val * -1 - 2 < 0) { return "main"; }
+            return $"{val * -1 - 2}"; 
         }
 
         public void AddGraph(int j, Color color, bool dig)
@@ -383,14 +388,14 @@ namespace ScopeViewer
                 }
             }
 
-            LineItem newCurve1 = PaneDig.AddCurve(nameCh1, list1, color, SymbolType.None);
-            LineItem newCurve0 = PaneDig.AddCurve(nameCh1, list0, color, SymbolType.None);
+            LineItem newCurve1 = PaneDig.AddCurve(nameCh1, list1, Color.DarkBlue, SymbolType.None);
+            LineItem newCurve0 = PaneDig.AddCurve(nameCh1, list0, Color.DarkBlue, SymbolType.None);
             newCurve0.Line.IsSmooth = false;
             newCurve1.Line.IsSmooth = false;
             _myCurve.Add(newCurve1);
-            _myCurve[_myCurve.Count - 1].Line.Width = 2;
+            _myCurve[_myCurve.Count - 1].Line.Width = 3;
             _myCurve.Add(newCurve0);
-            _myCurve[_myCurve.Count - 1].Line.Width = 2;
+            _myCurve[_myCurve.Count - 1].Line.Width = 3;
 
             var list = new PointPairList();
 
@@ -503,9 +508,9 @@ namespace ScopeViewer
             PaneDig.YAxis.Scale.MaxAuto = true;
 
             PaneDig.IsBoundedRanges = true;
-
-            _maxYAxisAuto = 0;
+            
             _minYAxisAuto = -maxMaskCount - 1;
+            _maxYAxisAuto = 0;
 
             PaneDig.XAxis.Scale.Max = Pane.XAxis.Scale.Max;
             PaneDig.XAxis.Scale.Min = Pane.XAxis.Scale.Min;
@@ -513,7 +518,7 @@ namespace ScopeViewer
             PaneDig.X2Axis.Scale.Max = PaneDig.XAxis.Scale.Max;
             PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
 
-            MaskMin_textBox.Text = Convert.ToInt32(-1 * _minYAxisAuto).ToString();
+            MaskMin_textBox.Text = Convert.ToInt32(-2 + -1 * _minYAxisAuto).ToString();
             MaskMax_textBox.Text = Convert.ToInt32(-1 * _maxYAxisAuto).ToString();
 
             PaneDig.Chart.Rect = new RectangleF(
@@ -1404,7 +1409,14 @@ namespace ScopeViewer
         {
             if (MaskMin_textBox.Text != "")
             {
-                _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+                if (Convert.ToInt32(MaskMin_textBox.Text) == 0)
+                {
+                    _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+                }
+                else
+                {
+                    _minYAxisAuto = -2 + -1 * Convert.ToInt32(MaskMin_textBox.Text);
+                }
 
                 ScrollEvent();
 
@@ -1417,7 +1429,14 @@ namespace ScopeViewer
         {
             if (MaskMax_textBox.Text != "")
             {
-                _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+                if (Convert.ToInt32(MaskMax_textBox.Text) == 0)
+                {
+                    _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+                }
+                else
+                {
+                    _maxYAxisAuto = -1 + -1 * Convert.ToInt32(MaskMax_textBox.Text);
+                }
 
                 ScrollEvent();
 
