@@ -184,7 +184,7 @@ namespace ScopeViewer
             xmlOut.WriteEndElement();
 
             // ReSharper disable once SpecifyACultureInStringConversionExplicitly
-            xmlOut.WriteStartElement("SizeLegend", (ShowLegendSlider.Value).ToString());
+            xmlOut.WriteStartElement("SizeLegend", Convert.ToInt32(ShowLegendSlider.Value).ToString());
             xmlOut.WriteEndElement();
 
             {

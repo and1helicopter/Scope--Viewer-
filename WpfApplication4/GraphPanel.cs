@@ -29,6 +29,7 @@ namespace ScopeViewer
 
             zedGraph.ZoomEvent += zedGraph_ZoomEvent;
             zedGraph.ScrollEvent += zedGraph_ScrollEvent;
+            zedGraph.PointValueEvent += ZedGraph_PointValueEvent;
 
             InitDrawGraph();
         }
@@ -250,8 +251,7 @@ namespace ScopeViewer
             {
                 return "";
             }
-            if (val * -1 - 2 < 0) { return "main"; }
-            return $"{val * -1 - 2}"; 
+            return val * -1 - 2 < 0 ? "main" : $"{val * -1 - 2}";
         }
 
         public void AddGraph(int j, Color color, bool dig)
@@ -309,7 +309,28 @@ namespace ScopeViewer
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
 
+
             ResizeAxis();
+        }
+
+        private string ZedGraph_PointValueEvent(ZedGraphControl sender, GraphPane pane, CurveItem curve, int iPt)
+        {
+            PointPair point = curve[iPt];
+           // Color clr = curve.Color;
+            string nameChannel = curve.Label.Text;
+
+
+            if(_absOrRel)
+            {
+                return
+                    $"{nameChannel}" + "\n" +
+                    $"X: {MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Hour:D2}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Minute:D2}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Second:D2}." +
+                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Millisecond:D3}" + 
+                    "\n" + $"Y: {point.Y}";
+            }
+            return $"{nameChannel}" + "\n" + $"X: {point.X}" + "\n" + $"Y: {point.Y}";
         }
 
         public void AddDigitalChannel(int numCh, int numOsc  ,Color color)
@@ -708,7 +729,7 @@ namespace ScopeViewer
             _myCurve[numChannel].Line.IsSmooth = smooth;
             _myCurve[numChannel].Line.SmoothTension = 0.5F;
 
-            _myCurve[numChannel].Line.Width = width ? 2 : 1;
+            _myCurve[numChannel].Line.Width = width ? 3 : 1;
 
             if (typeLine == 0) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
             if (typeLine == 1) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -730,6 +751,11 @@ namespace ScopeViewer
         {
             // Указываем, что расположение легенды мы будет задавать
             // в виде координат левого верхнего угла
+            if (fontSize < 5 || fontSize > 12)
+            {
+                fontSize = 9;
+            }
+
             Pane.Legend.Position = LegendPos.Float;
 
             // Координаты будут отсчитываться в системе координат окна графика
@@ -1190,6 +1216,9 @@ namespace ScopeViewer
                     }
                 }
             }
+
+            
+
         }
 
         private void zedGraph_MouseClick(object sender, MouseEventArgs e)
@@ -1707,6 +1736,12 @@ namespace ScopeViewer
         private void toolStrip1_MouseEnter(object sender, EventArgs e)
         {
             Cursor = Cursors.Default;
+        }
+
+        private void zedGraph_Resize_1(object sender, EventArgs e)
+        {
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
         }
 
         private void SaveScope_toolStripButton_MouseDown(object sender, MouseEventArgs e)

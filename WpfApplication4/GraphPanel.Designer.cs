@@ -41,14 +41,14 @@ namespace ScopeViewer
             this.SaveScope_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.absOrRelTime_toolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
+            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Mask1_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMax_textBox = new System.Windows.Forms.ToolStripTextBox();
             this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
             this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.posTab_StripButton = new System.Windows.Forms.ToolStripButton();
-            this.delateDig_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -77,6 +77,7 @@ namespace ScopeViewer
             this.zedGraph.UseExtendedPrintDialog = true;
             this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
             this.zedGraph.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseMove);
+            this.zedGraph.Resize += new System.EventHandler(this.zedGraph_Resize_1);
             // 
             // toolStrip1
             // 
@@ -222,6 +223,35 @@ namespace ScopeViewer
             this.absOrRelTime_toolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
             this.absOrRelTime_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.absOrRelTime_toolStripButton_MouseDown);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
+            // 
+            // posTab_StripButton
+            // 
+            this.posTab_StripButton.AutoSize = false;
+            this.posTab_StripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.posTab_StripButton.Image = global::ScopeViewer.Properties.Resources.Flip_Horizontal_48;
+            this.posTab_StripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.posTab_StripButton.Name = "posTab_StripButton";
+            this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
+            this.posTab_StripButton.Text = "Расположение ";
+            this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
+            // 
+            // delateDig_toolStripButton
+            // 
+            this.delateDig_toolStripButton.AutoSize = false;
+            this.delateDig_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.delateDig_toolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("delateDig_toolStripButton.Image")));
+            this.delateDig_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
+            this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
+            this.delateDig_toolStripButton.Text = "Убрать цифровой канал";
+            this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -254,35 +284,6 @@ namespace ScopeViewer
             this.MaskMin_textBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MaskMin_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Mask_KeyPress);
             this.MaskMin_textBox.TextChanged += new System.EventHandler(this.MaskMin_textBox_TextChanged);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 33);
-            // 
-            // posTab_StripButton
-            // 
-            this.posTab_StripButton.AutoSize = false;
-            this.posTab_StripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.posTab_StripButton.Image = global::ScopeViewer.Properties.Resources.Flip_Horizontal_48;
-            this.posTab_StripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.posTab_StripButton.Name = "posTab_StripButton";
-            this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
-            this.posTab_StripButton.Text = "Расположение ";
-            this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
-            // 
-            // delateDig_toolStripButton
-            // 
-            this.delateDig_toolStripButton.AutoSize = false;
-            this.delateDig_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.delateDig_toolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("delateDig_toolStripButton.Image")));
-            this.delateDig_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.delateDig_toolStripButton.Name = "delateDig_toolStripButton";
-            this.delateDig_toolStripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.delateDig_toolStripButton.Size = new System.Drawing.Size(30, 30);
-            this.delateDig_toolStripButton.Text = "Убрать цифровой канал";
-            this.delateDig_toolStripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.delateDig_toolStripButton_MouseDown);
             // 
             // toolStripSeparator5
             // 
