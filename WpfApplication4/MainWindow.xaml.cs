@@ -77,7 +77,6 @@ namespace ScopeViewer
 
         bool _openWindow;
         bool _graphButtonStatus;
-        bool _styleButtonStatus;
         bool _analysisButtonStatus;
 
         private void OpenAnimation()
@@ -132,15 +131,22 @@ namespace ScopeViewer
 
         private void OpenWindow()
         {
-            if (_graphButtonStatus == false && _styleButtonStatus == false && _analysisButtonStatus == false) _openWindow = false;
+            if (_graphButtonStatus == false && _analysisButtonStatus == false) _openWindow = false;
         }
 
         private void graphButton_Click(object sender, RoutedEventArgs e)
         {
+            _graphButton();
+        }
+
+        private void _graphButton()
+        {
             OpenWindow();
 
-            _styleButtonStatus = false;
-            _analysisButtonStatus = false;
+            if (OscilChannelList.Count != 0)
+            {
+                _analysisButtonStatus = false;
+            }
 
             ConfigStackPanel.Children.Remove(AnalysisObj);
             ResetColorAnalysisButton();
@@ -149,12 +155,16 @@ namespace ScopeViewer
             {
                 if (OscilChannelList.Count == 0)
                 {
+                    if (_openWindow)
+                    {
+                        _analysisButton();
+                    }
                     return;
                 }
 
                 _graphButtonStatus = true;
                 SetColorGraphButton();
-                if(_openWindow == false) OpenAnimation();
+                if (_openWindow == false) OpenAnimation();
                 _openWindow = true;
                 ConfigPanel.Width = new GridLength(250, GridUnitType.Pixel);
                 ConfigStackPanel.Children.Add(GraphObj);
@@ -173,9 +183,17 @@ namespace ScopeViewer
 
         private void analysisButton_Click(object sender, RoutedEventArgs e)
         {
+            _analysisButton();
+        }
+
+        private void _analysisButton()
+        {
             OpenWindow();
 
-            _graphButtonStatus = false;
+            if (OscilChannelList.Count != 0)
+            {
+                _graphButtonStatus = false;
+            }
 
             ConfigStackPanel.Children.Remove(GraphObj);
             ResetColorGraphButton();
@@ -184,6 +202,10 @@ namespace ScopeViewer
             {
                 if (OscilChannelList.Count == 0)
                 {
+                    if (_openWindow)
+                    {
+                        _graphButton();
+                    }
                     return;
                 }
 

@@ -168,7 +168,6 @@
         }
 
         #endregion
-
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton KHz1_radioButton;
         private System.Windows.Forms.RadioButton KHz2_radioButton;

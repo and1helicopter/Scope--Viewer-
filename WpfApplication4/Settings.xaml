@@ -42,7 +42,7 @@
                 Margin="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Header="TabItem1">
+                Header="TabItem1" Visibility="Collapsed">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="89*" />
