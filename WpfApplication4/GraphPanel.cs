@@ -69,26 +69,33 @@ namespace ScopeViewer
             if (Pane.YAxis.Scale.Min <= _minYAxis)
             {
                 Pane.YAxis.Scale.Min = _minYAxis;
-                if (PaneDig != null) { PaneDig.YAxis.Scale.Min = _minYAxisAuto; }
+                if (PaneDig != null)
+                {
+                    PaneDig.YAxis.Scale.Min = _minYAxisAuto;
+                }
             }
 
             if (Pane.YAxis.Scale.Max >= _maxYAxis)
             {
                 Pane.YAxis.Scale.Max = _maxYAxis;
-               if (PaneDig != null) { PaneDig.YAxis.Scale.Max = _maxYAxisAuto; }
+                if (PaneDig != null)
+                {
+                    PaneDig.YAxis.Scale.Max = _maxYAxisAuto; 
+                }
             }
 
             if (_scaleY == false)
             {
                 Pane.YAxis.Scale.Max = _maxYAxis;
                 Pane.YAxis.Scale.Min = _minYAxis;
-                if (PaneDig != null)
-                {
-                    PaneDig.YAxis.Scale.Max = _maxYAxisAuto;
-                    PaneDig.YAxis.Scale.Min = _minYAxisAuto;
-                }
             }
-            
+
+            if (PaneDig != null)
+            {
+                PaneDig.YAxis.Scale.Max = _maxYAxisAuto;
+                PaneDig.YAxis.Scale.Min = _minYAxisAuto;
+            }
+
             Pane.YAxis.Scale.Mag = 0;
             Pane.XAxis.Scale.Mag = 0;
             if (PaneDig != null)
@@ -833,6 +840,10 @@ namespace ScopeViewer
                 };
 
                 Pane.GraphObjList.Add(_stampTrigger);
+                if (_stampTrigger.Location.X < Pane.XAxis.Scale.Min || _stampTrigger.Location.X > Pane.XAxis.Scale.Max)
+                {
+                    _stampTrigger.IsVisible = false;
+                }
 
                 if (PaneDig != null)
                 {
@@ -848,6 +859,10 @@ namespace ScopeViewer
                     };
 
                     PaneDig.GraphObjList.Add(_stampTriggerDig);
+                    if (_stampTriggerDig.Location.X < PaneDig.XAxis.Scale.Min || _stampTriggerDig.Location.X > PaneDig.XAxis.Scale.Max)
+                    {
+                        _stampTriggerDig.IsVisible = false;
+                    }
                 }
 
             }
@@ -1011,6 +1026,7 @@ namespace ScopeViewer
                     Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor1.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
 
+                    /*
                     if (Cursor1.Location.X <= Pane.XAxis.Scale.Min) Cursor1.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
                     if (Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
 
@@ -1022,13 +1038,28 @@ namespace ScopeViewer
                         if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig1.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
                         if (CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
                     }
+                    */
+
+                    if (Cursor1.Location.X <= Pane.XAxis.Scale.Min || 
+                        Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.IsVisible = false;
+                    else Cursor1.IsVisible = true;
+
+                    if (PaneDig != null)
+                    {
+                        CursorDig1.Location.Y1 = PaneDig.YAxis.Scale.Min;
+                        CursorDig1.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
+
+                        if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min ||
+                            CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.IsVisible = false;
+                        else CursorDig1.IsVisible = true;
+                    }
                     continue;
                 }
                 if (Pane.GraphObjList[i].Link.Title == "Cursor2")
                 {
                     Cursor2.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor2.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-
+                    /*
                     if (Cursor2.Location.X <= Pane.XAxis.Scale.Min) Cursor2.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
                     if (Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
 
@@ -1039,6 +1070,20 @@ namespace ScopeViewer
 
                         if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig2.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
                         if (CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
+                    }
+                    */
+                    if (Cursor2.Location.X <= Pane.XAxis.Scale.Min ||
+                        Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.IsVisible = false;
+                    else Cursor2.IsVisible = true;
+
+                    if (PaneDig != null)
+                    {
+                        CursorDig2.Location.Y1 = PaneDig.YAxis.Scale.Min;
+                        CursorDig2.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
+
+                        if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min ||
+                            CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.IsVisible = false;
+                        else CursorDig2.IsVisible = true;
                     }
                     continue;
                 }
