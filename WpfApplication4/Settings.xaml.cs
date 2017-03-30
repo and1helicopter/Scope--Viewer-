@@ -150,6 +150,11 @@ namespace ScopeViewer
                 xmlOut.WriteStartElement("PointInLine", (1000).ToString());
                 xmlOut.WriteEndElement();
             }
+            if (PointInLineComboBox.SelectedIndex == 3)
+            {
+                xmlOut.WriteStartElement("PointInLine", (10000).ToString());
+                xmlOut.WriteEndElement();
+            }
             else
             {
                 xmlOut.WriteStartElement("PointInLine", (1000000).ToString());
@@ -347,11 +352,21 @@ namespace ScopeViewer
                 }
             }
 
-            if (Setting.PointInLine > 1000)
+            else if (Setting.PointInLine <= 10000)
             {
                 foreach (GraphPanel t in MainWindow.GraphPanelList)
                 {
                     PointInLineComboBox.SelectedIndex = 3;
+                    t.PointInLineChange(10000, Setting.ShowDigital);
+                    Setting.PointInLine = 10000;
+                }
+            }
+
+            if (Setting.PointInLine > 10000)
+            {
+                foreach (GraphPanel t in MainWindow.GraphPanelList)
+                {
+                    PointInLineComboBox.SelectedIndex = 4;
                     t.PointInLineChange(1000000, Setting.ShowDigital);
                 }
             }

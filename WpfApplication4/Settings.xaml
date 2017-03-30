@@ -386,6 +386,7 @@
                         <ComboBoxItem Content="Низкий" />
                         <ComboBoxItem Content="Средний" />
                         <ComboBoxItem Content="Высокий" />
+                        <ComboBoxItem Content="Очень высокий" />
                         <ComboBoxItem Content="Полный" />
                     </ComboBox>
                 </Grid>
