@@ -311,8 +311,8 @@ namespace ScopeViewer
                         _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
 
                         string stringTime = sr.ReadLine();
-                        string[] parseStringTime = stringTime.Split(' ');
-                        if(parseStringTime.Length == 4)
+                        string[] parseStringTime = stringTime?.Split(' ');
+                        if(parseStringTime?.Length == 4)
                         {
                             string [] splitString = parseStringTime[3].Split(':');
                             if(splitString.Length == 4)
@@ -322,14 +322,14 @@ namespace ScopeViewer
                             stringTime = parseStringTime[2] + " " + parseStringTime[3];
                         }
 
-                        
+
                         _oscil.StampDateTrigger = DateTime.Parse(stringTime);             //Строка штампа времени осциллограммы 
 
                         double sampleRate = 0;
                         double historyPercent = 0;
 
-                        int SampleRate = Convert.ToInt32(sr.ReadLine());
-                        switch (SampleRate)
+                        //int SampleRate = ;
+                        switch (Convert.ToInt32(sr.ReadLine()))
                         {
                             case 1:
                                 {
@@ -348,9 +348,9 @@ namespace ScopeViewer
                                 break;
                         }
 
-                        int HistoryPercent = Convert.ToInt32(sr.ReadLine());
+                        //int HistoryPercent = Convert.ToInt32(sr.ReadLine());
 
-                        switch (HistoryPercent)
+                        switch (Convert.ToInt32(sr.ReadLine()))
                         {
                             case 0x4000:
                                 {
@@ -694,10 +694,17 @@ namespace ScopeViewer
 
         private void settings_Click(object sender, RoutedEventArgs e)
         {
-            SettingsObj = new Settings
+            if (SettingsObj != null)
             {
-                Topmost = true
-            };
+                SettingsObj.Topmost = true;
+            }
+            else
+            {
+                SettingsObj = new Settings
+                {
+                    Topmost = true
+                };
+            }
             SettingsObj.Show();
         }
 
