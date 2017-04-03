@@ -411,8 +411,8 @@ namespace ScopeViewer
                 }
                 if (i == MainWindow.OscilList[numOsc].NumCount - 1)
                 {
-                    list1.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line1);
-                    list0.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line0);
+                    list1.Add((i) / MainWindow.OscilList[numOsc].SampleRate, line1);
+                    list0.Add((i) / MainWindow.OscilList[numOsc].SampleRate, line0);
                 }
             }
 
@@ -471,7 +471,7 @@ namespace ScopeViewer
                     if(MainWindow.OscilList[numOsc].Data[i][numCh] !=
                        MainWindow.OscilList[numOsc].Data[i - 1][numCh])
                     {
-                        list.Add((i - 1)/ MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double) (i - 1 + i)/2)/  MainWindow.OscilList[numOsc].SampleRate, line);
                         if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[i][numCh]) & 1 << l) == 1 << l)
                         {
                             line = -0.2 - 1 - l;
@@ -480,11 +480,11 @@ namespace ScopeViewer
                         {
                             line = -0.8 - 1 - l;
                         }
-                        list.Add(i / MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double)(i - 1 + i) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
                     }
                     if (i == MainWindow.OscilList[numOsc].NumCount - 1)
                     {
-                        list.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double)(i + i) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
                     }
                 }
 
@@ -498,7 +498,7 @@ namespace ScopeViewer
 
             PaneDig.YAxis.IsVisible = true;
 
-            PaneDig.X2Axis.IsVisible = true;
+            PaneDig.X2Axis.IsVisible = false;
             PaneDig.X2Axis.Scale.FontSpec.Size = 11;
             PaneDig.YAxis.ScaleFormatEvent += YAxis_ScaleFormatEvent;
 
@@ -599,7 +599,7 @@ namespace ScopeViewer
                 else
                 {
                     PaneDig.Chart.Rect = new RectangleF(
-                        Pane.Chart.Rect.X + Pane.Chart.Rect.Width + 75, 
+                        Pane.Chart.Rect.X + Pane.Chart.Rect.Width + 75 + 15, 
                         Pane.Chart.Rect.Y,
                         Pane.Chart.Rect.Width, 
                         Pane.Chart.Rect.Height);
