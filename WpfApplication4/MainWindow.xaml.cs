@@ -333,7 +333,7 @@ namespace ScopeViewer
                         {
                             case 1:
                                 {
-                                    sampleRate = 1000;
+                                    sampleRate = 4000;
                                 }
                                 break;
                             case 3:
@@ -343,7 +343,7 @@ namespace ScopeViewer
                                 break;
                             case 7:
                                 {
-                                    sampleRate = 4000;
+                                    sampleRate = 1000;
                                 }
                                 break;
                         }
@@ -414,7 +414,6 @@ namespace ScopeViewer
                         try{
                             StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
 
-
                             _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
 
                             string stringTime = sr.ReadLine();
@@ -440,10 +439,31 @@ namespace ScopeViewer
                             
                             _oscil.StampDateTrigger = DateTime.Parse(stringTime);
 
-                            OpenOldFormat openOldObj = new OpenOldFormat();                      //Запускам выбор параметров для осциллограммы старой версии
-
                             double sampleRate = 0;
                             double historyPercent = 0;
+
+                            //int SampleRate = ;
+                            switch (Convert.ToInt32(sr.ReadLine()))
+                            {
+                                case 1:
+                                    {
+                                        sampleRate = 4000;
+                                    }
+                                    break;
+                                case 3:
+                                    {
+                                        sampleRate = 2000;
+                                    }
+                                    break;
+                                case 7:
+                                    {
+                                        sampleRate = 1000;
+                                    }
+                                    break;
+                            }
+
+                            OpenOldFormat openOldObj = new OpenOldFormat(sampleRate);                      //Запускам выбор параметров для осциллограммы старой версии
+
 
                             DialogResult dlgr = openOldObj.ShowDialog();
 
@@ -452,9 +472,7 @@ namespace ScopeViewer
                                 sampleRate = OpenOldFormat.SampleRate;
                                 historyPercent = OpenOldFormat.HistoryPercent;
                             }
-
-
-                            sr.ReadLine(); // Пропускам строку
+                            
                             str = sr.ReadLine(); // Строка названия каналов
                             if (str != null)
                             {

@@ -1,20 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ScopeViewer
 {
     public partial class OpenOldFormat : Form
     {
-        public OpenOldFormat()
+        public OpenOldFormat(double sampleRate)
         {
             InitializeComponent();
+            try
+            {
+                switch (Convert.ToInt32(sampleRate))
+                {
+                    case 4000:
+                        {
+                            KHz4_radioButton.Checked = true;
+                            groupBox1.Enabled = false;
+                            SampleRate = 4000;
+                        }
+                        break;
+                    case 2000:
+                        {
+                            KHz2_radioButton.Checked = true;
+                            groupBox1.Enabled = false;
+                            SampleRate = 2000;
+                        }
+                        break;
+                    case 1000:
+                        {
+                            KHz1_radioButton.Checked = true;
+                            groupBox1.Enabled = false;
+                            SampleRate = 1000;
+                        }
+                        break;
+                }
+            }
+            catch
+            {
+                groupBox1.Enabled = true;
+            }
+
+
         }
 
         public static double SampleRate;
