@@ -215,7 +215,7 @@ namespace ScopeViewer
             this.absOrRelTime_toolStripButton.AutoSize = false;
             this.absOrRelTime_toolStripButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.absOrRelTime_toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.absOrRelTime_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Time_abs;
+            this.absOrRelTime_toolStripButton.Image = global::ScopeViewer.Properties.Resources.Time_rel;
             this.absOrRelTime_toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.absOrRelTime_toolStripButton.Name = "absOrRelTime_toolStripButton";
             this.absOrRelTime_toolStripButton.Size = new System.Drawing.Size(30, 30);
