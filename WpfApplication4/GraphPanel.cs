@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using ZedGraph;
 
@@ -18,7 +19,7 @@ namespace ScopeViewer
         double _maxYAxisAuto;
         double _minYAxisAuto;
         bool _scaleY;
-        bool _absOrRel;
+        bool _absOrRel = true;
 
         public GraphPanel()
         {
@@ -316,9 +317,17 @@ namespace ScopeViewer
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
 
+            _stampTriggerCreate = false;
+            StampTriggerEvent();
 
             ResizeAxis();
+
+            if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelCount - 1 == j)
+            {
+                ScrollEvent();
+            }
         }
+
 
         private string ZedGraph_PointValueEvent(ZedGraphControl sender, GraphPane pane, CurveItem curve, int iPt)
         {
@@ -621,7 +630,8 @@ namespace ScopeViewer
             zedGraph.IsShowVScrollBar = true;
             zedGraph.IsAutoScrollRange = true;
 
-            _maxXAxis = zedGraph.GraphPane.XAxis.Scale.Max;
+            int numPoint = Pane.CurveList.Last().Points.Count - 1;
+            _maxXAxis = Pane.CurveList.Last().Points[numPoint].X;
             _minXAxis = zedGraph.GraphPane.XAxis.Scale.Min;
 
             if (_maxYAxis < zedGraph.GraphPane.YAxis.Scale.Max)
@@ -1578,7 +1588,7 @@ namespace ScopeViewer
         {
             _absOrRel = !_absOrRel;
             absOrRelTime_toolStripButton.Image = _absOrRel ? Properties.Resources.Time_abs : Properties.Resources.Time_rel;
-            absOrRelTime_toolStripButton.ToolTipText = _absOrRel ? "Абсолютное время" : "Относительное время" ;
+            absOrRelTime_toolStripButton.ToolTipText = _absOrRel ? "Относительное время" : "Абсолютное время";
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
