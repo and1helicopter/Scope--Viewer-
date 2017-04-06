@@ -32,7 +32,7 @@ namespace ScopeViewer
         private readonly List<Label> _nameValue2LabelDig = new List<Label>();
 
 
-        public void AnalysisCursorAdd(int numOsc)
+        public void AnalysisCursorAdd(int numOsc,bool absOrRel)
         {
             _panelBorder.BorderBrush = Brushes.DarkGray;
             _panelBorder.BorderThickness = new Thickness(1.0);
@@ -69,13 +69,13 @@ namespace ScopeViewer
             {
                 _nameStatuslLabel.Add(new Label());
                 double x = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
-                _nameStatuslLabel[1].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[1].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[1].FontSize = 12;
                 _nameStatuslLabel[1].Height = 25;
                 _nameStatuslLabel[1].Width = 85;
-                _nameStatuslLabel[1].ToolTip = (int)x + " сек " + (int)((x - (int)x)*1000) + " мс " +
-                    (int)((x*1000 - (int)(x*1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
+                _nameStatuslLabel[1].Content = x.ToString("F6") + " сек";
+                _nameStatuslLabel[1].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
+                (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 positonY += 20;
                 _nameStatuslLabel[1].Margin = new Thickness(-275, positonY, 0, 0);
             }
@@ -83,13 +83,13 @@ namespace ScopeViewer
             {
                 _nameStatuslLabel.Add(new Label());
                 double x = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
-                _nameStatuslLabel[2].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[2].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[2].FontSize = 12;
                 _nameStatuslLabel[2].Height = 25;
                 _nameStatuslLabel[2].Width = 85;
+                _nameStatuslLabel[2].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[2].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
-                    (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
+                (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 _nameStatuslLabel[2].Margin = new Thickness(-80, positonY, 0, 0);
             }
 
@@ -160,6 +160,8 @@ namespace ScopeViewer
             }
 
             LayoutPanel[0].Children.Add(_panelBorder);
+
+            UpdateCursor(numOsc, absOrRel);
         }
 
         //Добавляем панель анализа для цифрового канала 

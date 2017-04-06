@@ -1391,7 +1391,7 @@ namespace ScopeViewer
             {
                 CursorClear();
                 CursorAdd();
-                _oscilCursor.AnalysisCursorAdd(NumGraphPanel());
+                _oscilCursor.AnalysisCursorAdd(NumGraphPanel(), _absOrRel);
                 MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[0]);
                 if (PaneDig != null)
                 {
@@ -1589,6 +1589,14 @@ namespace ScopeViewer
             _absOrRel = !_absOrRel;
             absOrRelTime_toolStripButton.Image = _absOrRel ? Properties.Resources.Time_abs : Properties.Resources.Time_rel;
             absOrRelTime_toolStripButton.ToolTipText = _absOrRel ? "Относительное время" : "Абсолютное время";
+            if (_cursorsCreate)
+            {
+                _oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+                if (PaneDig != null)
+                {
+                    _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                }
+            }
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
