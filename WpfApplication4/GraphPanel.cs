@@ -324,6 +324,25 @@ namespace ScopeViewer
 
             if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelCount - 1 == j)
             {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (_minYAxis == 0)
+                {
+                    double minYAxisTemp = Pane.CurveList[0].Points[0].Y;
+
+                    foreach (var item in Pane.CurveList)
+                    {
+
+                        for(int i = 0; i < item.NPts; i++)
+                        {
+                            if (item.Points[i].Y <= minYAxisTemp)
+                            {
+                                minYAxisTemp = item.Points[i].Y;
+                            }
+                        }
+                    }
+
+                    _minYAxis = minYAxisTemp - (_maxYAxis - minYAxisTemp)/10 ;
+                }
                 ScrollEvent();
             }
         }
@@ -480,7 +499,7 @@ namespace ScopeViewer
                     if(MainWindow.OscilList[numOsc].Data[i][numCh] !=
                        MainWindow.OscilList[numOsc].Data[i - 1][numCh])
                     {
-                        list.Add(((double) (i - 1 + i)/2)/  MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double) (i + i - 2)/2)/  MainWindow.OscilList[numOsc].SampleRate, line);
                         if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[i][numCh]) & 1 << l) == 1 << l)
                         {
                             line = -0.2 - 1 - l;
@@ -489,7 +508,7 @@ namespace ScopeViewer
                         {
                             line = -0.8 - 1 - l;
                         }
-                        list.Add(((double)(i - 1 + i) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double)(i + i - 2) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
                     }
                     if (i == MainWindow.OscilList[numOsc].NumCount - 1)
                     {
@@ -1423,8 +1442,19 @@ namespace ScopeViewer
         {
             if (_cursorsCreate)
             {
-                MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
-                _oscilCursor.AnalysisCursorClear();
+
+                if (PaneDig != null)
+                {
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[1]);
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                    _oscilCursor.AnalysisCursorClearDig();
+                    _oscilCursor.AnalysisCursorClear();
+                }
+                else
+                {
+                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                    _oscilCursor.AnalysisCursorClear();
+                }
             }
         }
 
@@ -1761,11 +1791,13 @@ namespace ScopeViewer
 
             foreach (PointPairList listTemp in ListTemp)
             {
-                for (int j =  0; j < listTemp.Count; j++)
+                for (int j = 0; j < listTemp.Count; j++)
                 {
                     listTemp[j].X = j / MainWindow.OscilList[NumGraphPanel()].SampleRate;
                 }
             }
+
+            
 
             MainWindow.OscilList[NumGraphPanel()].NumCount = Convert.ToUInt32(ListTemp[0].Count);
             MainWindow.OscilList[NumGraphPanel()].HistotyCount = hisCount > 0 ? hisCount : 0;
@@ -1787,12 +1819,21 @@ namespace ScopeViewer
 
             ResizeAxis();
 
+            foreach (var listTemp in ListTemp)
+            {
+                _maxXAxis = listTemp[listTemp.Count - 1].X;
+                break;
+            }
+
+            //_minXAxis
+
             ApplyCut_StripButton.Visible = false;
             Cut_StripButton.Image = Properties.Resources.Cutting_Add;
             _createCutBox = false;
 
             DelCutBox();
 
+            ScrollEvent();
         }
 
         //При наведении курсора на панаель инструментов, отображаем его как стандартный
