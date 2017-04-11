@@ -50,13 +50,14 @@ namespace ScopeViewer
             _nameLabel.Height = 25;
             _nameLabel.Width = 180;
             _nameLabel.TabIndex = 0;
-            _nameLabel.ToolTip = "Положения курсоров на осциллограмме";
+            _nameLabel.ToolTip = "Положения курсоров на осциллограмме:\n" + MainWindow.OscilList[numOsc].OscilNames;
             _nameLabel.Margin = new Thickness(0, 0, 0, 0);
 
             double positonY = 0;
             {
                 _nameStatuslLabel.Add(new Label());
-                _nameStatuslLabel[0].Content = "Курсор 1                  Курсор 2";
+                _nameStatuslLabel[0].Content = "Красный                Синий";
+               // _nameStatuslLabel[0].Foreground = Brushes.Red;
                 _nameStatuslLabel[0].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[0].FontSize = 12;
                 _nameStatuslLabel[0].Height = 25;
@@ -70,6 +71,7 @@ namespace ScopeViewer
                 _nameStatuslLabel.Add(new Label());
                 double x = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
                 _nameStatuslLabel[1].VerticalAlignment = VerticalAlignment.Top;
+                _nameStatuslLabel[1].Foreground = Brushes.Red;
                 _nameStatuslLabel[1].FontSize = 12;
                 _nameStatuslLabel[1].Height = 25;
                 _nameStatuslLabel[1].Width = 85;
@@ -84,6 +86,7 @@ namespace ScopeViewer
                 _nameStatuslLabel.Add(new Label());
                 double x = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
                 _nameStatuslLabel[2].VerticalAlignment = VerticalAlignment.Top;
+                _nameStatuslLabel[2].Foreground = Brushes.Blue;
                 _nameStatuslLabel[2].FontSize = 12;
                 _nameStatuslLabel[2].Height = 25;
                 _nameStatuslLabel[2].Width = 85;
@@ -133,6 +136,7 @@ namespace ScopeViewer
                 _nameValue1Label.Add(new Label());
                 _nameValue1Label[j].Content = str1;
                 _nameValue1Label[j].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue1Label[j].Foreground = Brushes.Red;
                 _nameValue1Label[j].FontSize = 12;
                 _nameValue1Label[j].Height = 25;
                 _nameValue1Label[j].Width = 85;
@@ -141,6 +145,7 @@ namespace ScopeViewer
                 _nameValue2Label.Add(new Label());
                 _nameValue2Label[j].Content = str2;
                 _nameValue2Label[j].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue2Label[j].Foreground = Brushes.Blue;
                 _nameValue2Label[j].FontSize = 12;
                 _nameValue2Label[j].Height = 25;
                 _nameValue2Label[j].Width = 85;
@@ -165,7 +170,7 @@ namespace ScopeViewer
         }
 
         //Добавляем панель анализа для цифрового канала 
-        public void AnalysisCursorAddDig(int numOsc)
+        public void AnalysisCursorAddDig(int numOsc, bool absOrRel)
         {
             _panelBorderDig.BorderBrush = Brushes.DarkGray;
             _panelBorderDig.BorderThickness = new Thickness(1.0);
@@ -177,13 +182,13 @@ namespace ScopeViewer
             LayoutPanel[1].Margin = new Thickness(2, 5, 2, 0);
             LayoutPanel[1].MouseDown += click_LayoutPanelCursorDig;
 
-            _nameLabelDig.Content = "Курсоры";
+            _nameLabelDig.Content = "Курсоры цифрового канала";
             _nameLabelDig.VerticalAlignment = VerticalAlignment.Top;
             _nameLabelDig.FontSize = 12;
             _nameLabelDig.Height = 25;
             _nameLabelDig.Width = 180;
             _nameLabelDig.TabIndex = 0;
-            _nameLabelDig.ToolTip = "Положение курсоров в дискретном канале";
+            _nameLabelDig.ToolTip = "Положение курсоров в дискретном канале:\n" + MainWindow.OscilList[numOsc].OscilNames;
             _nameLabelDig.Margin = new Thickness(0, 0, 0, 0);
 
             double positonY = 0;
@@ -192,13 +197,14 @@ namespace ScopeViewer
                 double x = MainWindow.GraphPanelList[numOsc].CursorDig1.Location.X;
                 _nameStatuslLabelDig[0].Content = x.ToString("F1") + " сек";
                 _nameStatuslLabelDig[0].VerticalAlignment = VerticalAlignment.Top;
+                _nameStatuslLabelDig[0].Foreground = Brushes.Red;
                 _nameStatuslLabelDig[0].FontSize = 12;
                 _nameStatuslLabelDig[0].Height = 25;
                 _nameStatuslLabelDig[0].Width = 75;
                 _nameStatuslLabelDig[0].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
                     (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 positonY += 20;
-                _nameStatuslLabelDig[0].Margin = new Thickness(-120, positonY, 0, 0);
+                _nameStatuslLabelDig[0].Margin = new Thickness(-125, positonY, 0, 0);
             }
             
             {
@@ -206,6 +212,7 @@ namespace ScopeViewer
                 double x = MainWindow.GraphPanelList[numOsc].CursorDig2.Location.X;
                 _nameStatuslLabelDig[1].Content = x.ToString("F1") + " сек";
                 _nameStatuslLabelDig[1].VerticalAlignment = VerticalAlignment.Top;
+                _nameStatuslLabelDig[1].Foreground = Brushes.Blue;
                 _nameStatuslLabelDig[1].FontSize = 12;
                 _nameStatuslLabelDig[1].Height = 25;
                 _nameStatuslLabelDig[1].Width = 75;
@@ -231,7 +238,7 @@ namespace ScopeViewer
                 _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].VerticalAlignment = VerticalAlignment.Top;
                 _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].FontSize = 12;
                 _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].Height = 25;
-                _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].Width = 100;
+                _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].Width = 90;
                 _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].ToolTip = "Название канала";
                 positonY += 20;
                 _nameChannelLabelDig[_nameChannelLabelDig.Count - 1].Margin = new Thickness(-350, positonY, 0, 0);
@@ -242,7 +249,7 @@ namespace ScopeViewer
                     if (MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[_nameChannelLabelDig.Count - 1].Points[k].X >
                         MainWindow.GraphPanelList[numOsc].CursorDig1.Location.X)
                     {
-                        str = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[2].Points[k].Y.ToString("F3");
+                        str = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[2].Points[k].Y.ToString("####");
                         break;
                     }
                 }
@@ -250,17 +257,18 @@ namespace ScopeViewer
                 _nameValue1LabelDig.Add(new Label());
                 _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Content = str;
                 _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Foreground = Brushes.Red;
                 _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].FontSize = 12;
                 _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Height = 25;
                 _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Width = 75;
-                _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Margin = new Thickness(-200, positonY, 0, 0);
+                _nameValue1LabelDig[_nameChannelLabelDig.Count - 1].Margin = new Thickness(-160, positonY, 0, 0);
 
                 for (int k = 0; k < MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[_nameChannelLabelDig.Count - 1].NPts; k++)
                 {
                     if (MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[_nameChannelLabelDig.Count - 1].Points[k].X >
                         MainWindow.GraphPanelList[numOsc].CursorDig2.Location.X)
                     {
-                        str = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[2].Points[k].Y.ToString("F3");
+                        str = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[2].Points[k].Y.ToString("####");
                         break;
                     }
                 }
@@ -268,21 +276,22 @@ namespace ScopeViewer
                 _nameValue2LabelDig.Add(new Label());
                 _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Content = str;
                 _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Foreground = Brushes.Blue;
                 _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].FontSize = 12;
                 _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Height = 25;
                 _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Width = 75;
-                _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Margin = new Thickness(-80, positonY, 0, 0);
+                _nameValue2LabelDig[_nameChannelLabelDig.Count - 1].Margin = new Thickness(-50, positonY, 0, 0);
 
             }
              for (int j = 0; j < MainWindow.GraphPanelList[numOsc].PaneDig.CurveList.Count - 3; j++)
             {
                 _nameChannelLabelDig.Add(new Label());
-                _nameChannelLabelDig[j + 1].Content = j + 1;
+                _nameChannelLabelDig[j + 1].Content = j;
                 _nameChannelLabelDig[j + 1].VerticalAlignment = VerticalAlignment.Top;
                 _nameChannelLabelDig[j + 1].FontSize = 12;
                 _nameChannelLabelDig[j + 1].Height = 25;
                 _nameChannelLabelDig[j + 1].Width = 100;
-                _nameChannelLabelDig[j + 1].ToolTip = "Название канала";
+                _nameChannelLabelDig[j + 1].ToolTip = "Бит канала";
                  positonY += 20;
                 _nameChannelLabelDig[j + 1].Margin = new Thickness(-350, positonY, 0, 0);
 
@@ -302,6 +311,7 @@ namespace ScopeViewer
                 _nameValue1LabelDig.Add(new Label());
                 _nameValue1LabelDig[j + 1].Content = str;
                 _nameValue1LabelDig[j + 1].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue1LabelDig[j + 1].Foreground = Brushes.Red;
                 _nameValue1LabelDig[j + 1].FontSize = 12;
                 _nameValue1LabelDig[j + 1].Height = 25;
                 _nameValue1LabelDig[j + 1].Width = 85;
@@ -321,6 +331,7 @@ namespace ScopeViewer
                 _nameValue2LabelDig.Add(new Label());
                 _nameValue2LabelDig[j + 1].Content = str;
                 _nameValue2LabelDig[j + 1].VerticalAlignment = VerticalAlignment.Top;
+                _nameValue2LabelDig[j + 1].Foreground = Brushes.Blue;
                 _nameValue2LabelDig[j + 1].FontSize = 12;
                 _nameValue2LabelDig[j + 1].Height = 25;
                 _nameValue2LabelDig[j + 1].Width = 85;
@@ -340,6 +351,8 @@ namespace ScopeViewer
             }
             
             LayoutPanel[1].Children.Add(_panelBorderDig);
+
+            UpdateCursorDig(numOsc, absOrRel);
         }
 
 
@@ -465,7 +478,7 @@ namespace ScopeViewer
                     {
                         if (j == 2)
                         {
-                            var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString("F3");
+                            var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString("####");
                             _nameValue1LabelDig[j - 2].Content = str1;
                         }
                         else
@@ -513,7 +526,7 @@ namespace ScopeViewer
                     {
                         if (j == 2)
                         {
-                            var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString("F3");
+                            var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString("####");
                             _nameValue2LabelDig[j - 2].Content = str1;
                         }
                         else

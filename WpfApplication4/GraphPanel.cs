@@ -1246,6 +1246,12 @@ namespace ScopeViewer
                         UpdateCursor();
                         zedGraph.Invalidate();
                     }
+
+                    //_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+                    //if (PaneDig != null)
+                    //{
+                    //    _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                    //}
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -1261,6 +1267,11 @@ namespace ScopeViewer
                         UpdateCursor();
                         zedGraph.Invalidate();
                     }
+                    //_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+                    //if (PaneDig != null)
+                    //{
+                    //    _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+                    //}
                 }
 
                 if (_leftLineCut != null || _rightLineCut != null)
@@ -1414,7 +1425,7 @@ namespace ScopeViewer
                 MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[0]);
                 if (PaneDig != null)
                 {
-                    _oscilCursor.AnalysisCursorAddDig(NumGraphPanel());
+                    _oscilCursor.AnalysisCursorAddDig(NumGraphPanel(), _absOrRel);
                     MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[1]);
                 }
                 AddCursor.Image = Properties.Resources.Stocks_Rem;
