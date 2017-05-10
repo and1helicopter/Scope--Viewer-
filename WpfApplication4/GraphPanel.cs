@@ -117,6 +117,11 @@ namespace ScopeViewer
         }
         
         // Создадим список точек   
+        private readonly List<double> _scaleLine = new List<double>();
+        private readonly List<double> _shiftLine = new List<double>();
+        
+
+
         public readonly List<PointPairList> ListTemp;
         private static int _pointInLine = 250;
         private readonly List<bool> _digitalList = new List<bool>();
@@ -178,7 +183,8 @@ namespace ScopeViewer
 
                     for (int j = startIndex; j < stopIndex; j += sum)
                     {
-                        Pane.CurveList[i].AddPoint(ListTemp[i][j]);
+                        //Pane.CurveList[i].AddPoint(ListTemp[i][j]);
+                        Pane.CurveList[i].AddPoint(ListTemp[i][j].X, ListTemp[i][j].Y*_scaleLine[i] + _shiftLine[i]);
                     }
                 }
             }
@@ -312,10 +318,13 @@ namespace ScopeViewer
                 ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
             }
 
+
             // Выберем случайный цвет для графика
             LineItem newCurve = Pane.AddCurve(nameCh, list, color, SymbolType.None);
             newCurve.Line.IsSmooth = false;
             _myCurve.Add(newCurve);
+            _scaleLine.Add(1.00);
+            _shiftLine.Add(0.00);
 
             _stampTriggerCreate = false;
             StampTriggerEvent();
@@ -758,7 +767,7 @@ namespace ScopeViewer
         }
 
 
-        public void ChangeLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine)
+        public void ChangeLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine, double scale, double shift)
         {
             Pane.CurveList[numChannel].Color = colorLine;
             Pane.CurveList[numChannel].IsVisible = show;
@@ -780,13 +789,21 @@ namespace ScopeViewer
             if (typeStep == 4) _myCurve[numChannel].Line.StepType = StepType.RearwardStep;
 
             //Изменение масштаба
+            _scaleLine[numChannel] = scale;
 
             //Изменение сдвига
+            _shiftLine[numChannel] = shift;
 
+            //Обновляем график
+            UpdateGraph();
+
+            //Устанавливаем новую верхнюю и нижнюю границу для оси OY 
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
+
+
 
         public void LegendShow(bool show, int fontSize, int h, int v)
         {

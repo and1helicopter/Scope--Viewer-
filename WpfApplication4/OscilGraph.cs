@@ -305,7 +305,6 @@ namespace ScopeViewer
             _scale.Add(1.00);
             ScaleTextBox[ScaleTextBox.Count - 1].Name = "scale" + Convert.ToString(ScaleTextBox.Count - 1);
             ScaleTextBox[ScaleTextBox.Count - 1].KeyUp += OnKeyUp;
-            //    WidthCheckBox[WidthCheckBox.Count - 1].Click += click_checkedButton;
 
             TextBox shiftextBox = new TextBox
             {
@@ -349,7 +348,7 @@ namespace ScopeViewer
                         ((TextBox) sender).Text = temp.ToString("F2");
                         _scale[Convert.ToInt32(((TextBox) sender).Name.Replace("scale", ""))] = temp;
                     }
-                    else if (temp == 0)
+                    else if (Math.Abs(temp) < 0.01)
                     {
                         ((TextBox)sender).Text = "0,01";
                         _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))] = 0.01;
@@ -358,14 +357,10 @@ namespace ScopeViewer
                     {
                         ((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
                     }
-                    //Обработчик 
-                    //Convert.ToDouble(((TextBox)sender).Text);
                 }
                 catch
                 {
                     ((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
-                    //Обработчик 
-                    //Convert.ToDouble(((TextBox) sender).Text);
                 }
             }
             else if (((TextBox)sender).ToolTip == "Сдвиг")
@@ -373,29 +368,33 @@ namespace ScopeViewer
                 try
                 {
                     double temp = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
-                    if (temp > 0)
-                    {
-                        ((TextBox)sender).Text = temp.ToString("F2");
-                        _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = temp;
-                    }
-                    else if (temp == 0)
-                    {
-                        ((TextBox)sender).Text = "0,00";
-                        _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = 0.00;
-                    }
-                    else
-                    {
-                        ((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
-                    }
-                    //Обработчик 
-                    //Convert.ToDouble(((TextBox)sender).Text);
+
+                    ((TextBox)sender).Text = temp.ToString("F2");
+                    _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = temp;
                 }
                 catch
                 {
                     ((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
-                    //Обработчик 
-                    //Convert.ToDouble(((TextBox) sender).Text);
                 }
+            }
+
+            //Обработчик 
+            {
+                //Нужно определить в каком графике произошел вызов 
+                int j = 0, l = 0;
+                for (int k = 0; k < MainWindow.OscilChannelList.Count; k++)
+                {
+                    for (int i = 0; i < MainWindow.OscilChannelList[k].TypeComboBox.Count; i++)
+                    {
+                        if (MainWindow.OscilChannelList[k].ScaleTextBox[i].IsFocused || MainWindow.OscilChannelList[k].ShiftTextBox[i].IsFocused)
+                        {
+                            j = i;
+                            l = k;
+                            break;
+                        }
+                    }
+                }
+                ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
             }
         }
         
@@ -548,7 +547,7 @@ namespace ScopeViewer
             if (VisibleCheckBox[num].IsChecked == false) show = false;
             if (SmoothCheckBox[num].IsChecked == true) smooth = true;
             if (WidthCheckBox[num].IsChecked == true) width = true;
-            MainWindow.GraphPanelList[numGraphPane].ChangeLine(num, line, typeStep, width, show, smooth, color);
+            MainWindow.GraphPanelList[numGraphPane].ChangeLine(num, line, typeStep, width, show, smooth, color, _scale[num], _shift[num]);
         }
 
         private void Graph_MouseDown(object sender, MouseEventArgs e)
