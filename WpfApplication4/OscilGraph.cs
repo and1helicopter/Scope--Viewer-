@@ -29,7 +29,13 @@ namespace ScopeViewer
         public readonly List<ComboBox> TypeTypeComboBox = new List<ComboBox>();
         public readonly List<ComboBox> TypeComboBox = new List<ComboBox>();
         public readonly List<CheckBox> SmoothCheckBox = new List<CheckBox>();
-        
+
+        public readonly List<TextBox> ScaleTextBox = new List<TextBox>();
+        private readonly List<double> _scale = new List<double>();
+
+        public readonly List<TextBox> ShiftTextBox = new List<TextBox>();
+        private readonly List<double> _shift = new List<double>();
+
         public readonly List<bool> OpenClose = new List<bool>();
         public readonly List<ComboBox> StepTypeComboBox = new List<ComboBox>();
         public readonly List<CheckBox> WidthCheckBox = new List<CheckBox>();
@@ -286,6 +292,35 @@ namespace ScopeViewer
             WidthCheckBox.Add(widthCheckBox);
             WidthCheckBox[WidthCheckBox.Count - 1].Click += click_checkedButton;
 
+            TextBox saleTextBox = new TextBox
+            {
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = 83,
+                Margin = new Thickness(-287, 100, 0, 0),
+                TextAlignment = TextAlignment.Right,
+                Text = "1,00",
+                ToolTip = "Масштабирование"
+            };
+            ScaleTextBox.Add(saleTextBox);
+            _scale.Add(1.00);
+            ScaleTextBox[ScaleTextBox.Count - 1].Name = "scale" + Convert.ToString(ScaleTextBox.Count - 1);
+            ScaleTextBox[ScaleTextBox.Count - 1].KeyUp += OnKeyUp;
+            //    WidthCheckBox[WidthCheckBox.Count - 1].Click += click_checkedButton;
+
+            TextBox shiftextBox = new TextBox
+            {
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = 83,
+                Margin = new Thickness(-117, 100, 0, 0),
+                TextAlignment = TextAlignment.Right,
+                Text = "0,00",
+                ToolTip = "Сдвиг"
+            };
+            ShiftTextBox.Add(shiftextBox);
+            _shift.Add(0.00);
+            ShiftTextBox[ShiftTextBox.Count - 1].Name = "shift"  + Convert.ToString(ShiftTextBox.Count - 1);
+            ShiftTextBox[ShiftTextBox.Count - 1].KeyUp += OnKeyUp;
+
             OpenClose.Add(new bool() );
 
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(NameLabel[NameLabel.Count - 1]);
@@ -297,9 +332,73 @@ namespace ScopeViewer
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(SmoothCheckBox[SmoothCheckBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(StepTypeComboBox[StepTypeComboBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(WidthCheckBox[WidthCheckBox.Count - 1]);
+            LayoutPanel[LayoutPanel.Count - 1].Children.Add(ScaleTextBox[ScaleTextBox.Count - 1]);
+            LayoutPanel[LayoutPanel.Count - 1].Children.Add(ShiftTextBox[ShiftTextBox.Count - 1]);
             LayoutPanel[LayoutPanel.Count - 1].Children.Add(_panelBorder[_panelBorder.Count - 1]);
         }
 
+        private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
+        {
+            if (((TextBox) sender).ToolTip == "Масштабирование")
+            {
+                try
+                {
+                    double temp = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                    if (temp > 0)
+                    {
+                        ((TextBox) sender).Text = temp.ToString("F2");
+                        _scale[Convert.ToInt32(((TextBox) sender).Name.Replace("scale", ""))] = temp;
+                    }
+                    else if (temp == 0)
+                    {
+                        ((TextBox)sender).Text = "0,01";
+                        _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))] = 0.01;
+                    }
+                    else
+                    {
+                        ((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
+                    }
+                    //Обработчик 
+                    //Convert.ToDouble(((TextBox)sender).Text);
+                }
+                catch
+                {
+                    ((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
+                    //Обработчик 
+                    //Convert.ToDouble(((TextBox) sender).Text);
+                }
+            }
+            else if (((TextBox)sender).ToolTip == "Сдвиг")
+            {
+                try
+                {
+                    double temp = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                    if (temp > 0)
+                    {
+                        ((TextBox)sender).Text = temp.ToString("F2");
+                        _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = temp;
+                    }
+                    else if (temp == 0)
+                    {
+                        ((TextBox)sender).Text = "0,00";
+                        _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = 0.00;
+                    }
+                    else
+                    {
+                        ((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
+                    }
+                    //Обработчик 
+                    //Convert.ToDouble(((TextBox)sender).Text);
+                }
+                catch
+                {
+                    ((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
+                    //Обработчик 
+                    //Convert.ToDouble(((TextBox) sender).Text);
+                }
+            }
+        }
+        
         private void VisibleCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             _showAllCheckBox.IsChecked = false;
@@ -332,7 +431,7 @@ namespace ScopeViewer
             {
                 if (LayoutPanel[i].IsMouseOver && OpenClose[i] == false)
                 {
-                    LayoutPanel[i].Height = 100;
+                    LayoutPanel[i].Height = 125;
                     OpenClose[i] = true;
                 }
                 else if (LayoutPanel[i].IsMouseOver && OpenClose[i])

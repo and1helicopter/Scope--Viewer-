@@ -779,6 +779,11 @@ namespace ScopeViewer
             if (typeStep == 3) _myCurve[numChannel].Line.StepType = StepType.RearwardSegment;
             if (typeStep == 4) _myCurve[numChannel].Line.StepType = StepType.RearwardStep;
 
+            //Изменение масштаба
+
+            //Изменение сдвига
+
+
             zedGraph.AxisChange();
             zedGraph.Invalidate();
         }
