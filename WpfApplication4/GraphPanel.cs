@@ -798,12 +798,17 @@ namespace ScopeViewer
             UpdateGraph();
 
             //Устанавливаем новую верхнюю и нижнюю границу для оси OY 
+            Pane.YAxis.Scale.MinAuto = true;
+            Pane.YAxis.Scale.MaxAuto = true;
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
+
+            _maxYAxis = Pane.YAxis.Scale.Max;
+            _minYAxis = Pane.YAxis.Scale.Min;
+
+            ScrollEvent();
         }
-
-
 
         public void LegendShow(bool show, int fontSize, int h, int v)
         {
