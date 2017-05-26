@@ -245,6 +245,7 @@ namespace ScopeViewer
             xmlOut.WriteEndDocument();
             xmlOut.Close();
             fs.Close();
+           // fs.Dispose();
         }
 
         private void ReadSetting()

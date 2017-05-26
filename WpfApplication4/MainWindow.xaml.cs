@@ -229,10 +229,21 @@ namespace ScopeViewer
 
         public void OpenAuto(string str)
         {
+            string strP = str.Split('.').Last();
+
             OpenFileDialog ofd = new OpenFileDialog
             {
-                FileName = str,
+                FileName = str
             };
+
+            if (strP == "txt")
+            {
+                ofd.FilterIndex = 1;
+            }
+            else if (strP == "cfg")
+            {
+                ofd.FilterIndex = 2;
+            }
             OpenFile(ofd);
         }
 

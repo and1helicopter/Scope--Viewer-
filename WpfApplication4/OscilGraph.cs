@@ -338,7 +338,7 @@ namespace ScopeViewer
 
         private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
         {
-            if (((TextBox) sender).ToolTip == "Масштабирование")
+            if ((string) ((TextBox) sender).ToolTip == "Масштабирование")
             {
                 try
                 {
@@ -363,7 +363,7 @@ namespace ScopeViewer
                     ((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
                 }
             }
-            else if (((TextBox)sender).ToolTip == "Сдвиг")
+            else if ((string) ((TextBox)sender).ToolTip == "Сдвиг")
             {
                 try
                 {

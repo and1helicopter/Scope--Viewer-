@@ -106,6 +106,8 @@ namespace ScopeViewer
             LoadNameFromXml("WindowHeight", doc, out WindowHeight);
             LoadNameFromXml("WindowWidth", doc, out WindowWidth);
             LoadNameFromXml("WondowState", doc, out WondowState);
+
+            LoadSetting = true;
         }
     }
 }
