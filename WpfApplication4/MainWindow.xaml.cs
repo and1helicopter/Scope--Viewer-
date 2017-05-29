@@ -277,7 +277,7 @@ namespace ScopeViewer
             {
                 try
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
                     _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
                     _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
                     _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
@@ -316,7 +316,7 @@ namespace ScopeViewer
                 {
                     try
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
+                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
 
 
                         _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
@@ -423,7 +423,7 @@ namespace ScopeViewer
                     catch (Exception)
                     {
                         try{
-                            StreamReader sr = new StreamReader(ofd.FileName, Encoding.UTF8);
+                            StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
 
                             _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
 
@@ -538,7 +538,7 @@ namespace ScopeViewer
             {
                 try
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.Default);
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
                     _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
                     sr.ReadLine();
                     str = sr.ReadLine();
@@ -592,7 +592,7 @@ namespace ScopeViewer
 
                     string pathDateFile = pathfile + "\\" + namefile + ".dat";
 
-                    StreamReader srd = new StreamReader(pathDateFile, Encoding.Default);
+                    StreamReader srd = new StreamReader(pathDateFile, Encoding.GetEncoding("Windows-1251"));
                     for (int j = 0; !srd.EndOfStream; j++)
                     {
                         str = srd.ReadLine();
