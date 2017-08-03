@@ -189,7 +189,7 @@ namespace ScopeViewer
                 FontSize = 12,
                 Height = 25,
                 Width = 140,
-                ToolTip = "Название канала:\n" + nameChannel + ", " + dimensionChannel,
+                ToolTip = "Название канала:\n" + nameChannel + @"  " + dimensionChannel,
                 Margin = new Thickness(0, 0, 0, 0)
             };
             nameLabel.Foreground = typeChannel ? new SolidColorBrush(Color.FromRgb(255, 50, 50)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));

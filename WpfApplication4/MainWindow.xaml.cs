@@ -277,7 +277,7 @@ namespace ScopeViewer
             {
                 try
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
                     _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
                     _oscil.StampDateTrigger = DateTime.Parse(sr.ReadLine());
                     _oscil.SampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
@@ -308,7 +308,7 @@ namespace ScopeViewer
                     for (int i = 0; i < _oscil.ChannelCount; i++)
                     {
                         _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
-                        _oscil.Dimension.Add("NONE");
+                        _oscil.Dimension.Add(" ");
                     }
                     sr.Close();
                 }
@@ -316,7 +316,7 @@ namespace ScopeViewer
                 {
                     try
                     {
-                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
+                        StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
 
 
                         _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
@@ -416,14 +416,14 @@ namespace ScopeViewer
                         for (int i = 0; i < _oscil.ChannelCount; i++)
                         {
                             _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
-                            _oscil.Dimension.Add("NONE");
+                            _oscil.Dimension.Add(" ");
                         }
                         sr.Close();
                     }
                     catch (Exception)
                     {
                         try{
-                            StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
+                            StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
 
                             _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
 
@@ -520,7 +520,7 @@ namespace ScopeViewer
                             for (int i = 0; i < _oscil.ChannelCount; i++)
                             {
                                 _oscil.TypeChannel.Add(false);  //Значит сигнал аналоговый
-                                _oscil.Dimension.Add("NONE");
+                                _oscil.Dimension.Add(" ");
                             }
                             sr.Close();
                         }
@@ -538,7 +538,7 @@ namespace ScopeViewer
             {
                 try
                 {
-                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("Windows-1251"));
+                    StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
                     _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
                     sr.ReadLine();
                     str = sr.ReadLine();
@@ -569,7 +569,7 @@ namespace ScopeViewer
                             string[] str1 = str.Split(',');
                             _oscil.ChannelNames.Add(Convert.ToString(str1[1]));
                         }
-                        _oscil.Dimension.Add("NONE");
+                        _oscil.Dimension.Add(" ");
                     }
                     sr.ReadLine();
                     sr.ReadLine();
@@ -592,7 +592,7 @@ namespace ScopeViewer
 
                     string pathDateFile = pathfile + "\\" + namefile + ".dat";
 
-                    StreamReader srd = new StreamReader(pathDateFile, Encoding.GetEncoding("Windows-1251"));
+                    StreamReader srd = new StreamReader(pathDateFile, Encoding.GetEncoding("utf-8"));
                     for (int j = 0; !srd.EndOfStream; j++)
                     {
                         str = srd.ReadLine();
