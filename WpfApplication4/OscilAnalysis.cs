@@ -431,26 +431,26 @@ namespace ScopeViewer
             {
                 //Abs time
                 _nameStatuslLabel[1].Content =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
                 _nameStatuslLabel[1].ToolTip =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
 
                 _nameStatuslLabel[2].Content =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
                 _nameStatuslLabel[2].ToolTip =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
             }
             else
             {
@@ -498,15 +498,15 @@ namespace ScopeViewer
             {
                 //Abs time
                 _nameStatuslLabelDig[0].Content =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
                 _nameStatuslLabelDig[0].ToolTip =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x1*1000).Millisecond.ToString("D3");
             }
             else
             {
@@ -545,15 +545,15 @@ namespace ScopeViewer
             {
                 //Abs time
                 _nameStatuslLabelDig[1].Content =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
                 _nameStatuslLabelDig[1].ToolTip =
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
-                    MainWindow.OscilList[numOsc].StampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Hour.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Minute.ToString("D2") + ":" +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Second.ToString("D2") + "." +
+                    MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x2*1000).Millisecond.ToString("D3");
             }
             else
             {

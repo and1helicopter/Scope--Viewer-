@@ -8,19 +8,42 @@ namespace ScopeViewer
     {
         public string OscilNames;
 
+        public string OscilStationName;
+        public string OscilRecordingDevice;
+
+        public ushort OscilChannelCount;
+
+        public List<bool> ChannelType = new List<bool>();
+        public List<string> ChannelColor = new List<string>();
+
         public List<string> ChannelNames = new List<string>();
-        public List<string> Dimension = new List<string>();
+        public List<string> ChannelPhase = new List<string>();
+        public List<string> ChannelCcbm = new List<string>();
+        public List<string> ChannelDimension = new List<string>();
+        public List<string> ChannelMin = new List<string>();
+        public List<string> ChannelMax = new List<string>();
 
-        public DateTime StampDateStart;
-        public DateTime StampDateTrigger;
-        public DateTime StampDateEnd;
-        public double SampleRate;
-        public double HistotyCount;
+        public string OscilNominalFrequency = "50";
+        public string OscilNRates = "1";
+        public double OscilSampleRate;
+        public uint OscilEndSample;
 
-        public ushort ChannelCount;
-        public uint NumCount;
-        public List<bool> TypeChannel = new List <bool>();
+        public DateTime OscilStampDateStart;
+        public DateTime OscilStampDateTrigger;
+        public DateTime OscilStampDateEnd;
 
-        public List<List<double>> Data = new List<List<double>>();
+        public string OscilFT = "ASCII";
+        public string OscilTimemult = "1";
+
+        public string OscilTimeCode;
+        public string OscilLocalCode;
+
+        public string OscilTmqCode;
+        public string OscilLeapsec;
+
+        public double OscilHistotyCount;
+
+
+        public List<List<double>> OscilData = new List<List<double>>();
     }
 }

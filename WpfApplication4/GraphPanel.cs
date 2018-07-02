@@ -139,7 +139,7 @@ namespace ScopeViewer
         public void ChangeDigitalList(int i, int j, int status)
         {
             _digitalList[i] = status != 0;
-            MainWindow.OscilList[j].TypeChannel[i] = status != 0;
+            MainWindow.OscilList[j].ChannelType[i] = status != 0;
             UpdateGraph();
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -200,34 +200,34 @@ namespace ScopeViewer
                 if (axis.Scale.Max - axis.Scale.Min > 5)
                 {
                     return
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}";
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Second:D2}";
                 }
                 if (axis.Scale.Max - axis.Scale.Min > 0.005)
                 {
                     return
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}";
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}";
                 }
                 if (axis.Scale.Max - axis.Scale.Min > 0.000005)
                 {
                     return
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
                         $"'{(int) (val * 1000000) % 1000:D3}";
                 }
                 else
                 {
                     return
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
-                        $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Hour:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Minute:D2}:" +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Second:D2}." +
+                        $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Millisecond:D3}" +
                         $"'{(int)(val * 1000000) % 1000:D3}"+
                         $"\"{(uint)((val * 1000000000)%1000):D3}";
                 }
@@ -273,8 +273,8 @@ namespace ScopeViewer
             zedGraph.IsEnableVZoom = false;
 
             Pane.Border.Color = Color.White;
-            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + @"." +
-                                   MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
+            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger + @"." +
+                                   MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger.Millisecond.ToString("000");
 
             if (!dig) AddAnalogChannel(j, color);
         }
@@ -293,29 +293,29 @@ namespace ScopeViewer
 
             PointPairList list = new PointPairList();
             ListTemp.Add(new PointPairList());
-            _digitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].TypeChannel[j]);
+            _digitalList.Add(MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelType[j]);
 
             string nameCh = "";
 
             // Заполняем список точек. Приращение по оси X 
             // ReSharper disable once PossibleLossOfFraction
-            int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount / _pointInLine));
+            int sum = Convert.ToInt32((double)(MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilEndSample / _pointInLine));
             if (sum == 0) sum = 1;
             // DateTime tempTime;
 
-            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i += sum)
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilEndSample; i += sum)
             {
-                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilStampDateStart;
                 // добавим в список точку
-                list.Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                list.Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilSampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData[i][j]);
                 nameCh = MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelNames[j];
             }
 
-            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].NumCount; i++)
+            for (int i = 0; i < MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilEndSample; i++)
             {
-                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].StampDateStart;
+                //tempTime = MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilStampDateStart;
                 // добавим в список точку
-                ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].SampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data[i][j]);
+                ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilSampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData[i][j]);
             }
 
 
@@ -331,7 +331,7 @@ namespace ScopeViewer
 
             ResizeAxis();
 
-            if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].ChannelCount - 1 == j)
+            if (MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilChannelCount - 1 == j)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (_minYAxis == 0)
@@ -368,10 +368,10 @@ namespace ScopeViewer
             {
                 return
                     $"{nameChannel}" + "\n" +
-                    $"X: {MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Hour:D2}:" +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Minute:D2}:" +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Second:D2}." +
-                    $"{MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(point.X * 1000).Millisecond:D3}" + 
+                    $"X: {MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(point.X * 1000).Hour:D2}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(point.X * 1000).Minute:D2}:" +
+                    $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(point.X * 1000).Second:D2}." +
+                    $"{MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(point.X * 1000).Millisecond:D3}" + 
                     "\n" + $"Y: {point.Y}";
             }
             return $"{nameChannel}" + "\n" + $"X: {point.X}" + "\n" + $"Y: {point.Y}";
@@ -387,7 +387,7 @@ namespace ScopeViewer
 
             if (_cursorsCreate)          //Удалим Курсоры, если оние есть
             {
-                AddCoursorEvent();
+                AddCoursorVerticalEvent();
             }
 
             if (_stampTriggerCreate)     //Удалим штамп времени, если есть
@@ -429,27 +429,27 @@ namespace ScopeViewer
             string nameCh1 = MainWindow.OscilList[numOsc].ChannelNames[numCh];
             double line1 = -0.2, line0 = -0.8;
 
-            for (int i = 1; i < MainWindow.OscilList[numOsc].NumCount; i++)
+            for (int i = 1; i < MainWindow.OscilList[numOsc].OscilEndSample; i++)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (MainWindow.OscilList[numOsc].Data[i][numCh] !=
-                    MainWindow.OscilList[numOsc].Data[i - 1][numCh])
+                if (MainWindow.OscilList[numOsc].OscilData[i][numCh] !=
+                    MainWindow.OscilList[numOsc].OscilData[i - 1][numCh])
                 {
-                    list1.Add((i - 1) / MainWindow.OscilList[numOsc].SampleRate, line1);
-                    list0.Add((i - 1 )/ MainWindow.OscilList[numOsc].SampleRate, line0);
+                    list1.Add((i - 1) / MainWindow.OscilList[numOsc].OscilSampleRate, line1);
+                    list0.Add((i - 1 )/ MainWindow.OscilList[numOsc].OscilSampleRate, line0);
 
                     double temp0 = line0;
                     double temp1 = line1;
                     line1 = temp0;
                     line0 = temp1;
 
-                    list1.Add(i / MainWindow.OscilList[numOsc].SampleRate, line1);
-                    list0.Add(i / MainWindow.OscilList[numOsc].SampleRate, line0);
+                    list1.Add(i / MainWindow.OscilList[numOsc].OscilSampleRate, line1);
+                    list0.Add(i / MainWindow.OscilList[numOsc].OscilSampleRate, line0);
                 }
-                if (i == MainWindow.OscilList[numOsc].NumCount - 1)
+                if (i == MainWindow.OscilList[numOsc].OscilEndSample - 1)
                 {
-                    list1.Add((i) / MainWindow.OscilList[numOsc].SampleRate, line1);
-                    list0.Add((i) / MainWindow.OscilList[numOsc].SampleRate, line0);
+                    list1.Add((i) / MainWindow.OscilList[numOsc].OscilSampleRate, line1);
+                    list0.Add((i) / MainWindow.OscilList[numOsc].OscilSampleRate, line0);
                 }
             }
 
@@ -464,10 +464,10 @@ namespace ScopeViewer
 
             var list = new PointPairList();
 
-            for (int i = 0; i < MainWindow.OscilList[numOsc].NumCount; i++)
+            for (int i = 0; i < MainWindow.OscilList[numOsc].OscilEndSample; i++)
             {
                 // добавим в список точку
-                list.Add(i / MainWindow.OscilList[numOsc].SampleRate, MainWindow.OscilList[numOsc].Data[i][numCh]);
+                list.Add(i / MainWindow.OscilList[numOsc].OscilSampleRate, MainWindow.OscilList[numOsc].OscilData[i][numCh]);
             }
 
             LineItem newCurveBase = PaneDig.AddCurve(nameCh1, list, color, SymbolType.None);
@@ -491,7 +491,7 @@ namespace ScopeViewer
                 list = new PointPairList();
                 double line;
 
-                if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[0][numCh]) & 1 << l) == 1 << l)
+                if ((Convert.ToInt32(MainWindow.OscilList[numOsc].OscilData[0][numCh]) & 1 << l) == 1 << l)
                 {
                     line = -0.2 - 1 - l;
                 }
@@ -500,16 +500,16 @@ namespace ScopeViewer
                     line = -0.8 - 1 - l;
                 }
 
-                list.Add(0 / MainWindow.OscilList[numOsc].SampleRate, line);
+                list.Add(0 / MainWindow.OscilList[numOsc].OscilSampleRate, line);
 
-                for (int i = 1; i < MainWindow.OscilList[numOsc].NumCount; i++)
+                for (int i = 1; i < MainWindow.OscilList[numOsc].OscilEndSample; i++)
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if(MainWindow.OscilList[numOsc].Data[i][numCh] !=
-                       MainWindow.OscilList[numOsc].Data[i - 1][numCh])
+                    if(MainWindow.OscilList[numOsc].OscilData[i][numCh] !=
+                       MainWindow.OscilList[numOsc].OscilData[i - 1][numCh])
                     {
-                        list.Add(((double) (i + i - 2)/2)/  MainWindow.OscilList[numOsc].SampleRate, line);
-                        if ((Convert.ToInt32(MainWindow.OscilList[numOsc].Data[i][numCh]) & 1 << l) == 1 << l)
+                        list.Add(((double) (i + i - 2)/2)/  MainWindow.OscilList[numOsc].OscilSampleRate, line);
+                        if ((Convert.ToInt32(MainWindow.OscilList[numOsc].OscilData[i][numCh]) & 1 << l) == 1 << l)
                         {
                             line = -0.2 - 1 - l;
                         }
@@ -517,11 +517,11 @@ namespace ScopeViewer
                         {
                             line = -0.8 - 1 - l;
                         }
-                        list.Add(((double)(i + i - 2) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double)(i + i - 2) / 2) / MainWindow.OscilList[numOsc].OscilSampleRate, line);
                     }
-                    if (i == MainWindow.OscilList[numOsc].NumCount - 1)
+                    if (i == MainWindow.OscilList[numOsc].OscilEndSample - 1)
                     {
-                        list.Add(((double)(i + i) / 2) / MainWindow.OscilList[numOsc].SampleRate, line);
+                        list.Add(((double)(i + i) / 2) / MainWindow.OscilList[numOsc].OscilSampleRate, line);
                     }
                 }
 
@@ -883,7 +883,7 @@ namespace ScopeViewer
         {
             try
             {
-                double timeStamp = MainWindow.OscilList[NumGraphPanel()].HistotyCount / MainWindow.OscilList[NumGraphPanel()].SampleRate;
+                double timeStamp = MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount / MainWindow.OscilList[NumGraphPanel()].OscilSampleRate;
                 _stampTrigger = new LineObj(timeStamp, Pane.YAxis.Scale.Min, timeStamp, Pane.YAxis.Scale.Max)
                 {
                     Line =
@@ -1437,12 +1437,12 @@ namespace ScopeViewer
             zedGraph.Invalidate();
         }
 
-        private void AddCoursor_MouseDown(object sender, MouseEventArgs e)
+        private void AddCoursorVertical_MouseDown(object sender, MouseEventArgs e)
         {
-            AddCoursorEvent();
+            AddCoursorVerticalEvent();
         }
 
-        private void AddCoursorEvent()
+        private void AddCoursorVerticalEvent()
         {
             if (_cursorsCreate == false)
             {
@@ -1474,6 +1474,11 @@ namespace ScopeViewer
                 }
                 AddCursor.Image = Properties.Resources.Stocks_Add;
             }
+        }
+
+        private void AddCoursorHorizontal_MouseDown(object sender, MouseEventArgs e)
+        {
+
         }
 
         public void DelCursor()
@@ -1625,7 +1630,7 @@ namespace ScopeViewer
         {
             if (_cursorsCreate)          //Удалим Курсоры если оние есть
             {
-                AddCoursorEvent();
+                AddCoursorVerticalEvent();
             }
             if (_stampTriggerCreate)
             {
@@ -1781,17 +1786,17 @@ namespace ScopeViewer
             //Формируем новую осциллограмму 
             int numLeft = 0;
             int numRight = ListTemp[0].Count;
-            double hisCount = MainWindow.OscilList[NumGraphPanel()].HistotyCount;
+            double hisCount = MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount;
 
             for (int j = ListTemp[0].Count - 1; j >= 0; j--)
             {
                 if (ListTemp[0][j].X > _rightLineCut.Location.X)   //Правая сторона
                 {
-                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data.RemoveAt(j);
+                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData.RemoveAt(j);
                 }
                 else if (ListTemp[0][j].X < _leftLineCut.Location.X)   //Левая сторона
                 {
-                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].Data.RemoveAt(j);
+                    MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData.RemoveAt(j);
                 }
             }
 
@@ -1831,23 +1836,23 @@ namespace ScopeViewer
             {
                 for (int j = 0; j < listTemp.Count; j++)
                 {
-                    listTemp[j].X = j / MainWindow.OscilList[NumGraphPanel()].SampleRate;
+                    listTemp[j].X = j / MainWindow.OscilList[NumGraphPanel()].OscilSampleRate;
                 }
             }
 
             
 
-            MainWindow.OscilList[NumGraphPanel()].NumCount = Convert.ToUInt32(ListTemp[0].Count);
-            MainWindow.OscilList[NumGraphPanel()].HistotyCount = hisCount > 0 ? hisCount : 0;
-            MainWindow.OscilList[NumGraphPanel()].StampDateTrigger =
-                MainWindow.OscilList[NumGraphPanel()].StampDateStart.AddMilliseconds(1000 * (numLeft + MainWindow.OscilList[NumGraphPanel()].HistotyCount) / MainWindow.OscilList[NumGraphPanel()].SampleRate);
-            MainWindow.OscilList[NumGraphPanel()].StampDateStart =
-                MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.AddMilliseconds(-(1000 * MainWindow.OscilList[NumGraphPanel()].HistotyCount / MainWindow.OscilList[NumGraphPanel()].SampleRate));
-            MainWindow.OscilList[NumGraphPanel()].StampDateEnd =
-                MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.AddMilliseconds(1000 * (MainWindow.OscilList[NumGraphPanel()].NumCount - MainWindow.OscilList[NumGraphPanel()].HistotyCount) / MainWindow.OscilList[NumGraphPanel()].SampleRate);
+            MainWindow.OscilList[NumGraphPanel()].OscilEndSample = Convert.ToUInt32(ListTemp[0].Count);
+            MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount = hisCount > 0 ? hisCount : 0;
+            MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger =
+                MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(1000 * (numLeft + MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount) / MainWindow.OscilList[NumGraphPanel()].OscilSampleRate);
+            MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart =
+                MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger.AddMilliseconds(-(1000 * MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount / MainWindow.OscilList[NumGraphPanel()].OscilSampleRate));
+            MainWindow.OscilList[NumGraphPanel()].OscilStampDateEnd =
+                MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger.AddMilliseconds(1000 * (MainWindow.OscilList[NumGraphPanel()].OscilEndSample - MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount) / MainWindow.OscilList[NumGraphPanel()].OscilSampleRate);
 
-            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger + @"." +
-                       MainWindow.OscilList[NumGraphPanel()].StampDateTrigger.Millisecond.ToString("000");
+            StampTime_label.Text = MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger + @"." +
+                       MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger.Millisecond.ToString("000");
 
             if (_stampTriggerCreate)
             {
@@ -1912,12 +1917,12 @@ namespace ScopeViewer
 
             try
             {
-                DateTime dateTemp = MainWindow.OscilList[NumGraphPanel()].StampDateTrigger;
+                DateTime dateTemp = MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger;
                 sw.WriteLine(dateTemp.ToString("dd'/'MM'/'yyyy HH:mm:ss.fff000"));                  //Штамп времени
-                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].SampleRate);                     //Частота выборки (частота запуска осциллогрофа/ делитель)
-                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].HistotyCount);                   //Предыстория 
+                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilSampleRate);                     //Частота выборки (частота запуска осциллогрофа/ делитель)
+                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount);                   //Предыстория 
                 sw.WriteLine(FileHeaderLine());                                                     //Формирование заголовка (подписи названия каналов)
-                for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].NumCount; i++)            //Формирование строк всех загруженных данных (отсортированых с предысторией)
+                for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilEndSample; i++)            //Формирование строк всех загруженных данных (отсортированых с предысторией)
                 {
                     sw.WriteLine(FileParamLine(i));
                 }
@@ -1934,7 +1939,7 @@ namespace ScopeViewer
         private string FileHeaderLine()
         {
             string str = " " + "\t";
-            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].ChannelCount; i++)
+            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilChannelCount; i++)
             {
                 str = str + MainWindow.OscilList[NumGraphPanel()].ChannelNames[i] + "\t";
             }
@@ -1944,9 +1949,9 @@ namespace ScopeViewer
         private string FileParamLine(int numLine)
         {
             string str = numLine + "\t";
-            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].Data[numLine].Count; i++)
+            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilData[numLine].Count; i++)
             {
-                str = str + MainWindow.OscilList[NumGraphPanel()].Data[numLine][i] + "\t";
+                str = str + MainWindow.OscilList[NumGraphPanel()].OscilData[numLine][i] + "\t";
             }
             return str;
         }

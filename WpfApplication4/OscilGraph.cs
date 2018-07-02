@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -162,7 +163,7 @@ namespace ScopeViewer
             }
         }
 
-        public void GraphConfigAdd(string nameChannel, string dimensionChannel, bool typeChannel)
+        public void GraphConfigAdd(string nameChannel, string dimensionChannel, bool typeChannel, string colorChannel)
         {
             Border panelBorder = new Border
             {
@@ -192,8 +193,25 @@ namespace ScopeViewer
                 ToolTip = "Название канала:\n" + nameChannel + @"  " + dimensionChannel,
                 Margin = new Thickness(0, 0, 0, 0)
             };
+
             nameLabel.Foreground = typeChannel ? new SolidColorBrush(Color.FromRgb(255, 50, 50)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
             NameLabel.Add(nameLabel);
+
+            SolidColorBrush color = new SolidColorBrush(GenerateColor(_rngColor));
+            if (colorChannel.ToLower() != "ffffff")
+            {
+                try
+                {
+                    byte r = byte.Parse(colorChannel.Substring(0, 2), NumberStyles.AllowHexSpecifier);
+                    byte g = byte.Parse(colorChannel.Substring(2, 2), NumberStyles.AllowHexSpecifier);
+                    byte b = byte.Parse(colorChannel.Substring(4, 2), NumberStyles.AllowHexSpecifier);
+                    color = new SolidColorBrush(Color.FromRgb(r, g, b));
+                }
+                catch 
+                {
+                    color = new SolidColorBrush(GenerateColor(_rngColor));
+                }
+            }
 
             Ellipse colorEllipse = new Ellipse
             {
@@ -202,7 +220,7 @@ namespace ScopeViewer
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(3, 2, 0, 0),
                 ToolTip = "Цвет",
-                Fill = new SolidColorBrush(GenerateColor(_rngColor)),
+                Fill = color,
             };
             ColorEllipse.Add(colorEllipse);
             ColorEllipse[ColorEllipse.Count - 1].MouseDown += click_ColorEllipse;
