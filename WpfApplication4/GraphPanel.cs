@@ -954,8 +954,10 @@ namespace ScopeViewer
 
         private readonly OscilAnalysis _oscilCursor = new OscilAnalysis();
         private bool _cursorsCreate;
+        private bool _cursorsCreateHorizontal;
         public LineObj Cursor1;
         public LineObj Cursor2;
+        public LineObj CursorHorizontal;
         public LineObj CursorDig1;
         public LineObj CursorDig2;
         
@@ -1054,11 +1056,41 @@ namespace ScopeViewer
             zedGraph.Invalidate();
         }
 
+        private void CursorHorizontalAdd()
+        {
+            CursorHorizontal = new LineObj(
+                Pane.XAxis.Scale.Min,
+                (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 2 + Pane.YAxis.Scale.Min,
+                Pane.XAxis.Scale.Max,
+                (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 2 + Pane.YAxis.Scale.Min
+                )
+            {
+                Line =
+                {
+                    Style = System.Drawing.Drawing2D.DashStyle.Solid,
+                    Color = Color.Green,
+                    Width = 2
+                },
+                Link = {Title = "CursorHorizontal" }
+            };
+
+            Pane.GraphObjList.Add(CursorHorizontal);
+
+            _cursorsCreateHorizontal = true;
+
+            // Обновляем график
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+        }
+
         private void CursorClear()
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
             {
-                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2") { Pane.GraphObjList.Remove(Pane.GraphObjList[i]);}
+                if (Pane.GraphObjList[i].Link.Title == "Cursor1" || Pane.GraphObjList[i].Link.Title == "Cursor2")
+                {
+                    Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
+                }
             }
             if (PaneDig != null)
             {
@@ -1073,6 +1105,22 @@ namespace ScopeViewer
             zedGraph.Invalidate();
         }
 
+        private void CursorClearHorizontal()
+        {
+            for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
+            {
+                if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal")
+                {
+                    Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
+                }
+            }
+
+            _cursorsCreateHorizontal = false;
+
+            zedGraph.AxisChange();
+            zedGraph.Invalidate();
+        }
+
         private void UpdateCursor()
         {
             for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
@@ -1081,20 +1129,6 @@ namespace ScopeViewer
                 {
                     Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor1.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-
-                    /*
-                    if (Cursor1.Location.X <= Pane.XAxis.Scale.Min) Cursor1.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
-                    if (Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
-
-                    if (PaneDig != null)
-                    {
-                        CursorDig1.Location.Y1 = PaneDig.YAxis.Scale.Min;
-                        CursorDig1.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
-
-                        if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig1.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
-                        if (CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
-                    }
-                    */
 
                     if (Cursor1.Location.X <= Pane.XAxis.Scale.Min || 
                         Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.IsVisible = false;
@@ -1115,19 +1149,7 @@ namespace ScopeViewer
                 {
                     Cursor2.Location.Y1 = Pane.YAxis.Scale.Min;
                     Cursor2.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-                    /*
-                    if (Cursor2.Location.X <= Pane.XAxis.Scale.Min) Cursor2.Location.X = Pane.XAxis.Scale.Min + (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
-                    if (Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.Location.X = Pane.XAxis.Scale.Max - (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 100;
 
-                    if (PaneDig != null)
-                    {
-                        CursorDig2.Location.Y1 = PaneDig.YAxis.Scale.Min;
-                        CursorDig2.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
-
-                        if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min) CursorDig2.Location.X = PaneDig.XAxis.Scale.Min + (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
-                        if (CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.Location.X = PaneDig.XAxis.Scale.Max - (PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 100;
-                    }
-                    */
                     if (Cursor2.Location.X <= Pane.XAxis.Scale.Min ||
                         Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.IsVisible = false;
                     else Cursor2.IsVisible = true;
@@ -1141,6 +1163,18 @@ namespace ScopeViewer
                             CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.IsVisible = false;
                         else CursorDig2.IsVisible = true;
                     }
+                    continue;
+                }
+
+                if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal")
+                {
+                    CursorHorizontal.Location.X1 = Pane.XAxis.Scale.Min;
+                    CursorHorizontal.Location.Width = (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min);
+
+                    if (CursorHorizontal.Location.Y <= Pane.YAxis.Scale.Min ||
+                        CursorHorizontal.Location.Y >= Pane.YAxis.Scale.Max) CursorHorizontal.IsVisible = false;
+                    else CursorHorizontal.IsVisible = true;
+
                     continue;
                 }
                 if (Pane.GraphObjList[i].Link.Title == "StampTrigger")
@@ -1257,7 +1291,7 @@ namespace ScopeViewer
             double graphX, graphY;
             Pane.ReverseTransform(new PointF(e.X, e.Y), out graphX, out graphY);
 
-            if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null)
+            if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null || CursorHorizontal != null)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 // ReSharper disable once PossibleNullReferenceException
@@ -1273,12 +1307,6 @@ namespace ScopeViewer
                         UpdateCursor();
                         zedGraph.Invalidate();
                     }
-
-                    //_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
-                    //if (PaneDig != null)
-                    //{
-                    //    _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
-                    //}
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -1294,11 +1322,6 @@ namespace ScopeViewer
                         UpdateCursor();
                         zedGraph.Invalidate();
                     }
-                    //_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
-                    //if (PaneDig != null)
-                    //{
-                    //    _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
-                    //}
                 }
 
                 if (_leftLineCut != null || _rightLineCut != null)
@@ -1327,10 +1350,16 @@ namespace ScopeViewer
                         Cursor = Cursors.VSplit;
                     }
                 }
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (CursorHorizontal != null && CursorHorizontal.Line.Width == 3)
+                {
+                    CursorHorizontal.Location.Y1 = graphY;
+                    UpdateCursor();
+                    zedGraph.Invalidate();
+                    Cursor = Cursors.HSplit;
+                }
             }
-
-            
-
         }
 
         private void zedGraph_MouseClick(object sender, MouseEventArgs e)
@@ -1432,6 +1461,12 @@ namespace ScopeViewer
                         _rightLineCut.Line.Width = 3;
                     }
                 }
+
+                if (lineObject.Link.Title == "CursorHorizontal")
+                {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    CursorHorizontal.Line.Width = CursorHorizontal.Line.Width == 3 ? 2 : 3;
+                }
             }
 
             zedGraph.Invalidate();
@@ -1455,7 +1490,7 @@ namespace ScopeViewer
                     _oscilCursor.AnalysisCursorAddDig(NumGraphPanel(), _absOrRel);
                     MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[1]);
                 }
-                AddCursor.Image = Properties.Resources.Stocks_Rem;
+                AddCursor.Image = Properties.Resources.CursorRemoveV;
             }
             else
             {
@@ -1469,17 +1504,36 @@ namespace ScopeViewer
                 }
                 else
                 {
-                    MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
+                    if(MainWindow.AnalysisObj.AnalysisStackPanel.Children.Count != 0)
+                        MainWindow.AnalysisObj.AnalysisStackPanel.Children.Remove(_oscilCursor.LayoutPanel[0]);
                     _oscilCursor.AnalysisCursorClear();
                 }
-                AddCursor.Image = Properties.Resources.Stocks_Add;
+
+                AddCursor.Image = Properties.Resources.CursorAddV;
             }
         }
 
         private void AddCoursorHorizontal_MouseDown(object sender, MouseEventArgs e)
         {
-
+            AddCoursorHorizontalEvent();
         }
+
+        private void AddCoursorHorizontalEvent()
+        {
+            if (!_cursorsCreateHorizontal)
+            {
+                CursorClearHorizontal();
+                CursorHorizontalAdd();
+                AddCursorH.Image = Properties.Resources.CursorRemoveH;
+
+            }
+            else
+            {
+                CursorClearHorizontal();
+                AddCursorH.Image = Properties.Resources.CursorAddH;
+            }
+        }
+
 
         public void DelCursor()
         {

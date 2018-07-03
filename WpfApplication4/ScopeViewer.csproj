@@ -403,6 +403,12 @@
   <ItemGroup>
     <Resource Include="Resources\Height-48.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CursorAddH.png" />
+    <Resource Include="Resources\CursorAddV.png" />
+    <Resource Include="Resources\CursorRemoveH.png" />
+    <Resource Include="Resources\CursorRemoveV.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
