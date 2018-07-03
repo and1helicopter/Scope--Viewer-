@@ -61,8 +61,10 @@ namespace ScopeViewer
             this.zedGraph.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zedGraph.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.zedGraph.IsAntiAlias = true;
             this.zedGraph.IsShowPointValues = true;
             this.zedGraph.IsSynchronizeXAxes = true;
+            this.zedGraph.IsSynchronizeYAxes = true;
             this.zedGraph.Location = new System.Drawing.Point(0, 33);
             this.zedGraph.Margin = new System.Windows.Forms.Padding(0);
             this.zedGraph.Name = "zedGraph";
@@ -76,6 +78,7 @@ namespace ScopeViewer
             this.zedGraph.Size = new System.Drawing.Size(809, 438);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
+            this.zedGraph.SizeChanged += new System.EventHandler(this.zedGraph_SizeChanged);
             this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
             this.zedGraph.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseMove);
             this.zedGraph.Resize += new System.EventHandler(this.zedGraph_Resize_1);

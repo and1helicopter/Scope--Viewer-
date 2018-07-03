@@ -20,6 +20,7 @@ namespace ScopeViewer
         double _minYAxisAuto;
         bool _scaleY;
         bool _absOrRel = true;
+        private bool _init;
 
         public GraphPanel()
         {
@@ -37,16 +38,26 @@ namespace ScopeViewer
 
         private void zedGraph_ScrollEvent(object sender, ScrollEventArgs e)
         {
+            zedGraph.ScrollMaxX = _maxXAxis;
+            zedGraph.ScrollMinX = _minXAxis;
+            zedGraph.ScrollMaxY = _maxYAxis;
+            zedGraph.ScrollMinY = _minYAxis;
+
             ScrollEvent();
         }
 
         private void zedGraph_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
         {
+            zedGraph.ScrollMaxX = _maxXAxis;
+            zedGraph.ScrollMinX = _minXAxis;
+            zedGraph.ScrollMaxY = _maxYAxis;
+            zedGraph.ScrollMinY = _minYAxis;
+
             ScrollEvent();
         }
 
         private void ScrollEvent()
-        {            
+        {
             if (Pane.XAxis.Scale.Min <= _minXAxis)
             {
                 Pane.XAxis.Scale.Min = _minXAxis;
@@ -107,6 +118,7 @@ namespace ScopeViewer
                 PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
             }
 
+            Refresh();
             UpdateCursor();
             UpdateGraph();
         }
@@ -277,6 +289,7 @@ namespace ScopeViewer
                                    MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger.Millisecond.ToString("000");
 
             if (!dig) AddAnalogChannel(j, color);
+            _init = true;
         }
 
         private void AddAnalogChannel(int j, Color color)
@@ -1941,10 +1954,26 @@ namespace ScopeViewer
 
         private void zedGraph_Resize_1(object sender, EventArgs e)
         {
-            zedGraph.AxisChange();
-            zedGraph.Invalidate();
+            zedGraph.ScrollMaxX = _maxXAxis;
+            zedGraph.ScrollMinX = _minXAxis;
+            zedGraph.ScrollMaxY = _maxYAxis;
+            zedGraph.ScrollMinY = _minYAxis;
+
+            if(_init)
+                ScrollEvent();
         }
 
+        private void zedGraph_SizeChanged(object sender, EventArgs e)
+        {
+            zedGraph.ScrollMaxX = _maxXAxis;
+            zedGraph.ScrollMinX = _minXAxis;
+            zedGraph.ScrollMaxY = _maxYAxis;
+            zedGraph.ScrollMinY = _minYAxis;
+
+            if (_init)
+                ScrollEvent();
+        }
+    
         private void SaveScope_toolStripButton_MouseDown(object sender, MouseEventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog()
@@ -2073,13 +2102,6 @@ namespace ScopeViewer
 
                                     sw.WriteLine(str);
                                 }
-                                
-                                
-                                //List<ushort[]> lud = InitParamsLines();
-                                //for (int i = 0; i < lud.Count; i++)
-                                //{
-                                //    sw.WriteLine(FileParamLineData(lud[i], i));
-                                //}
                             }
                             catch
                             {
