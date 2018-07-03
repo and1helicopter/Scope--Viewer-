@@ -466,67 +466,12 @@ namespace ScopeViewer
                     {
                         try{
                             StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
-
-                            _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
-
-                            string stringTime = sr.ReadLine();
-                            string[] parseStringTime = stringTime.Split(' ');
-                            if (parseStringTime.Length == 4)
-                            {
-                                string[] splitString = parseStringTime[3].Split(':');
-                                if (splitString.Length == 4)
-                                {
-                                    parseStringTime[3] = $@"{splitString[0]}:{splitString[1]}:{splitString[2]}.{splitString[3]}";
-                                }
-                                stringTime = parseStringTime[2] + " " + parseStringTime[3];
-                            }
-                            else if (parseStringTime.Length == 2)
-                            {
-                                string[] splitString = parseStringTime[1].Split(':');
-                                if (splitString.Length == 4)
-                                {
-                                    parseStringTime[3] = $@"{splitString[0]}:{splitString[1]}:{splitString[2]}.{splitString[3]}";
-                                }
-                                stringTime = parseStringTime[0] + " " + parseStringTime[1];
-                            }
-                            
-                            _oscil.OscilStampDateTrigger = DateTime.Parse(stringTime);
-
-                            double sampleRate = 0;
-                            double historyPercent = 0;
-
-                            //int OscilSampleRate = ;
-                            switch (Convert.ToInt32(sr.ReadLine()))
-                            {
-                                case 1:
-                                    {
-                                        sampleRate = 4000;
-                                    }
-                                    break;
-                                case 3:
-                                    {
-                                        sampleRate = 2000;
-                                    }
-                                    break;
-                                case 7:
-                                    {
-                                        sampleRate = 1000;
-                                    }
-                                    break;
-                            }
-
-                            OpenOldFormat openOldObj = new OpenOldFormat(sampleRate);                      //Запускам выбор параметров для осциллограммы старой версии
-
-
-                            DialogResult dlgr = openOldObj.ShowDialog();
-
-                            if (dlgr == System.Windows.Forms.DialogResult.OK)
-                            {
-                                sampleRate = OpenOldFormat.SampleRate;
-                                historyPercent = OpenOldFormat.HistoryPercent;
-                            }
-                            
-                            str = sr.ReadLine(); // Строка названия каналов
+                            _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
+                            _oscil.OscilStampDateTrigger = DateTime.Parse(sr.ReadLine());
+                            _oscil.OscilSampleRate = Convert.ToDouble(sr.ReadLine());     //Частота выборки 
+                            _oscil.OscilHistotyCount = Convert.ToDouble(sr.ReadLine());   //колличество на предысторию 
+                            _oscil.OscilStampDateStart = _oscil.OscilStampDateTrigger.AddMilliseconds(-(1000 * _oscil.OscilHistotyCount / _oscil.OscilSampleRate));
+                            str = sr.ReadLine();
                             if (str != null)
                             {
                                 string[] str1 = str.Split('\t');
@@ -534,9 +479,11 @@ namespace ScopeViewer
                             }
                             _oscil.OscilChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
 
-                            for (int i = 0; i < 8; i++)
+                            str = sr.ReadLine(); //Цвета
+                            if (str != null)
                             {
-                                sr.ReadLine();
+                                string[] str1 = str.Split('\t');
+                                for (int i = 1; i < str1.Length - 1; i++) _oscil.ChannelColor.Add(Convert.ToString(str1[i]));
                             }
 
                             for (int j = 0; !sr.EndOfStream; j++)
@@ -553,18 +500,7 @@ namespace ScopeViewer
                                 }
                             }
                             _oscil.OscilEndSample = Convert.ToUInt32(_oscil.OscilData.Count);
-
-                            _oscil.OscilSampleRate = sampleRate;     //Частота выборки 
-                            _oscil.OscilHistotyCount = _oscil.OscilEndSample * historyPercent / 100;   //колличество на предысторию 
-                            _oscil.OscilStampDateStart = _oscil.OscilStampDateTrigger.AddMilliseconds(-(1000 * _oscil.OscilHistotyCount / _oscil.OscilSampleRate));
                             _oscil.OscilStampDateEnd = _oscil.OscilStampDateTrigger.AddMilliseconds(1000 * (_oscil.OscilEndSample - _oscil.OscilHistotyCount) / _oscil.OscilSampleRate);
-
-                            for (int i = 0; i < _oscil.OscilChannelCount; i++)
-                            {
-                                _oscil.ChannelType.Add(false);  //Значит сигнал аналоговый
-                                _oscil.ChannelDimension.Add(" ");
-                            }
-
                             for (int i = 0; i < _oscil.OscilChannelCount; i++)
                             {
                                 _oscil.ChannelType.Add(false);  //Значит сигнал аналоговый
@@ -588,8 +524,134 @@ namespace ScopeViewer
                         }
                         catch
                         {
-                            MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
+                            try
+                            {
+                                StreamReader sr = new StreamReader(ofd.FileName, Encoding.GetEncoding("utf-8"));
+
+                                _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);  //Строка названия осциллограммы
+
+                                string stringTime = sr.ReadLine();
+                                string[] parseStringTime = stringTime.Split(' ');
+                                if (parseStringTime.Length == 4)
+                                {
+                                    string[] splitString = parseStringTime[3].Split(':');
+                                    if (splitString.Length == 4)
+                                    {
+                                        parseStringTime[3] = $@"{splitString[0]}:{splitString[1]}:{splitString[2]}.{splitString[3]}";
+                                    }
+                                    stringTime = parseStringTime[2] + " " + parseStringTime[3];
+                                }
+                                else if (parseStringTime.Length == 2)
+                                {
+                                    string[] splitString = parseStringTime[1].Split(':');
+                                    if (splitString.Length == 4)
+                                    {
+                                        parseStringTime[3] = $@"{splitString[0]}:{splitString[1]}:{splitString[2]}.{splitString[3]}";
+                                    }
+                                    stringTime = parseStringTime[0] + " " + parseStringTime[1];
+                                }
+
+                                _oscil.OscilStampDateTrigger = DateTime.Parse(stringTime);
+
+                                double sampleRate = 0;
+                                double historyPercent = 0;
+
+                                //int OscilSampleRate = ;
+                                switch (Convert.ToInt32(sr.ReadLine()))
+                                {
+                                    case 1:
+                                        {
+                                            sampleRate = 4000;
+                                        }
+                                        break;
+                                    case 3:
+                                        {
+                                            sampleRate = 2000;
+                                        }
+                                        break;
+                                    case 7:
+                                        {
+                                            sampleRate = 1000;
+                                        }
+                                        break;
+                                }
+
+                                OpenOldFormat openOldObj = new OpenOldFormat(sampleRate);                      //Запускам выбор параметров для осциллограммы старой версии
+
+
+                                DialogResult dlgr = openOldObj.ShowDialog();
+
+                                if (dlgr == System.Windows.Forms.DialogResult.OK)
+                                {
+                                    sampleRate = OpenOldFormat.SampleRate;
+                                    historyPercent = OpenOldFormat.HistoryPercent;
+                                }
+
+                                str = sr.ReadLine(); // Строка названия каналов
+                                if (str != null)
+                                {
+                                    string[] str1 = str.Split('\t');
+                                    for (int i = 1; i < str1.Length - 1; i++) _oscil.ChannelNames.Add(Convert.ToString(str1[i]));
+                                }
+                                _oscil.OscilChannelCount = Convert.ToUInt16(_oscil.ChannelNames.Count);
+
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    sr.ReadLine();
+                                }
+
+                                for (int j = 0; !sr.EndOfStream; j++)
+                                {
+                                    str = sr.ReadLine();
+                                    if (str != null)
+                                    {
+                                        string[] str2 = str.Split('\t');
+                                        _oscil.OscilData.Add(new List<double>());
+                                        for (int i = 1; i < str2.Length - 1; i++)
+                                        {
+                                            _oscil.OscilData[j].Add(Convert.ToDouble(str2[i]));
+                                        }
+                                    }
+                                }
+                                _oscil.OscilEndSample = Convert.ToUInt32(_oscil.OscilData.Count);
+
+                                _oscil.OscilSampleRate = sampleRate;     //Частота выборки 
+                                _oscil.OscilHistotyCount = _oscil.OscilEndSample * historyPercent / 100;   //колличество на предысторию 
+                                _oscil.OscilStampDateStart = _oscil.OscilStampDateTrigger.AddMilliseconds(-(1000 * _oscil.OscilHistotyCount / _oscil.OscilSampleRate));
+                                _oscil.OscilStampDateEnd = _oscil.OscilStampDateTrigger.AddMilliseconds(1000 * (_oscil.OscilEndSample - _oscil.OscilHistotyCount) / _oscil.OscilSampleRate);
+
+                                for (int i = 0; i < _oscil.OscilChannelCount; i++)
+                                {
+                                    _oscil.ChannelType.Add(false);  //Значит сигнал аналоговый
+                                    _oscil.ChannelDimension.Add(" ");
+                                }
+
+                                for (int i = 0; i < _oscil.OscilChannelCount; i++)
+                                {
+                                    _oscil.ChannelType.Add(false);  //Значит сигнал аналоговый
+                                    _oscil.ChannelDimension.Add(" ");
+                                    _oscil.ChannelPhase.Add("");
+                                    _oscil.ChannelCcbm.Add("");
+                                    _oscil.ChannelMin.Add("");
+                                    _oscil.ChannelMax.Add("");
+                                }
+
+                                _oscil.OscilStationName = "";
+                                _oscil.OscilRecordingDevice = "";
+
+                                _oscil.OscilTimeCode = "";
+                                _oscil.OscilLocalCode = "";
+
+                                _oscil.OscilTmqCode = "";
+                                _oscil.OscilLeapsec = "";
+
+                                sr.Close();
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Ошибка при чтении файла", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
                         }
                     }
                 }
@@ -606,6 +668,7 @@ namespace ScopeViewer
                     var line1 = str.Split(',');
                     _oscil.OscilStationName = line1[0].Normalize();
                     _oscil.OscilRecordingDevice = line1[1].Normalize();
+                    _oscil.OscilRevisionYear = line1[2].Normalize();
                     str = sr.ReadLine();
                     Regex regex = new Regex(@"\d");
                     // ReSharper disable once AssignNullToNotNullAttribute
@@ -668,12 +731,15 @@ namespace ScopeViewer
                     _oscil.OscilFT = line10;
                     var line11 = sr.ReadLine();
                     _oscil.OscilTimemult = line11;
-                    var line12 = sr.ReadLine().Split(',');
-                    _oscil.OscilTimeCode = line12[0];
-                    _oscil.OscilLocalCode = line12[1];
-                    var line13 = sr.ReadLine().Split(',');
-                    _oscil.OscilTmqCode = line13[0];
-                    _oscil.OscilLeapsec = line13[1];
+                    if (_oscil.OscilRevisionYear == "2013")
+                    {
+                        var line12 = sr.ReadLine().Split(',');
+                        _oscil.OscilTimeCode = line12[0];
+                        _oscil.OscilLocalCode = line12[1];
+                        var line13 = sr.ReadLine().Split(',');
+                        _oscil.OscilTmqCode = line13[0];
+                        _oscil.OscilLeapsec = line13[1];
+                    }
 
                     sr.Close();
 

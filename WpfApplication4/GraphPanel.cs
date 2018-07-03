@@ -1896,44 +1896,160 @@ namespace ScopeViewer
             SaveFileDialog sfd = new SaveFileDialog()
             {
                 DefaultExt = @".txt",
-                Filter = @"Text Files (*.txt)|*.txt"
+                Filter = @"Text Files (*.txt)|*.txt|COMTRADE rev. 1999 (*.cfg)|*.cfg|COMTRADE rev. 2013 (*.cfg)|*.cfg"
             };
 
             if (sfd.ShowDialog() != DialogResult.OK) { return; }
 
             // Save to .txt
-
-            StreamWriter sw;
-
-            try
+            if (sfd.FilterIndex == 1)
             {
-                sw = File.CreateText(sfd.FileName);
-            }
-            catch
-            {
-                MessageBox.Show(@"Ошибка при создании файла!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                StreamWriter sw;
 
-            try
-            {
-                DateTime dateTemp = MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger;
-                sw.WriteLine(dateTemp.ToString("dd'/'MM'/'yyyy HH:mm:ss.fff000"));                  //Штамп времени
-                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilSampleRate);                     //Частота выборки (частота запуска осциллогрофа/ делитель)
-                sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount);                   //Предыстория 
-                sw.WriteLine(FileHeaderLine());                                                     //Формирование заголовка (подписи названия каналов)
-                for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilEndSample; i++)            //Формирование строк всех загруженных данных (отсортированых с предысторией)
+                try
                 {
-                    sw.WriteLine(FileParamLine(i));
+                    sw = File.CreateText(sfd.FileName);
+                }
+                catch
+                {
+                    MessageBox.Show(@"Ошибка при создании файла!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
+                try
+                {
+                    DateTime dateTemp = MainWindow.OscilList[NumGraphPanel()].OscilStampDateTrigger;
+                    sw.WriteLine(dateTemp.ToString("dd'/'MM'/'yyyy HH:mm:ss.fff000"));                  //Штамп времени
+                    sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilSampleRate);                     //Частота выборки (частота запуска осциллогрофа/ делитель)
+                    sw.WriteLine(MainWindow.OscilList[NumGraphPanel()].OscilHistotyCount);                   //Предыстория 
+                    sw.WriteLine(FileHeaderLine());                                                     //Формирование заголовка (подписи названия каналов)
+                    sw.WriteLine(FileColorsLine());
+                    for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilEndSample; i++)            //Формирование строк всех загруженных данных (отсортированых с предысторией)
+                    {
+                        sw.WriteLine(FileParamLine(i));
+                    }
+
+                }
+                catch
+                {
+                    MessageBox.Show(@"Ошибка при записи в файл!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                sw.Close();
             }
-            catch
+            else
             {
-                MessageBox.Show(@"Ошибка при записи в файл!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                StreamWriter sw;
+                try
+                {
+                    sw = File.CreateText(sfd.FileName);
+                    var index = NumGraphPanel();
+
+                    var window = sfd.FilterIndex == 2 ? new SaveToComtrade(MainWindow.OscilList[index], false) : new SaveToComtrade(MainWindow.OscilList[NumGraphPanel()], true);
+                    if (window.ShowDialog() == true)
+                    {
+                        var tempOscil = MainWindow.OscilList[index];
+
+                        string namefile;
+                        string pathfile;
+                        try
+                        {
+                            namefile = Path.GetFileNameWithoutExtension(sfd.FileName);
+                            pathfile = Path.GetDirectoryName(sfd.FileName);
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Ошибка при создании файла!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        try
+                        {
+                            sw.WriteLine(Line1(sfd.FilterIndex, tempOscil));
+                            sw.WriteLine(Line2(tempOscil));
+
+                            for (int i = 0, j = 0; i < tempOscil.OscilChannelCount; i++)
+                            {
+                                if (!tempOscil.ChannelType[i]) { sw.WriteLine(Line3(i, j + 1, tempOscil)); j++; }
+                            }
+                            for (int i = 0, j = 0; i < tempOscil.OscilChannelCount; i++)
+                            {
+                                if (tempOscil.ChannelType[i]) { sw.WriteLine(Line4(i, j + 1, tempOscil)); j++; }
+                            }
+
+                            sw.WriteLine(Line5(tempOscil));
+                            sw.WriteLine(Line6(tempOscil));
+                            sw.WriteLine(Line7(tempOscil));
+                            sw.WriteLine(Line8(tempOscil));
+                            sw.WriteLine(Line9(tempOscil));
+                            sw.WriteLine(Line10(tempOscil));
+                            sw.WriteLine(Line11(tempOscil));
+                            if (sfd.FilterIndex == 3)
+                            {
+                                sw.WriteLine(Line12(tempOscil));
+                                sw.WriteLine(Line13(tempOscil));
+                            }
+                            sw.Close();
+
+                            string pathDateFile = pathfile + "\\" + namefile + @".dat";
+                            try
+                            {
+                                sw = File.CreateText(pathDateFile);
+                            }
+                            catch
+                            {
+                                MessageBox.Show(@"Ошибка при создании файла!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            try
+                            {
+
+                                for (int i = 0; i < tempOscil.OscilData.Count; i++)
+                                {
+                                    string str = (i + 1) + ",";
+
+                                    for (int j = 0; j < tempOscil.OscilChannelCount; j++)
+                                    {
+                                        if (!tempOscil.ChannelType[j])
+                                        {
+                                            str = str + "," + tempOscil.OscilData[i][j];
+                                        }
+                                    }
+
+                                    sw.WriteLine(str);
+                                }
+                                
+                                
+                                //List<ushort[]> lud = InitParamsLines();
+                                //for (int i = 0; i < lud.Count; i++)
+                                //{
+                                //    sw.WriteLine(FileParamLineData(lud[i], i));
+                                //}
+                            }
+                            catch
+                            {
+                                MessageBox.Show(@"Ошибка при записи в файл!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Ошибка при записи в файл!", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                    };
+
+                }
+                catch
+                {
+                    MessageBox.Show(@"Ошибка при создании файла!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                sw.Close();
             }
-            sw.Close();
         }
 
         private string FileHeaderLine()
@@ -1946,6 +2062,16 @@ namespace ScopeViewer
             return str;
         }
 
+        private string FileColorsLine()
+        {
+            string str = " " + "\t";
+            for (int i = 0; i < MainWindow.OscilList[NumGraphPanel()].OscilChannelCount; i++)
+            {
+                str = str + MainWindow.OscilList[NumGraphPanel()].ChannelColor[i] + "\t";
+            }
+            return str;
+        }
+
         private string FileParamLine(int numLine)
         {
             string str = numLine + "\t";
@@ -1954,6 +2080,133 @@ namespace ScopeViewer
                 str = str + MainWindow.OscilList[NumGraphPanel()].OscilData[numLine][i] + "\t";
             }
             return str;
+        }
+
+        private string Line1(int filterIndex, Oscil oscil)
+        {
+            string stationName = oscil.OscilStationName;
+            string recDevId = oscil.OscilRecordingDevice;
+            string revYear = "";
+            if (filterIndex == 2) revYear = "1999";
+            if (filterIndex == 3) revYear = "2013";
+            string str = stationName + "," + recDevId + "," + revYear;
+            return str;
+        }
+
+        private string Line2(Oscil oscil)
+        {
+            int nA = 0, nD = 0;
+            for (int i = 0; i < oscil.OscilChannelCount; i++)
+            {
+                //Если параметр в списке известных, то пишем его в файл
+                if (!oscil.ChannelType[i]) nA += 1;
+                if (oscil.ChannelType[i]) nD += 1;
+            }
+            int tt = nA + nD;
+            string str = tt + "," + nA + "A," + nD + "D";
+            return str;
+        }
+
+        private string Line3(int num, int nA, Oscil oscil)
+        {
+            string chId = oscil.ChannelNames[num];
+            string ph = oscil.ChannelPhase[num];
+            string ccbm = oscil.ChannelCcbm[num];
+            string uu = oscil.ChannelDimension[num];
+            string a = "1";
+            string b = "0";
+            int skew = 0;
+            string min;
+            string max;
+            try
+            {
+                min = oscil.ChannelMin[num];
+                max = oscil.ChannelMax[num];
+            }
+            catch
+            {
+                min = "0";
+                max = "0";
+            }
+
+            int primary = 1;
+            int secondary = 1;
+            string ps = "P";
+
+            string str = nA + "," + chId + "," + ph + "," + ccbm + "," + uu + "," + a + "," + b + "," + skew + "," +
+                         min + "," + max + "," + primary + "," + secondary + "," + ps;
+
+            return str;
+        }
+
+        private string Line4(int num, int nD, Oscil oscil)
+        {
+            string chId = oscil.ChannelNames[num];
+            string ph = oscil.ChannelPhase[num];
+            string ccbm = oscil.ChannelCcbm[num];
+            int y = 0;
+
+            string str = nD + "," + chId + "," + ph + "," + ccbm + "," + y;
+
+            return str;
+        }
+
+        private string Line5(Oscil oscil)
+        {
+            return oscil.OscilNominalFrequency;
+        }
+
+        private string Line6(Oscil oscil)
+        {
+            return oscil.OscilNRates;
+        }
+
+        private string Line7(Oscil oscil)
+        {
+            string samp = oscil.OscilSampleRate.ToString("######");
+            string endsamp = oscil.OscilEndSample.ToString();
+            string str = samp + "," + endsamp;
+            return str;
+        }
+
+        private string Line8(Oscil oscil)
+        {
+            //Время начала осциллограммы 
+            DateTime dateTemp = oscil.OscilStampDateStart;
+            return dateTemp.ToString("dd'/'MM'/'yyyy,HH:mm:ss.fff000");
+        }
+
+        private string Line9(Oscil oscil)
+        {
+            //Время срабатывания триггера
+            DateTime dateTemp = oscil.OscilStampDateTrigger;
+            return dateTemp.ToString("dd'/'MM'/'yyyy,HH:mm:ss.fff000");
+        }
+
+        private string Line10(Oscil oscil)
+        {
+            string ft = oscil.OscilFT;
+            return ft;
+        }
+
+        private string Line11(Oscil oscil)
+        {
+            string timemult = oscil.OscilTimemult;
+            return timemult;
+        }
+
+        private string Line12(Oscil oscil)
+        {
+            string timecode = oscil.OscilTimeCode;
+            string localcode = oscil.OscilLocalCode;
+            return timecode + "," + localcode;
+        }
+
+        private string Line13(Oscil oscil)
+        {
+            string tmqCode = oscil.OscilTmqCode;
+            string leapsec = oscil.OscilLeapsec;
+            return tmqCode + "," + leapsec;
         }
     }
 }

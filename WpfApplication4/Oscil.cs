@@ -10,6 +10,7 @@ namespace ScopeViewer
 
         public string OscilStationName;
         public string OscilRecordingDevice;
+        public string OscilRevisionYear;
 
         public ushort OscilChannelCount;
 
