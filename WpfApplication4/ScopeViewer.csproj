@@ -156,8 +156,8 @@
       <DependentUpon>OpenOldFormat.cs</DependentUpon>
     </Compile>
     <Compile Include="Oscil.cs" />
-    <Compile Include="OscilAnalysis.cs" />
-    <Compile Include="OscilGraph.cs" />
+    <Compile Include="Panels\OscilAnalysis.cs" />
+    <Compile Include="Panels\OscilGraph.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -171,10 +171,10 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis.xaml.cs">
+    <Compile Include="Panels\Analysis.xaml.cs">
       <DependentUpon>Analysis.xaml</DependentUpon>
     </Compile>
-    <Page Include="Graph.xaml">
+    <Page Include="Panels\Graph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -186,7 +186,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph.xaml.cs">
+    <Compile Include="Panels\Graph.xaml.cs">
       <DependentUpon>Graph.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
@@ -201,7 +201,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Analysis.xaml">
+    <Page Include="Panels\Analysis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
