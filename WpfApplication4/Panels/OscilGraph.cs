@@ -315,7 +315,7 @@ namespace ScopeViewer
 				Width = 83,
 				Margin = new Thickness(-287, 100, 0, 0),
 				TextAlignment = TextAlignment.Right,
-				Text = "1,00",
+				Text = "1",
 				ToolTip = "Масштабирование"
 			};
 			ScaleTextBox.Add(saleTextBox);
@@ -330,7 +330,7 @@ namespace ScopeViewer
 				Width = 83,
 				Margin = new Thickness(-117, 100, 0, 0),
 				TextAlignment = TextAlignment.Right,
-				Text = "0,00",
+				Text = "0",
 				ToolTip = "Сдвиг"
 			};
 			ShiftTextBox.Add(shiftextBox);
@@ -377,7 +377,7 @@ namespace ScopeViewer
 				}
 				catch
 				{
-					((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
+					//((TextBox)sender).Text = _scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))].ToString("F2");
 				}
 			}
 			else if ((string)((TextBox)sender).ToolTip == "Сдвиг")
@@ -388,7 +388,7 @@ namespace ScopeViewer
 				}
 				catch
 				{
-					((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
+					//((TextBox)sender).Text = _shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))].ToString("F2");
 				}
 			}
 
