@@ -36,7 +36,7 @@ namespace ScopeViewer
 			InitDrawGraph();
 		}
 
-		public void ScrollUpdate()
+		private void ScrollUpdate()
 		{
 			//zedGraph.ScrollMaxX = _maxXAxis + _maxXAxis * 0.0001;
 			//zedGraph.ScrollMinX = _minXAxis - _minXAxis * 0.0001;
@@ -379,7 +379,9 @@ namespace ScopeViewer
 
 					_minYAxis = minYAxisTemp - (_maxYAxis - minYAxisTemp) / 10;
 				}
-				ScrollEvent();
+
+				ScrollUpdate();
+				//ScrollEvent();
 			}
 		}
 
@@ -669,9 +671,7 @@ namespace ScopeViewer
 						Pane.Chart.Rect.Height);
 				}
 			}
-			ScrollEvent();
-			zedGraph.AxisChange();
-			zedGraph.Invalidate();
+			ScrollUpdate();
 		}
 
 		private void ResizeAxis()
@@ -718,6 +718,7 @@ namespace ScopeViewer
 			zedGraph.Invalidate();
 			UpdateGraph();
 			zedGraph.AxisChange();
+			zedGraph.Invalidate();
 		}
 
 		private void InitDrawGraph()
@@ -834,8 +835,6 @@ namespace ScopeViewer
 			_maxYAxis = Pane.YAxis.Scale.Max;
 			_minYAxis = Pane.YAxis.Scale.Min;
 
-			ScrollEvent();
-
 			ScrollUpdate();
 		}
 
@@ -906,6 +905,8 @@ namespace ScopeViewer
 			// Вызываем метод AxisChange (), чтобы обновить данные об осях.
 			zedGraph.AxisChange();
 			zedGraph.Invalidate();
+			
+			zedGraph.Update();
 		}
 
 		private LineObj _stampTrigger;
@@ -1973,7 +1974,8 @@ namespace ScopeViewer
 
 			DelCutBox();
 
-			ScrollEvent();
+			ScrollUpdate();
+			//ScrollEvent();
 		}
 
 		//При наведении курсора на панаель инструментов, отображаем его как стандартный
@@ -1990,7 +1992,7 @@ namespace ScopeViewer
 			zedGraph.ScrollMinY = _minYAxis;
 
 			if (_init)
-				ScrollEvent();
+				ScrollUpdate();
 		}
 
 		private void zedGraph_SizeChanged(object sender, EventArgs e)
@@ -2001,7 +2003,7 @@ namespace ScopeViewer
 			zedGraph.ScrollMinY = _minYAxis;
 
 			if (_init)
-				ScrollEvent();
+				ScrollUpdate();
 		}
 
 		private void SaveScope_toolStripButton_MouseDown(object sender, MouseEventArgs e)

@@ -819,6 +819,8 @@ namespace ScopeViewer
 				System.Drawing.Color color = System.Drawing.Color.FromArgb(brush.Color.A, brush.Color.R, brush.Color.G, brush.Color.B);
 				GraphPanelList[GraphPanelList.Count - 1].AddGraph(i, color, dig);
 			}
+
+			GraphPanelList[GraphPanelList.Count - 1].Scale(1.0f);
 		}
 
 		private void OnClosed(object sender, EventArgs eventArgs)
