@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ZedGraph;
 
@@ -38,11 +41,6 @@ namespace ScopeViewer
 
 		private void ScrollUpdate()
 		{
-			//zedGraph.ScrollMaxX = _maxXAxis + _maxXAxis * 0.0001;
-			//zedGraph.ScrollMinX = _minXAxis - _minXAxis * 0.0001;
-			//zedGraph.ScrollMaxY = _maxYAxis + _maxYAxis * 0.0001;
-			//zedGraph.ScrollMinY = _minYAxis - _minYAxis * 0.0001;
-
 			ScrollEvent();
 
 			zedGraph.AxisChange();
@@ -1166,42 +1164,54 @@ namespace ScopeViewer
 			{
 				if (Pane.GraphObjList[i].Link.Title == "Cursor1")
 				{
-					Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
-					Cursor1.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
-
 					if (Cursor1.Location.X <= Pane.XAxis.Scale.Min ||
-						Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.IsVisible = false;
+					    Cursor1.Location.X >= Pane.XAxis.Scale.Max) Cursor1.IsVisible = false;
 					else Cursor1.IsVisible = true;
 
+					Cursor1.Location.Y1 = Pane.YAxis.Scale.Min;
+					Cursor1.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
+					
 					if (PaneDig != null)
 					{
+						if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min ||
+						    CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.IsVisible = false;
+						else CursorDig1.IsVisible = true;
+
 						CursorDig1.Location.Y1 = PaneDig.YAxis.Scale.Min;
 						CursorDig1.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
-
-						if (CursorDig1.Location.X <= PaneDig.XAxis.Scale.Min ||
-							CursorDig1.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig1.IsVisible = false;
-						else CursorDig1.IsVisible = true;
 					}
+					//Обновляю значение положение курсора в label
+					var x1 = Cursor1.Location.X;
+					tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
+					//Разница между курсорами
+					CursorDif(x1, Cursor2.Location.X);
+
 					continue;
 				}
 				if (Pane.GraphObjList[i].Link.Title == "Cursor2")
 				{
+					if (Cursor2.Location.X <= Pane.XAxis.Scale.Min ||
+					    Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.IsVisible = false;
+					else Cursor2.IsVisible = true;
+
 					Cursor2.Location.Y1 = Pane.YAxis.Scale.Min;
 					Cursor2.Location.Height = (Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min);
 
-					if (Cursor2.Location.X <= Pane.XAxis.Scale.Min ||
-						Cursor2.Location.X >= Pane.XAxis.Scale.Max) Cursor2.IsVisible = false;
-					else Cursor2.IsVisible = true;
-
 					if (PaneDig != null)
 					{
+						if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min ||
+						    CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.IsVisible = false;
+						else CursorDig2.IsVisible = true;
+
 						CursorDig2.Location.Y1 = PaneDig.YAxis.Scale.Min;
 						CursorDig2.Location.Height = PaneDig.YAxis.Scale.Max - PaneDig.YAxis.Scale.Min;
-
-						if (CursorDig2.Location.X <= PaneDig.XAxis.Scale.Min ||
-							CursorDig2.Location.X >= PaneDig.XAxis.Scale.Max) CursorDig2.IsVisible = false;
-						else CursorDig2.IsVisible = true;
 					}
+					//Обновляю значение положение курсора в label
+					var x2 = Cursor2.Location.X;
+					tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
+					//Разница между курсорами
+					CursorDif(Cursor1.Location.X, x2);
+
 					continue;
 				}
 
@@ -1325,10 +1335,15 @@ namespace ScopeViewer
 			}
 		}
 
+		private void CursorDif(double x1, double x2)
+		{
+			var dif = Math.Abs(x2 - x1);
+			tool_CursorsDif.Text = $@"Δ: {dif:F6}";
+		}
+
 		private void zedGraph_MouseMove(object sender, MouseEventArgs e)
 		{
-			double graphX, graphY;
-			Pane.ReverseTransform(new PointF(e.X, e.Y), out graphX, out graphY);
+			Pane.ReverseTransform(new PointF(e.X, e.Y), out var graphX, out var graphY);
 
 			if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null || CursorHorizontal != null)
 			{
@@ -1528,6 +1543,20 @@ namespace ScopeViewer
 					MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[1]);
 				}
 				AddCursor.Image = Properties.Resources.CursorRemoveV;
+				tool_Cursors_label.Visible = true;
+				tool_CursorsLeft_label.Visible = true;
+				tool_CursorsRight_label.Visible = true;
+				tool_EnterLeft_label.Visible = true;
+				tool_EnterRight_label.Visible = true;
+				tool_CursorsDif.Visible = true;
+				tool_separator.Visible = true;
+				tool_separator2.Visible = true;
+				var x1 = Cursor1.Location.X;
+				tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
+				var x2 = Cursor2.Location.X;
+				tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
+				tool_CursorsDif.Text = Math.Abs(x2 - x1).ToString(CultureInfo.InvariantCulture);
+				tool_CursorsDif.ToolTipText = @"Приращение времени";
 			}
 			else
 			{
@@ -1547,7 +1576,30 @@ namespace ScopeViewer
 				}
 
 				AddCursor.Image = Properties.Resources.CursorAddV;
+				tool_Cursors_label.Visible = false;
+				tool_CursorsLeft_label.Visible = false;
+				tool_CursorsRight_label.Visible = false;
+				tool_EnterLeft_label.Visible = false;
+				tool_EnterRight_label.Visible = false;
+				tool_CursorsDif.Visible = false;
+				tool_separator.Visible = false;
+				tool_separator2.Visible = false;
 			}
+		}
+
+		private string TextPosition(double x, int numOsc, bool absOrRel)
+		{
+			if (absOrRel)
+			{
+				var hour = MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x * 1000).Hour.ToString(CultureInfo.CurrentCulture);
+				var min = MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x * 1000).Minute.ToString(CultureInfo.CurrentCulture);
+				var sec = MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x * 1000).Second.ToString(CultureInfo.CurrentCulture);
+				var milisec = MainWindow.OscilList[numOsc].OscilStampDateStart.AddMilliseconds(x * 1000).Millisecond.ToString(CultureInfo.CurrentCulture);
+				
+				return milisec == String.Empty || milisec == "0" ? hour + ":" + min + ":" + sec : hour + ":" + min + ":" + sec + "." + milisec;
+			}
+
+			return x.ToString(CultureInfo.CurrentCulture).Length <= 10 ? x.ToString(CultureInfo.CurrentCulture) : x.ToString("F6");
 		}
 
 		private void AddCoursorHorizontal_MouseDown(object sender, MouseEventArgs e)
@@ -1760,6 +1812,11 @@ namespace ScopeViewer
 				{
 					_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
 				}
+
+				var x1 = Cursor1.Location.X;
+				tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
+				var x2 = Cursor2.Location.X;
+				tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
 			}
 
 			zedGraph.AxisChange();
@@ -2293,6 +2350,91 @@ namespace ScopeViewer
 		{
 			string ft = oscil.OscilFT;
 			return ft;
+		}
+
+		private void tool_EnterLeft_label_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != ':') && (e.KeyChar != '.'))
+			{
+				e.Handled = true;
+			}
+		}
+
+				private void tool_EnterRight_label_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != ':') && (e.KeyChar != '.'))
+			{
+				e.Handled = true;
+			}
+		}
+
+		private void tool_EnterLeft_label_TextChanged(object sender, EventArgs e)
+		{
+			PositionCursors(Cursor1, tool_EnterLeft_label.Text);
+		}
+
+		private void tool_EnterRight_label_TextChanged(object sender, EventArgs e)
+		{
+			PositionCursors(Cursor2, tool_EnterRight_label.Text);
+		}
+
+		private void PositionCursors(LineObj cursObj, string position)
+		{
+			Regex regex = _absOrRel ? new Regex(@"\d{1,2}:\d{1,2}:\d{1,2}\.?\d?") : new Regex(@"\d*\,?\d*");
+			var result = regex.IsMatch(position);
+			//Запуск метода изменения положения курсора
+			if (result)
+			{
+				try
+				{
+					if (_absOrRel)
+					{
+						if (new Regex(@"^\d{0,2}:\d{0,2}:\d{0,2}\.?\d+$").IsMatch(position))
+						{
+							var numOsc = NumGraphPanel();
+							var startTime = MainWindow.OscilList[numOsc].OscilStampDateStart;
+							var currentHour = Convert.ToInt32(new Regex(@"^\d{1,2}").Match(position).ToString());
+							var temp = new Regex(@"\:\d{1,2}\:").Match(position).ToString();
+							var currentMin = Convert.ToInt32(new Regex(@"\d{1,2}").Match(temp).ToString());
+							temp = new Regex(@"\:\d{0,2}\.?\d+$").Match(position).ToString();
+							temp = new Regex(@"^[\:?]\d{0,2}([^\.])?").Match(temp).ToString();
+							var currentSecond = Convert.ToInt32(new Regex(@"\d{1,2}").Match(temp).ToString());
+							//Милесекунды 
+							temp = new Regex(@"\.\d+$").Match(position).ToString();
+							var currentMilisecond = Convert.ToInt32(temp != String.Empty ? new Regex(@"\d+").Match(temp).ToString() : "0");
+
+							var currentDay = startTime.Hour > currentHour ? startTime.Day + 1 : startTime.Day;
+							var currentMonth = startTime.Day > currentDay ? startTime.Month + 1 : startTime.Month;
+							var currentYear = startTime.Month > currentMonth ? startTime.Year + 1 : startTime.Year;						
+							var currentTime = new DateTime(currentYear, currentMonth, currentDay , currentHour, currentMin, currentSecond, currentMilisecond);
+							var sec = (currentTime - startTime).TotalSeconds;
+		
+							cursObj.Location.X = Convert.ToDouble(sec);
+							UpdateCursor();
+							zedGraph.Invalidate();
+						}
+					}
+					else
+					{
+						if (new Regex(@"^\d*[^\,]$").IsMatch(position) || new Regex(@"^\d*\,\d+$").IsMatch(position))
+						{
+							cursObj.Location.X = Convert.ToDouble(position);
+							UpdateCursor();
+							zedGraph.Invalidate();
+						}
+					}
+
+					_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+					if (PaneDig != null)
+					{
+						_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+					}
+				}
+				catch 
+				{
+					//ignored
+				}
+			}
 		}
 
 		private string Line11(Oscil oscil)

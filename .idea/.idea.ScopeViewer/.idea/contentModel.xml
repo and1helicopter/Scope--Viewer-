@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\and1h\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_ScopeViewer.-515905276.00" t="ExcludeRecursive" />
+    <e p="F:\project\Scope (Viewer)" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="ScopeViewer.sln" t="IncludeFlat" />
+      <e p="WpfApplication4" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Forms" t="Include">
+          <e p="BinaryMask.cs" t="Include" />
+          <e p="BinaryMask.Designer.cs" t="Include" />
+          <e p="BinaryMask.resx" t="Include" />
+          <e p="GraphPanel.cs" t="Include" />
+          <e p="GraphPanel.Designer.cs" t="Include" />
+          <e p="GraphPanel.resx" t="Include" />
+          <e p="OpenOldFormat.cs" t="Include" />
+          <e p="OpenOldFormat.Designer.cs" t="Include" />
+          <e p="OpenOldFormat.resx" t="Include" />
+          <e p="SaveToCOMTRADE.xaml" t="Include" />
+          <e p="SaveToCOMTRADE.xaml.cs" t="Include" />
+          <e p="Settings.xaml" t="Include" />
+          <e p="Settings.xaml.cs" t="Include" />
+        </e>
+        <e p="License-LGPL.txt" t="Include" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Oscil.cs" t="Include" />
+        <e p="packages.config" t="Include" />
+        <e p="Panels" t="Include">
+          <e p="Analysis.xaml" t="Include" />
+          <e p="Analysis.xaml.cs" t="Include" />
+          <e p="Graph.xaml" t="Include" />
+          <e p="Graph.xaml.cs" t="Include" />
+          <e p="OscilAnalysis.cs" t="Include" />
+          <e p="OscilGraph.cs" t="Include" />
+        </e>
+        <e p="Properties" t="Include">
+          <e p="app.manifest" t="Include" />
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="Available Updates-48.png" t="Include" />
+          <e p="blue_line.png" t="Include" />
+          <e p="Chromatography-48.png" t="Include" />
+          <e p="Chromatography-48_2.png" t="Include" />
+          <e p="Close Window-48(1).png" t="Include" />
+          <e p="Close Window-48.png" t="Include" />
+          <e p="Cosine-50(4).png" t="Include" />
+          <e p="Cosine-50(5).png" t="Include" />
+          <e p="CursorAddH.png" t="Include" />
+          <e p="CursorAddV.png" t="Include" />
+          <e p="CursorRemoveH.png" t="Include" />
+          <e p="CursorRemoveV.png" t="Include" />
+          <e p="Cut_Apply.png" t="Include" />
+          <e p="Cutting Coupon-48.png" t="Include" />
+          <e p="Cutting_Add.png" t="Include" />
+          <e p="Cutting_Remove.png" t="Include" />
+          <e p="Delete Property-48.png" t="Include" />
+          <e p="Dig_Add.png" t="Include" />
+          <e p="Dig_Cancel.png" t="Include" />
+          <e p="Dig_Leave.png" t="Include" />
+          <e p="Expand-48.png" t="Include" />
+          <e p="Flip Horizontal-48.png" t="Include" />
+          <e p="Flip Vertical-48.png" t="Include" />
+          <e p="Height-48.png" t="Include" />
+          <e p="Horizontal Line-48(1).png" t="Include" />
+          <e p="Horizontal Line-48(2).png" t="Include" />
+          <e p="Horizontal Line-48.png" t="Include" />
+          <e p="Line Chart-48(2).png" t="Include" />
+          <e p="Line Chart-48(3).png" t="Include" />
+          <e p="Line Chart-48.ico" t="Include" />
+          <e p="Line Chart-48.png" t="Include" />
+          <e p="Line-48(1).png" t="Include" />
+          <e p="Line-48(2).png" t="Include" />
+          <e p="Line-48.png" t="Include" />
+          <e p="Long Position-48.png" t="Include" />
+          <e p="Long Position-48_.png" t="Include" />
+          <e p="Open Folder-48.png" t="Include" />
+          <e p="red_line.png" t="Include" />
+          <e p="Resize-48.png" t="Include" />
+          <e p="Save as-48(1).png" t="Include" />
+          <e p="Services-48.ico" t="Include" />
+          <e p="Services-48.png" t="Include" />
+          <e p="Show Property-48(1).png" t="Include" />
+          <e p="Stocks_Add.png" t="Include" />
+          <e p="Stocks_Rem.png" t="Include" />
+          <e p="Time_abs.png" t="Include" />
+          <e p="Time_rel.png" t="Include" />
+          <e p="Watch_Add.png" t="Include" />
+          <e p="Watch_Rem.png" t="Include" />
+          <e p="Width-48.png" t="Include" />
+        </e>
+        <e p="ScopeViewer.csproj" t="IncludeRecursive" />
+        <e p="ScopeViewer_key.snk" t="Include" />
+        <e p="Setting.cs" t="Include" />
+        <e p="Settings.cs" t="Include" />
+        <e p="Xceed.Wpf.AvalonDock.dll" t="Include" />
+        <e p="Xceed.Wpf.AvalonDock.resources.dll" t="Include" />
+        <e p="Xceed.Wpf.AvalonDock.Themes.Aero.dll" t="Include" />
+        <e p="ZedGraph.dll" t="Include" />
+        <e p="ZedGraph.resources.dll" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>

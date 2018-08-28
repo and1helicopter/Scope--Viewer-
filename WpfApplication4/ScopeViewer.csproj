@@ -137,23 +137,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BinaryMask.cs">
+    <Compile Include="Forms\BinaryMask.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BinaryMask.Designer.cs">
+    <Compile Include="Forms\BinaryMask.Designer.cs">
       <DependentUpon>BinaryMask.cs</DependentUpon>
     </Compile>
-    <Compile Include="GraphPanel.cs">
+    <Compile Include="Forms\GraphPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GraphPanel.Designer.cs">
+    <Compile Include="Forms\GraphPanel.Designer.cs">
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenOldFormat.cs">
+    <Compile Include="Forms\OpenOldFormat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OpenOldFormat.Designer.cs">
+    <Compile Include="Forms\OpenOldFormat.Designer.cs">
       <DependentUpon>OpenOldFormat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SaveToCOMTRADE.xaml.cs">
+      <DependentUpon>SaveToCOMTRADE.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Oscil.cs" />
     <Compile Include="Panels\OscilAnalysis.cs" />
@@ -163,17 +169,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SaveToCOMTRADE.xaml.cs">
-      <DependentUpon>SaveToCOMTRADE.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Setting.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Panels\Analysis.xaml.cs">
       <DependentUpon>Analysis.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Setting.cs" />
+    <Compile Include="Settings.cs" />
+    <Page Include="Forms\SaveToCOMTRADE.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Panels\Graph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -193,14 +201,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SaveToCOMTRADE.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Panels\Analysis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -215,13 +215,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="BinaryMask.resx">
+    <EmbeddedResource Include="Forms\BinaryMask.resx">
       <DependentUpon>BinaryMask.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GraphPanel.resx">
+    <EmbeddedResource Include="Forms\GraphPanel.resx">
       <DependentUpon>GraphPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OpenOldFormat.resx">
+    <EmbeddedResource Include="Forms\OpenOldFormat.resx">
       <DependentUpon>OpenOldFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -408,6 +408,12 @@
     <Resource Include="Resources\CursorAddV.png" />
     <Resource Include="Resources\CursorRemoveH.png" />
     <Resource Include="Resources\CursorRemoveV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blue_line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red_line.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

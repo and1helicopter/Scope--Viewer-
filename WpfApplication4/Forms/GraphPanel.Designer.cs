@@ -51,6 +51,14 @@ namespace ScopeViewer
 			this.Mask2_label = new System.Windows.Forms.ToolStripLabel();
 			this.MaskMin_textBox = new System.Windows.Forms.ToolStripTextBox();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.tool_separator = new System.Windows.Forms.ToolStripSeparator();
+			this.tool_CursorsDif = new System.Windows.Forms.ToolStripLabel();
+			this.tool_separator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.tool_EnterRight_label = new System.Windows.Forms.ToolStripTextBox();
+			this.tool_CursorsRight_label = new System.Windows.Forms.ToolStripLabel();
+			this.tool_EnterLeft_label = new System.Windows.Forms.ToolStripTextBox();
+			this.tool_CursorsLeft_label = new System.Windows.Forms.ToolStripLabel();
+			this.tool_Cursors_label = new System.Windows.Forms.ToolStripLabel();
 			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -75,7 +83,7 @@ namespace ScopeViewer
 			this.zedGraph.ScrollMinX = 0D;
 			this.zedGraph.ScrollMinY = 0D;
 			this.zedGraph.ScrollMinY2 = 0D;
-			this.zedGraph.Size = new System.Drawing.Size(809, 438);
+			this.zedGraph.Size = new System.Drawing.Size(1165, 438);
 			this.zedGraph.TabIndex = 0;
 			this.zedGraph.UseExtendedPrintDialog = true;
 			this.zedGraph.SizeChanged += new System.EventHandler(this.zedGraph_SizeChanged);
@@ -108,10 +116,18 @@ namespace ScopeViewer
             this.MaskMax_textBox,
             this.Mask2_label,
             this.MaskMin_textBox,
-            this.toolStripSeparator5});
+            this.toolStripSeparator5,
+            this.tool_separator,
+            this.tool_CursorsDif,
+            this.tool_separator2,
+            this.tool_EnterRight_label,
+            this.tool_CursorsRight_label,
+            this.tool_EnterLeft_label,
+            this.tool_CursorsLeft_label,
+            this.tool_Cursors_label});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(809, 33);
+			this.toolStrip1.Size = new System.Drawing.Size(1165, 33);
 			this.toolStrip1.TabIndex = 1;
 			this.toolStrip1.Text = "toolStrip1";
 			this.toolStrip1.MouseEnter += new System.EventHandler(this.toolStrip1_MouseEnter);
@@ -310,6 +326,76 @@ namespace ScopeViewer
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 33);
 			// 
+			// tool_separator
+			// 
+			this.tool_separator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_separator.Name = "tool_separator";
+			this.tool_separator.Size = new System.Drawing.Size(6, 33);
+			this.tool_separator.Visible = false;
+			// 
+			// tool_CursorsDif
+			// 
+			this.tool_CursorsDif.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_CursorsDif.Name = "tool_CursorsDif";
+			this.tool_CursorsDif.Size = new System.Drawing.Size(18, 30);
+			this.tool_CursorsDif.Text = "Δ:";
+			this.tool_CursorsDif.Visible = false;
+			// 
+			// tool_separator2
+			// 
+			this.tool_separator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_separator2.Name = "tool_separator2";
+			this.tool_separator2.Size = new System.Drawing.Size(6, 33);
+			this.tool_separator2.Visible = false;
+			// 
+			// tool_EnterRight_label
+			// 
+			this.tool_EnterRight_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_EnterRight_label.Name = "tool_EnterRight_label";
+			this.tool_EnterRight_label.Size = new System.Drawing.Size(80, 33);
+			this.tool_EnterRight_label.Visible = false;
+			this.tool_EnterRight_label.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tool_EnterRight_label_KeyPress);
+			this.tool_EnterRight_label.TextChanged += new System.EventHandler(this.tool_EnterRight_label_TextChanged);
+			// 
+			// tool_CursorsRight_label
+			// 
+			this.tool_CursorsRight_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_CursorsRight_label.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tool_CursorsRight_label.Image = global::ScopeViewer.Properties.Resources.blue_line;
+			this.tool_CursorsRight_label.Name = "tool_CursorsRight_label";
+			this.tool_CursorsRight_label.Size = new System.Drawing.Size(30, 30);
+			this.tool_CursorsRight_label.Text = "toolStripLabel2";
+			this.tool_CursorsRight_label.Visible = false;
+			// 
+			// tool_EnterLeft_label
+			// 
+			this.tool_EnterLeft_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_EnterLeft_label.Name = "tool_EnterLeft_label";
+			this.tool_EnterLeft_label.Size = new System.Drawing.Size(80, 33);
+			this.tool_EnterLeft_label.Visible = false;
+			this.tool_EnterLeft_label.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tool_EnterLeft_label_KeyPress);
+			this.tool_EnterLeft_label.TextChanged += new System.EventHandler(this.tool_EnterLeft_label_TextChanged);
+			// 
+			// tool_CursorsLeft_label
+			// 
+			this.tool_CursorsLeft_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_CursorsLeft_label.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.tool_CursorsLeft_label.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.tool_CursorsLeft_label.Image = global::ScopeViewer.Properties.Resources.red_line;
+			this.tool_CursorsLeft_label.Name = "tool_CursorsLeft_label";
+			this.tool_CursorsLeft_label.Size = new System.Drawing.Size(30, 30);
+			this.tool_CursorsLeft_label.Text = "toolStripLabel1";
+			this.tool_CursorsLeft_label.Visible = false;
+			// 
+			// tool_Cursors_label
+			// 
+			this.tool_Cursors_label.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.tool_Cursors_label.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.tool_Cursors_label.Name = "tool_Cursors_label";
+			this.tool_Cursors_label.Size = new System.Drawing.Size(133, 30);
+			this.tool_Cursors_label.Text = "Положение курсоров: ";
+			this.tool_Cursors_label.Visible = false;
+			// 
 			// GraphPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -319,7 +405,7 @@ namespace ScopeViewer
 			this.Controls.Add(this.toolStrip1);
 			this.DoubleBuffered = true;
 			this.Name = "GraphPanel";
-			this.Size = new System.Drawing.Size(809, 471);
+			this.Size = new System.Drawing.Size(1165, 471);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -351,6 +437,14 @@ namespace ScopeViewer
         private ToolStripButton SaveScope_toolStripButton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripButton AddCursorH;
-    }
+		private ToolStripLabel tool_CursorsLeft_label;
+		private ToolStripTextBox tool_EnterLeft_label;
+		private ToolStripLabel tool_CursorsRight_label;
+		private ToolStripTextBox tool_EnterRight_label;
+		private ToolStripLabel tool_Cursors_label;
+		private ToolStripLabel tool_CursorsDif;
+		private ToolStripSeparator tool_separator;
+		private ToolStripSeparator tool_separator2;
+	}
 }
 

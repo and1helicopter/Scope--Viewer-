@@ -73,6 +73,16 @@ namespace ScopeViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap blue_line {
+            get {
+                object obj = ResourceManager.GetObject("blue_line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Chromatography_48_1_ {
             get {
                 object obj = ResourceManager.GetObject("Chromatography_48_1_", resourceCulture);
@@ -406,6 +416,16 @@ namespace ScopeViewer.Properties {
         internal static System.Drawing.Bitmap Open_Folder_48 {
             get {
                 object obj = ResourceManager.GetObject("Open_Folder_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap red_line {
+            get {
+                object obj = ResourceManager.GetObject("red_line", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -6,62 +6,62 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
     Title="Scope Viewer"
-    Width="800"
+    Width="1000"
     Height="550"
+    MinWidth="1000"
+    MinHeight="550"
     Closing="Window_Closing"
     Icon="Resources/Line Chart-48.ico"
     mc:Ignorable="d" SizeChanged="Main_SizeChanged">
-    <!--  Loaded="Window_Loaded"  -->
-    <Grid Margin="0,0,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="76" />
-            <ColumnDefinition x:Name="ConfigPanel" Width="0*" />
-            <ColumnDefinition Width="2" />
-            <ColumnDefinition
+	<Grid Margin="0,0,0,0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="76" />
+			<ColumnDefinition x:Name="ConfigPanel" Width="0*" />
+			<ColumnDefinition Width="2" />
+			<ColumnDefinition
                 Width="32"
                 MinWidth="32 px"
                 MaxWidth="32 px" />
-            <ColumnDefinition Width="2" />
-            <ColumnDefinition x:Name="PanelForGraph" Width="517*" />
-            <ColumnDefinition Width="163*" />
-        </Grid.ColumnDefinitions>
-        <Menu
+			<ColumnDefinition Width="2" />
+			<ColumnDefinition x:Name="PanelForGraph" />
+		</Grid.ColumnDefinitions>
+		<Menu
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="6"
             Height="30"
             Margin="0,0,0,0"
             VerticalAlignment="Top">
-            <MenuItem
+			<MenuItem
                 Width="90"
                 VerticalContentAlignment="Center"
                 Click="openButton_Click"
                 Header="Открыть" ToolTip="Открыть осциллограмму ">
-                <MenuItem.Icon>
-                    <Image
+				<MenuItem.Icon>
+					<Image
                         Width="16"
                         Height="16"
                         Source="Resources/Open Folder-48.png" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
+				</MenuItem.Icon>
+			</MenuItem>
+			<MenuItem
                 Width="90"
                 Height="28"
                 Click="settings_Click"
                 Header="Настройки" ToolTip="Настройки приложения">
-                <MenuItem.Icon>
-                    <Image
+				<MenuItem.Icon>
+					<Image
                         Width="16"
                         Height="16"
                         Source="Resources/Services-48.png" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </Menu>
-        <Button
+				</MenuItem.Icon>
+			</MenuItem>
+		</Menu>
+		<Button
             x:Name="GraphButton"
             Grid.Row="1"
             Grid.Column="0"
@@ -78,7 +78,7 @@
             Foreground="#FF2196F3"
             RenderTransformOrigin="1,1"
             ToolTip="Настройка каналов" />
-        <Button
+		<Button
             x:Name="AnalysisButton"
             Grid.Row="1"
             Grid.Column="0"
@@ -94,7 +94,7 @@
             FontSize="14"
             Foreground="#FF2196F3"
             ToolTip="Результаты анализа" />
-        <ScrollViewer
+		<ScrollViewer
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
@@ -102,17 +102,17 @@
             Margin="0,0,2,0"
             VerticalContentAlignment="Stretch"
             VerticalScrollBarVisibility="Auto">
-            <StackPanel
+			<StackPanel
                 x:Name="ConfigStackPanel"
                 Height="Auto"
                 ScrollViewer.CanContentScroll="True" />
-        </ScrollViewer>
-        <Border
+		</ScrollViewer>
+		<Border
             Grid.Row="1"
             Grid.Column="2"
             Background="WhiteSmoke" />
-        <StackPanel Grid.Row="1" Grid.Column="3">
-            <Rectangle
+		<StackPanel Grid.Row="1" Grid.Column="3">
+			<Rectangle
                 x:Name="AddGraph"
                 Width="28"
                 Height="28"
@@ -123,11 +123,11 @@
                 MouseEnter="AddGraph_MouseEnter"
                 MouseLeave="AddGraph_MouseLeave"
                 ToolTip="Добавить новый график">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Chromatography-48.png" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <Rectangle
+				<Rectangle.Fill>
+					<ImageBrush ImageSource="Resources/Chromatography-48.png" />
+				</Rectangle.Fill>
+			</Rectangle>
+			<Rectangle
                 x:Name="UnionScope"
                 Width="28"
                 Height="28"
@@ -138,11 +138,11 @@
                 MouseEnter="UnionScope_MouseEnter"
                 MouseLeave="UnionScope_MouseLeave"
                 ToolTip="Объединить осциллограммы">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Line Chart-48(2).png" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <Rectangle
+				<Rectangle.Fill>
+					<ImageBrush ImageSource="Resources/Line Chart-48(2).png" />
+				</Rectangle.Fill>
+			</Rectangle>
+			<Rectangle
                 x:Name="AddDigitalChannel"
                 Width="28"
                 Height="28"
@@ -153,32 +153,31 @@
                 MouseEnter="AddDigitalChannel_MouseEnter"
                 MouseLeave="AddDigitalChannel_MouseLeave"
                 ToolTip="Открыть дискретный канал">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="Resources/Dig_Add.png" />
-                </Rectangle.Fill>
-            </Rectangle>
-        </StackPanel>
-        <Border
+				<Rectangle.Fill>
+					<ImageBrush ImageSource="Resources/Dig_Add.png" />
+				</Rectangle.Fill>
+			</Rectangle>
+		</StackPanel>
+		<Border
             Grid.Row="1"
             Grid.Column="4"
             Background="WhiteSmoke" />
-        <xcad:DockingManager
+		<xcad:DockingManager
             Grid.Row="1"
             Grid.Column="5"
-            Grid.ColumnSpan="2"
             AllowMixedOrientation="True"
-            Background="#FFE8E2E2">
-            <xcad:DockingManager.Theme>
-                <xcad:GenericTheme />
-            </xcad:DockingManager.Theme>
-            <xcad:LayoutRoot x:Name="LayoutRoot">
-                <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutDocumentPaneGroup>
-                        <xcad:LayoutDocumentPane x:Name="LayoutGraph" />
-                    </xcad:LayoutDocumentPaneGroup>
-                </xcad:LayoutPanel>
-            </xcad:LayoutRoot>
-        </xcad:DockingManager>
-    </Grid>
+            Background="#FFE8E2E2" Margin="0,0,0,0">
+			<xcad:DockingManager.Theme>
+				<xcad:GenericTheme />
+			</xcad:DockingManager.Theme>
+			<xcad:LayoutRoot x:Name="LayoutRoot">
+				<xcad:LayoutPanel Orientation="Horizontal">
+					<xcad:LayoutDocumentPaneGroup>
+						<xcad:LayoutDocumentPane x:Name="LayoutGraph" />
+					</xcad:LayoutDocumentPaneGroup>
+				</xcad:LayoutPanel>
+			</xcad:LayoutRoot>
+		</xcad:DockingManager>
+	</Grid>
 </Window>
 
