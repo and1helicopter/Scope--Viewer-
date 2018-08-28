@@ -1224,6 +1224,10 @@ namespace ScopeViewer
 						CursorHorizontal.Location.Y >= Pane.YAxis.Scale.Max) CursorHorizontal.IsVisible = false;
 					else CursorHorizontal.IsVisible = true;
 
+					////Обновляю значение положение курсора в label
+					var y = CursorHorizontal.Location.Y;
+					tool_HorizontEnter.Text = TextPosition(y, NumGraphPanel(), false);
+
 					continue;
 				}
 				if (Pane.GraphObjList[i].Link.Title == "StampTrigger")
@@ -1555,7 +1559,7 @@ namespace ScopeViewer
 				tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
 				var x2 = Cursor2.Location.X;
 				tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
-				tool_CursorsDif.Text = Math.Abs(x2 - x1).ToString(CultureInfo.InvariantCulture);
+				tool_CursorsDif.Text = $@"Δ:{Math.Abs(x2 - x1):F6}";
 				tool_CursorsDif.ToolTipText = @"Приращение времени";
 			}
 			else
@@ -1576,13 +1580,16 @@ namespace ScopeViewer
 				}
 
 				AddCursor.Image = Properties.Resources.CursorAddV;
-				tool_Cursors_label.Visible = false;
 				tool_CursorsLeft_label.Visible = false;
 				tool_CursorsRight_label.Visible = false;
 				tool_EnterLeft_label.Visible = false;
 				tool_EnterRight_label.Visible = false;
 				tool_CursorsDif.Visible = false;
-				tool_separator.Visible = false;
+				if (!_cursorsCreateHorizontal)
+				{
+					tool_Cursors_label.Visible = false;
+					tool_separator.Visible = false;
+				}
 				tool_separator2.Visible = false;
 			}
 		}
@@ -1615,11 +1622,25 @@ namespace ScopeViewer
 				CursorHorizontalAdd();
 				AddCursorH.Image = Properties.Resources.CursorRemoveH;
 
+				tool_Cursors_label.Visible = true;
+				tool_separator.Visible = true;
+				tool_Horizont_label.Visible = true;
+				tool_HorizontEnter.Visible = true;
+				var y = CursorHorizontal.Location.Y;
+				tool_HorizontEnter.Text = TextPosition(y, NumGraphPanel(), false);
 			}
 			else
 			{
 				CursorClearHorizontal();
 				AddCursorH.Image = Properties.Resources.CursorAddH;
+				if (!_cursorsCreate)
+				{
+					tool_Cursors_label.Visible = false;
+					tool_separator.Visible = false;
+				}
+
+				tool_Horizont_label.Visible = false;
+				tool_HorizontEnter.Visible = false;
 			}
 		}
 
@@ -2360,9 +2381,17 @@ namespace ScopeViewer
 			}
 		}
 
-				private void tool_EnterRight_label_KeyPress(object sender, KeyPressEventArgs e)
+		private void tool_EnterRight_label_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != ':') && (e.KeyChar != '.'))
+			{
+				e.Handled = true;
+			}
+		}
+
+		private void tool_HorizontEnter_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
 			{
 				e.Handled = true;
 			}
@@ -2376,6 +2405,22 @@ namespace ScopeViewer
 		private void tool_EnterRight_label_TextChanged(object sender, EventArgs e)
 		{
 			PositionCursors(Cursor2, tool_EnterRight_label.Text);
+		}
+
+		private void tool_HorizontEnter_TextChanged(object sender, EventArgs e)
+		{
+			var position = tool_HorizontEnter.Text;
+			Regex regex = new Regex(@"\d*\,?\d*");
+			var result = regex.IsMatch(position);
+			if (result)
+			{
+				if (new Regex(@"^\d*[^\,]$").IsMatch(position) || new Regex(@"^\d*\,\d+$").IsMatch(position))
+				{
+					CursorHorizontal.Location.Y = Convert.ToDouble(position);
+					UpdateCursor();
+					zedGraph.Invalidate();
+				}
+			}
 		}
 
 		private void PositionCursors(LineObj cursObj, string position)
@@ -2436,6 +2481,8 @@ namespace ScopeViewer
 				}
 			}
 		}
+
+
 
 		private string Line11(Oscil oscil)
 		{

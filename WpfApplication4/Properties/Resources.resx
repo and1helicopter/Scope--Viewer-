@@ -121,17 +121,14 @@
   <data name="Cutting_Add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cutting_Add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Stocks_Rem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Stocks_Rem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="blue_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\blue_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Line_Chart_48_2_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Line Chart-48(2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Chromatography_48_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Chromatography-48_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Line_Chart_48_3_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Line Chart-48(3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Dig_Cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dig_Cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,8 +139,8 @@
   <data name="Horizontal_Line_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Horizontal Line-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CursorAddV" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CursorAddV.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Flip_Vertical_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Flip Vertical-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Flip_Horizontal_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Flip Horizontal-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,14 +169,14 @@
   <data name="Cosine_50_4_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cosine-50(4).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Cut_Apply" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cut_Apply.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Cosine_50_5_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cosine-50(5).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Resize_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Resize-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Height_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Height-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Expand_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Expand-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -205,14 +202,20 @@
   <data name="Save_as_48_1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Save as-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Available_Updates_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Available Updates-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Line_48_2_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Line-48(2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Line_Chart_48_3_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Line Chart-48(3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Long_Position_48_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Long Position-48_.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Flip_Vertical_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Flip Vertical-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="red_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\red_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Height_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Height-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Close_Window_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close Window-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -229,6 +232,9 @@
   <data name="Line_48_1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Line-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Cutting_Remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cutting_Remove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Horizontal_Line_48_2_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Horizontal Line-48(2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -238,8 +244,8 @@
   <data name="Services_481" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Services-48.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Line_48_2_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Line-48(2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="CursorAddV" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CursorAddV.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Watch_Add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Watch_Add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -250,19 +256,16 @@
   <data name="Dig_Leave" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dig_Leave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Cutting_Remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cutting_Remove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Stocks_Rem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Stocks_Rem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Close_Window_48_1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close Window-48(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Cut_Apply" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cut_Apply.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Available_Updates_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Available Updates-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="blue_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\blue_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="red_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\red_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="green_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\green_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
