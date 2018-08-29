@@ -941,6 +941,7 @@ namespace ScopeViewer
 
 					_oscil.OscilChannelCount += 1;
 					_oscil.ChannelType.Add(OscilList[k].ChannelType[i]);
+					_oscil.ChannelColor.Add(OscilList[k].ChannelColor[i]);
 
 					for (int j = 0; j < _oscil.OscilEndSample; j++)
 					{

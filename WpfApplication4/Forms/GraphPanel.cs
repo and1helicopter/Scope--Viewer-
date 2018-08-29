@@ -1963,11 +1963,11 @@ namespace ScopeViewer
 			{
 				if (ListTemp[0][j].X > _rightLineCut.Location.X)   //Правая сторона
 				{
-					MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData.RemoveAt(j);
+					MainWindow.OscilList[NumGraphPanel()].OscilData.RemoveAt(j);
 				}
 				else if (ListTemp[0][j].X < _leftLineCut.Location.X)   //Левая сторона
 				{
-					MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData.RemoveAt(j);
+					MainWindow.OscilList[NumGraphPanel()].OscilData.RemoveAt(j);
 				}
 			}
 
