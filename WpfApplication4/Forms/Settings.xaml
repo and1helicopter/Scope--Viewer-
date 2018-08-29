@@ -8,9 +8,8 @@
     Width="631.936"
     Height="473"
     Closing="Window_Closing"
-    Icon="Resources/Services-48.ico"
-    mc:Ignorable="d">
-    <Grid Margin="0">
+	mc:Ignorable="d" Icon="/ScopeViewer;component/Resources/Services-48.ico"><!-- Icon="Resources/Services-48.ico"-->
+	<Grid Margin="0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="149" />
             <ColumnDefinition Width="2*" />

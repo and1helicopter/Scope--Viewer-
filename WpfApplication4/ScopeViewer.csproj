@@ -298,7 +298,9 @@
     <Resource Include="Resources\Line Chart-48.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Services-48.ico" />
+    <Resource Include="Resources\Services-48.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Available Updates-48.png" />

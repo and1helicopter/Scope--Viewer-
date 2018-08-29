@@ -1086,6 +1086,7 @@ namespace ScopeViewer
 				_oscil.ChannelNames.Add(OscilList[firstScope].ChannelNames[scopeIndex]);
 				_oscil.ChannelDimension.Add(OscilList[firstScope].ChannelDimension[scopeIndex]);
 				_oscil.ChannelType.Add(OscilList[firstScope].ChannelType[scopeIndex]);
+				_oscil.ChannelColor.Add(OscilList[firstScope].ChannelColor[scopeIndex]);
 
 				for (int j = 0; j < OscilList[firstScope].OscilEndSample; j++)
 				{
