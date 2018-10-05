@@ -15,8 +15,8 @@
     mc:Ignorable="d" SizeChanged="Main_SizeChanged">
 	<Grid Margin="0,0,0,0">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" MinHeight="26" MaxHeight="26"/>
+			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="76" />
@@ -49,15 +49,14 @@
 				</MenuItem.Icon>
 			</MenuItem>
 			<MenuItem
-                Width="90"
-                Height="28"
+
                 Click="settings_Click"
                 Header="Настройки" ToolTip="Настройки приложения">
 				<MenuItem.Icon>
-					<Image
-                        Width="16"
-                        Height="16"
-                        Source="Resources/Services-48.png" />
+					<Image Source="Resources/Services-48.png" />
+					<!--Width="16"
+                        Height="16"-->
+
 				</MenuItem.Icon>
 			</MenuItem>
 		</Menu>
@@ -173,7 +172,7 @@
 			<xcad:LayoutRoot x:Name="LayoutRoot">
 				<xcad:LayoutPanel Orientation="Horizontal">
 					<xcad:LayoutDocumentPaneGroup>
-						<xcad:LayoutDocumentPane x:Name="LayoutGraph" />
+						<xcad:LayoutDocumentPane x:Name="LayoutGraph"/>
 					</xcad:LayoutDocumentPaneGroup>
 				</xcad:LayoutPanel>
 			</xcad:LayoutRoot>

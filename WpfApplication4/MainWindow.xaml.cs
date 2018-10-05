@@ -903,6 +903,12 @@ namespace ScopeViewer
 			LayoutDocumentList[i].Close();
 		}
 
+		public static void ActivateOscil(int i)
+		{
+			LayoutDocumentList[i].IsSelected = true;
+		}
+		
+
 		private void AddGraph_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			//Создание новой осциллограммы OscilList

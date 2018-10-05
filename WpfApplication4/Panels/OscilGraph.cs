@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -82,11 +83,13 @@ namespace ScopeViewer
 
 			OscilName = new Label
 			{
-				Content = "Осциллограмма №" + (MainWindow.OscilChannelList.Count + 1),
+				Content = oscilName,
 				ToolTip = oscilName,
 				Width = 150,
 				Margin = new Thickness(0, 3, 0, 0)
 			};
+
+			OscilName.MouseDown += OscilNameOnMouseDown;
 
 			_selectAllCheckBox = new CheckBox
 			{
@@ -120,6 +123,21 @@ namespace ScopeViewer
 			LayoutOscilPanel.Children.Add(_showAllCheckBox);
 			LayoutOscilPanel.Children.Add(_selectAllCheckBox);
 			LayoutOscilPanel.Children.Add(_closeButton);
+		}
+
+		private void OscilNameOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+		{
+			int l = 0;
+			for (int k = 0; k < MainWindow.OscilChannelList.Count; k++)
+			{
+				if (MainWindow.OscilChannelList[k].OscilName.IsMouseOver)
+				{
+					l = k;
+					break;
+				}
+			}
+
+			MainWindow.ActivateOscil(l);
 		}
 
 		private void ShowAllCheckBox_Click(object sender, RoutedEventArgs e)
@@ -336,7 +354,7 @@ namespace ScopeViewer
 			ShiftTextBox.Add(shiftextBox);
 			_shift.Add(0.00);
 			ShiftTextBox[ShiftTextBox.Count - 1].Name = "shift" + Convert.ToString(ShiftTextBox.Count - 1);
-			ShiftTextBox[ShiftTextBox.Count - 1].PreviewTextInput += OscilGraph_Scale_PreviewTextInput;
+			ShiftTextBox[ShiftTextBox.Count - 1].PreviewTextInput += OscilGraph_Shift_PreviewTextInput;
 			ShiftTextBox[ShiftTextBox.Count - 1].KeyUp += OnKeyUp;
 
 			OpenClose.Add(new bool());
@@ -357,14 +375,14 @@ namespace ScopeViewer
 
 		private void OscilGraph_Scale_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
-			e.Handled = !((Char.IsDigit(e.Text, 0) || ((e.Text == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0].ToString()) && (DS_Count(((TextBox)sender).Text) < 1))));
+			Regex regex = new Regex(@"^([0-9]+)?[\.]?([0-9]+)?$");
+			e.Handled = !regex.IsMatch(e.Text);
 		}
 
-		private static int DS_Count(string s)
+		private void OscilGraph_Shift_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
-			string substr = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0].ToString();
-			int count = (s.Length - s.Replace(substr, "").Length) / substr.Length;
-			return count;
+			Regex regex = new Regex(@"^[-+]?([0-9]+)?\.?([0-9]+)?$");
+			e.Handled = !regex.IsMatch(e.Text);
 		}
 
 		private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
@@ -373,7 +391,7 @@ namespace ScopeViewer
 			{
 				try
 				{
-					_scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))] = Convert.ToDouble(((TextBox)sender).Text);
+					_scale[Convert.ToInt32(((TextBox)sender).Name.Replace("scale", ""))] = Convert.ToDouble(((TextBox)sender).Text.Replace(".", ","));
 				}
 				catch
 				{
@@ -384,7 +402,7 @@ namespace ScopeViewer
 			{
 				try
 				{
-					_shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = Convert.ToDouble(((TextBox)sender).Text);
+					_shift[Convert.ToInt32(((TextBox)sender).Name.Replace("shift", ""))] = Convert.ToDouble(((TextBox)sender).Text.Replace(".", ","));
 				}
 				catch
 				{

@@ -17,11 +17,12 @@ namespace ScopeViewer
 		public GraphPane PaneDig;
 		readonly List<LineItem> _myCurve = new List<LineItem>();
 
-		double _maxXAxis, _minXAxis, _maxYAxis, _minYAxis;
+		double _maxXAxis, _minXAxis, _maxYAxis, _minYAxis, _smallX, _lastMinX, _lastMaxX;
 		double _maxYAxisAuto;
 		double _minYAxisAuto;
 		bool _scaleY;
 		bool _absOrRel = true;
+		private bool _bind = false;
 		private bool _init;
 
 		public GraphPanel()
@@ -36,6 +37,11 @@ namespace ScopeViewer
 			zedGraph.PointValueEvent += ZedGraph_PointValueEvent;
 
 			InitDrawGraph();
+		}
+
+		internal void SetCursorBinding(bool bind)
+		{
+			_bind = bind;
 		}
 
 		private void ScrollUpdate()
@@ -127,6 +133,15 @@ namespace ScopeViewer
 				PaneDig.X2Axis.Scale.Max = PaneDig.XAxis.Scale.Max;
 				PaneDig.X2Axis.Scale.Min = PaneDig.XAxis.Scale.Min;
 			}
+
+			if (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min < _smallX * 10)
+			{
+				Pane.XAxis.Scale.Min = _lastMinX;
+				Pane.XAxis.Scale.Max = _lastMaxX;
+			}
+
+			_lastMinX = Pane.XAxis.Scale.Min;
+			_lastMaxX = Pane.XAxis.Scale.Max;
 
 			Refresh();
 			UpdateCursor();
@@ -342,6 +357,8 @@ namespace ScopeViewer
 				ListTemp[ListTemp.Count - 1].Add((i) / MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilSampleRate, MainWindow.OscilList[MainWindow.OscilList.Count - 1].OscilData[i][j]);
 			}
 
+			_smallX = Math.Abs(ListTemp[0][1].X -
+			                   ListTemp[0][0].X);
 
 			// Выберем случайный цвет для графика
 			LineItem newCurve = Pane.AddCurve(nameCh, list, color, SymbolType.None);
@@ -796,6 +813,7 @@ namespace ScopeViewer
 		{
 			Pane.CurveList[numChannel].Color = colorLine;
 			Pane.CurveList[numChannel].IsVisible = show;
+			Pane.CurveList[numChannel].Label.IsVisible = show;
 			_myCurve[numChannel].Line.IsSmooth = smooth;
 			_myCurve[numChannel].Line.SmoothTension = 0.5F;
 
@@ -831,6 +849,20 @@ namespace ScopeViewer
 
 			_maxYAxis = Pane.YAxis.Scale.Max;
 			_minYAxis = Pane.YAxis.Scale.Min;
+
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if (Pane.YAxis.Scale.Max == 0)
+			{
+				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
+				            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+			}
+
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if (Pane.YAxis.Scale.Min == 0)
+			{
+				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
+				            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+			}
 
 			ScrollUpdate();
 		}
@@ -988,7 +1020,8 @@ namespace ScopeViewer
 		private bool _cursorsCreateHorizontal;
 		public LineObj Cursor1;
 		public LineObj Cursor2;
-		public LineObj CursorHorizontal;
+		public LineObj CursorHorizontal1;
+		public LineObj CursorHorizontal2;
 		public LineObj CursorDig1;
 		public LineObj CursorDig2;
 
@@ -1093,12 +1126,30 @@ namespace ScopeViewer
 
 		private void CursorHorizontalAdd()
 		{
-			CursorHorizontal = new LineObj(
+			CursorHorizontal1 = new LineObj(
 				Pane.XAxis.Scale.Min,
-				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 2 + Pane.YAxis.Scale.Min,
+				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) * 2 / 3 + Pane.YAxis.Scale.Min,
 				Pane.XAxis.Scale.Max,
-				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 2 + Pane.YAxis.Scale.Min
+				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) * 2 / 3 + Pane.YAxis.Scale.Min
 				)
+			{
+				Line =
+				{
+					Style = System.Drawing.Drawing2D.DashStyle.Solid,
+					Color = Color.DarkGreen,
+					Width = 2
+				},
+				Link = { Title = "CursorHorizontal1" },
+				ZOrder = ZOrder.B_BehindLegend
+			};
+
+			Pane.GraphObjList.Add(CursorHorizontal1);
+
+			CursorHorizontal2 = new LineObj(
+				Pane.XAxis.Scale.Min,
+				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 3 + Pane.YAxis.Scale.Min,
+				Pane.XAxis.Scale.Max,
+				(Pane.YAxis.Scale.Max - Pane.YAxis.Scale.Min) / 3 + Pane.YAxis.Scale.Min)
 			{
 				Line =
 				{
@@ -1106,11 +1157,11 @@ namespace ScopeViewer
 					Color = Color.Green,
 					Width = 2
 				},
-				Link = { Title = "CursorHorizontal" },
+				Link = { Title = "CursorHorizontal2" },
 				ZOrder = ZOrder.B_BehindLegend
 			};
 
-			Pane.GraphObjList.Add(CursorHorizontal);
+			Pane.GraphObjList.Add(CursorHorizontal2);
 
 			_cursorsCreateHorizontal = true;
 
@@ -1145,7 +1196,7 @@ namespace ScopeViewer
 		{
 			for (int i = Pane.GraphObjList.Count - 1; i >= 0; i--)
 			{
-				if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal")
+				if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal1" || Pane.GraphObjList[i].Link.Title == "CursorHorizontal2")
 				{
 					Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
 				}
@@ -1214,21 +1265,40 @@ namespace ScopeViewer
 					continue;
 				}
 
-				if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal")
+				if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal1")
 				{
-					CursorHorizontal.Location.X1 = Pane.XAxis.Scale.Min;
-					CursorHorizontal.Location.Width = (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min);
+					CursorHorizontal1.Location.X1 = Pane.XAxis.Scale.Min;
+					CursorHorizontal1.Location.Width = (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min);
 
-					if (CursorHorizontal.Location.Y <= Pane.YAxis.Scale.Min ||
-						CursorHorizontal.Location.Y >= Pane.YAxis.Scale.Max) CursorHorizontal.IsVisible = false;
-					else CursorHorizontal.IsVisible = true;
+					if (CursorHorizontal1.Location.Y <= Pane.YAxis.Scale.Min ||
+						CursorHorizontal1.Location.Y >= Pane.YAxis.Scale.Max) CursorHorizontal1.IsVisible = false;
+					else CursorHorizontal1.IsVisible = true;
 
 					////Обновляю значение положение курсора в label
-					var y = CursorHorizontal.Location.Y;
-					tool_HorizontEnter.Text = TextPosition(y, NumGraphPanel(), false);
+					var y = CursorHorizontal1.Location.Y;
+					tool_Horizont1Enter.Text = TextPosition(y, NumGraphPanel(), false);
+					CursorHorizontalDif(y, CursorHorizontal2.Location.Y);
 
 					continue;
 				}
+
+				if (Pane.GraphObjList[i].Link.Title == "CursorHorizontal2")
+				{
+					CursorHorizontal2.Location.X1 = Pane.XAxis.Scale.Min;
+					CursorHorizontal2.Location.Width = (Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min);
+
+					if (CursorHorizontal2.Location.Y <= Pane.YAxis.Scale.Min ||
+					    CursorHorizontal2.Location.Y >= Pane.YAxis.Scale.Max) CursorHorizontal2.IsVisible = false;
+					else CursorHorizontal2.IsVisible = true;
+
+					////Обновляю значение положение курсора в label
+					var y = CursorHorizontal2.Location.Y;
+					tool_Horizont2Enter.Text = TextPosition(y, NumGraphPanel(), false);
+					CursorHorizontalDif(CursorHorizontal1.Location.Y, y);
+
+					continue;
+				}
+
 				if (Pane.GraphObjList[i].Link.Title == "StampTrigger")
 				{
 					_stampTrigger.Location.Y1 = Pane.YAxis.Scale.Min;
@@ -1344,17 +1414,29 @@ namespace ScopeViewer
 			tool_CursorsDif.Text = $@"Δ: {dif:F6}";
 		}
 
+		private void CursorHorizontalDif(double y1, double y2)
+		{
+			var dif = Math.Abs(y2 - y1);
+			tool_CursorsHorizontalDif.Text = $@"Δ: {dif:F6}";
+		}
+
 		private void zedGraph_MouseMove(object sender, MouseEventArgs e)
 		{
 			Pane.ReverseTransform(new PointF(e.X, e.Y), out var graphX, out var graphY);
 
-			if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null || CursorHorizontal != null)
+			if (Cursor1 != null || Cursor2 != null || _leftLineCut != null || _rightLineCut != null || CursorHorizontal1 != null)
 			{
 				// ReSharper disable once CompareOfFloatsByEqualityOperator
 				// ReSharper disable once PossibleNullReferenceException
 				if (Cursor1 != null && Cursor1.Line.Width == 3)
 				{
 					Cursor1.Location.X1 = graphX;
+					if (_bind)
+					{
+						var count = (int)(Cursor1.Location.X / _smallX);
+						Cursor1.Location.X = count * _smallX;
+					}
+
 					UpdateCursor();
 					zedGraph.Invalidate();
 					Cursor = Cursors.VSplit;
@@ -1370,6 +1452,12 @@ namespace ScopeViewer
 				if (Cursor2 != null && Cursor2.Line.Width == 3)
 				{
 					Cursor2.Location.X1 = graphX;
+					if (_bind)
+					{
+						var count = (int)(Cursor2.Location.X / _smallX);
+						Cursor2.Location.X = count * _smallX;
+					}
+					
 					UpdateCursor();
 					zedGraph.Invalidate();
 					Cursor = Cursors.VSplit;
@@ -1409,9 +1497,18 @@ namespace ScopeViewer
 				}
 
 				// ReSharper disable once CompareOfFloatsByEqualityOperator
-				if (CursorHorizontal != null && CursorHorizontal.Line.Width == 3)
+				if (CursorHorizontal1 != null && CursorHorizontal1.Line.Width == 3)
 				{
-					CursorHorizontal.Location.Y1 = graphY;
+					CursorHorizontal1.Location.Y1 = graphY;
+					UpdateCursor();
+					zedGraph.Invalidate();
+					Cursor = Cursors.HSplit;
+				}
+
+				// ReSharper disable once CompareOfFloatsByEqualityOperator
+				if (CursorHorizontal2 != null && CursorHorizontal2.Line.Width == 3)
+				{
+					CursorHorizontal2.Location.Y1 = graphY;
 					UpdateCursor();
 					zedGraph.Invalidate();
 					Cursor = Cursors.HSplit;
@@ -1517,10 +1614,16 @@ namespace ScopeViewer
 					}
 				}
 
-				if (lineObject.Link.Title == "CursorHorizontal")
+				if (lineObject.Link.Title == "CursorHorizontal1")
 				{
 					// ReSharper disable once CompareOfFloatsByEqualityOperator
-					CursorHorizontal.Line.Width = CursorHorizontal.Line.Width == 3 ? 2 : 3;
+					CursorHorizontal1.Line.Width = CursorHorizontal1.Line.Width == 3 ? 2 : 3;
+				}
+
+				if (lineObject.Link.Title == "CursorHorizontal2")
+				{
+					// ReSharper disable once CompareOfFloatsByEqualityOperator
+					CursorHorizontal2.Line.Width = CursorHorizontal2.Line.Width == 3 ? 2 : 3;
 				}
 			}
 
@@ -1624,9 +1727,17 @@ namespace ScopeViewer
 				tool_Cursors_label.Visible = true;
 				tool_separator.Visible = true;
 				tool_Horizont_label.Visible = true;
-				tool_HorizontEnter.Visible = true;
-				var y = CursorHorizontal.Location.Y;
-				tool_HorizontEnter.Text = TextPosition(y, NumGraphPanel(), false);
+				tool_Horizont1Enter.Visible = true;
+				tool_Horizont2Enter.Visible = true;
+				tool_CursorsHorizontalDif.Visible = true;
+				tool_separator3.Visible = true;
+				tool_separator4.Visible = true;
+				var y1 = CursorHorizontal1.Location.Y;
+				tool_Horizont1Enter.Text = TextPosition(y1, NumGraphPanel(), false);
+				var y2 = CursorHorizontal2.Location.Y;
+				tool_Horizont2Enter.Text = TextPosition(y2, NumGraphPanel(), false);
+				tool_CursorsHorizontalDif.Text = $@"Δ:{Math.Abs(y2 - y1):F6}";
+				tool_CursorsHorizontalDif.ToolTipText = @"Приращение";
 			}
 			else
 			{
@@ -1637,12 +1748,14 @@ namespace ScopeViewer
 					tool_Cursors_label.Visible = false;
 					tool_separator.Visible = false;
 				}
-
+				tool_CursorsHorizontalDif.Visible = false;
 				tool_Horizont_label.Visible = false;
-				tool_HorizontEnter.Visible = false;
+				tool_Horizont1Enter.Visible = false;
+				tool_Horizont2Enter.Visible = false;
+				tool_separator3.Visible = false;
+				tool_separator4.Visible = false;
 			}
 		}
-
 
 		public void DelCursor()
 		{
@@ -2406,16 +2519,32 @@ namespace ScopeViewer
 			PositionCursors(Cursor2, tool_EnterRight_label.Text);
 		}
 
-		private void tool_HorizontEnter_TextChanged(object sender, EventArgs e)
+		private void tool_Horizont1Enter_TextChanged(object sender, EventArgs e)
 		{
-			var position = tool_HorizontEnter.Text;
+			var position = tool_Horizont1Enter.Text;
 			Regex regex = new Regex(@"\d*\,?\d*");
 			var result = regex.IsMatch(position);
 			if (result)
 			{
 				if (new Regex(@"^\d*[^\,]$").IsMatch(position) || new Regex(@"^\d*\,\d+$").IsMatch(position))
 				{
-					CursorHorizontal.Location.Y = Convert.ToDouble(position);
+					CursorHorizontal1.Location.Y = Convert.ToDouble(position);
+					UpdateCursor();
+					zedGraph.Invalidate();
+				}
+			}
+		}
+
+		private void tool_Horizont2Enter_TextChanged(object sender, EventArgs e)
+		{
+			var position = tool_Horizont2Enter.Text;
+			Regex regex = new Regex(@"\d*\,?\d*");
+			var result = regex.IsMatch(position);
+			if (result)
+			{
+				if (new Regex(@"^\d*[^\,]$").IsMatch(position) || new Regex(@"^\d*\,\d+$").IsMatch(position))
+				{
+					CursorHorizontal2.Location.Y = Convert.ToDouble(position);
 					UpdateCursor();
 					zedGraph.Invalidate();
 				}

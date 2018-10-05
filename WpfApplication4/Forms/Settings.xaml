@@ -8,26 +8,27 @@
     Width="631.936"
     Height="473"
     Closing="Window_Closing"
-	mc:Ignorable="d" Icon="/ScopeViewer;component/Resources/Services-48.ico"><!-- Icon="Resources/Services-48.ico"-->
+	mc:Ignorable="d" Icon="/ScopeViewer;component/Resources/Services-48.ico">
+	<!-- Icon="Resources/Services-48.ico"-->
 	<Grid Margin="0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="149" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition MinWidth="149" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
 
 
-        <TreeView
+		<TreeView
             Margin="5,5,5,30"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             SelectedItemChanged="TreeView_SelectedItemChanged">
-            <TreeViewItem
+			<TreeViewItem
                 FontSize="14"
                 Header="График"
                 TabIndex="0" />
-        </TreeView>
+		</TreeView>
 
-        <TabControl
+		<TabControl
             x:Name="TabControl"
             Grid.Column="1"
             Margin="0,5,10,30"
@@ -35,23 +36,23 @@
             VerticalContentAlignment="Stretch"
             IsHitTestVisible="True"
             ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <TabItem
+			<TabItem
                 Width="54"
                 Height="20"
                 Margin="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Header="TabItem1" Visibility="Collapsed">
-                <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="89*" />
-                        <ColumnDefinition Width="311*" />
-                    </Grid.ColumnDefinitions>
-                    <Label
+                Header="TabItem1" IsSelected="True" Visibility="Hidden">
+				<Grid Background="#FFE5E5E5">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="89*" />
+						<ColumnDefinition Width="311*" />
+					</Grid.ColumnDefinitions>
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="100"
-                        Margin="10,10,0,0"
+                        Margin="10,1,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -59,11 +60,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="339"
-                        Margin="30,34,0,0"
+                        Margin="30,25,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -71,17 +72,17 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <CheckBox
+					<CheckBox
                         x:Name="ShowDigitalCheckBox"
                         Grid.Column="1"
-                        Margin="285,38,0,0"
+                        Margin="285,29,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="235"
-                        Margin="30,58,0,0"
+                        Margin="30,49,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -89,11 +90,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="100"
-                        Margin="10,82,0,0"
+                        Margin="10,72,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -101,11 +102,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="204"
-                        Margin="30,106,0,0"
+                        Margin="30,96,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -113,11 +114,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="204"
-                        Margin="30,130,0,0"
+                        Margin="30,120,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -125,11 +126,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="204"
-                        Margin="30,154,0,0"
+                        Margin="30,144,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -137,11 +138,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="204"
-                        Margin="30,178,0,0"
+                        Margin="30,168,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -149,113 +150,113 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <ComboBox
+					<ComboBox
                         x:Name="XMinorComboBox"
                         Grid.Column="1"
                         Width="120"
-                        Margin="150,106,0,0"
+                        Margin="150,96,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         SelectedIndex="0">
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dot" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dash" />
-                    </ComboBox>
-                    <CheckBox
+					</ComboBox>
+					<CheckBox
                         x:Name="XMinorCheckBox"
                         Grid.Column="1"
-                        Margin="285,110,0,0"
+                        Margin="285,100,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
-                    <ComboBox
+					<ComboBox
                         x:Name="YMinorComboBox"
                         Grid.Column="1"
                         Width="120"
-                        Margin="150,130,0,0"
+                        Margin="150,120,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         SelectedIndex="0">
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dot" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dash" />
-                    </ComboBox>
-                    <CheckBox
+					</ComboBox>
+					<CheckBox
                         x:Name="YMinorCheckBox"
                         Grid.Column="1"
-                        Margin="285,134,0,0"
+                        Margin="285,124,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
-                    <ComboBox
+					<ComboBox
                         x:Name="XMajorComboBox"
                         Grid.Column="1"
                         Width="120"
-                        Margin="150,154,0,0"
+                        Margin="150,144,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         SelectedIndex="0">
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dot" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dash" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Solid" />
-                    </ComboBox>
-                    <CheckBox
+					</ComboBox>
+					<CheckBox
                         x:Name="XMajorCheckBox"
                         Grid.Column="1"
-                        Margin="285,158,0,0"
+                        Margin="285,148,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         IsChecked="True" />
-                    <ComboBox
+					<ComboBox
                         x:Name="YMajorComboBox"
                         Grid.Column="1"
                         Width="120"
-                        Margin="150,178,0,0"
+                        Margin="150,168,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         SelectedIndex="0">
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dot" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Dash" />
-                        <ComboBoxItem
+						<ComboBoxItem
                             Width="118"
                             HorizontalAlignment="Left"
                             Content="Solid" />
-                    </ComboBox>
-                    <CheckBox
+					</ComboBox>
+					<CheckBox
                         x:Name="YMajorCheckBox"
                         Grid.Column="1"
-                        Margin="285,182,0,0"
+                        Margin="285,172,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         IsChecked="True" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="100"
-                        Margin="10,202,0,0"
+                        Margin="10,188,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -263,11 +264,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="202"
-                        Margin="30,250,0,0"
+                        Margin="30,236,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -275,11 +276,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="339"
-                        Margin="30,226,0,0"
+                        Margin="30,212,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -287,11 +288,11 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <Label
+					<Label
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Width="227"
-                        Margin="30,274,0,0"
+                        Margin="30,260,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -299,17 +300,17 @@
                         FontSize="14"
                         RenderTransformOrigin="0.666,0.436"
                         TextOptions.TextHintingMode="Fixed" />
-                    <CheckBox
+					<CheckBox
                         x:Name="ShowLegendCheckBox"
                         Grid.Column="1"
-                        Margin="285,230,0,0"
+                        Margin="285,216,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
-                    <Slider
+					<Slider
                         x:Name="ShowLegendSlider"
                         Grid.Column="1"
                         Width="151"
-                        Margin="150,251,0,0"
+                        Margin="150,237,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Maximum="12"
@@ -317,26 +318,26 @@
                         RenderTransformOrigin="0.5,0.5"
                         SmallChange="1"
                         Value="7                             " />
-                    <Rectangle
+					<Rectangle
                         Grid.Column="1"
                         Width="150"
-                        Height="80"
-                        Margin="151,274,0,0"
+                        Height="65"
+                        Margin="151,259,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Fill="#FF8D8D8D" />
-                    <Rectangle
+					<Rectangle
                         Grid.Column="1"
                         Width="140"
-                        Height="70"
-                        Margin="156,279,0,0"
+                        Height="54"
+                        Margin="156,264,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Fill="#FFDADADA" />
-                    <RadioButton
+					<RadioButton
                         x:Name="Position0"
                         Grid.Column="1"
-                        Margin="281,333,0,0"
+                        Margin="281,302,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -344,63 +345,92 @@
                         GroupName="Position"
                         IsChecked="True"
                         TabIndex="0" />
-                    <RadioButton
+					<RadioButton
                         x:Name="Position1"
                         Grid.Column="1"
-                        Margin="281,279,0,0"
+                        Margin="281,264,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Content=""
                         GroupName="Position"
                         TabIndex="1" />
-                    <RadioButton
+					<RadioButton
                         x:Name="Position2"
                         Grid.Column="1"
-                        Margin="156,279,0,0"
+                        Margin="156,264,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Content=""
                         GroupName="Position"
                         TabIndex="2" />
-                    <RadioButton
+					<RadioButton
                         x:Name="Position3"
                         Grid.Column="1"
-                        Margin="156,333,0,0"
+                        Margin="156,302,0,0"
                         Padding="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Content=""
                         GroupName="Position"
                         TabIndex="3" />
-                    <ComboBox
+					<ComboBox
                         x:Name="PointInLineComboBox"
                         Grid.Column="1"
                         Width="120"
-                        Margin="181,61,0,0"
+                        Margin="181,52,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         SelectedIndex="1">
-                        <ComboBoxItem Content="Низкий" />
-                        <ComboBoxItem Content="Средний" />
-                        <ComboBoxItem Content="Высокий" />
-                        <ComboBoxItem Content="Очень высокий" />
-                        <ComboBoxItem Content="Полный" />
-                    </ComboBox>
-                </Grid>
-            </TabItem>
-            <TabItem
+						<ComboBoxItem Content="Низкий" />
+						<ComboBoxItem Content="Средний" />
+						<ComboBoxItem Content="Высокий" />
+						<ComboBoxItem Content="Очень высокий" />
+						<ComboBoxItem Content="Полный" />
+					</ComboBox>
+					<Label
+						Grid.Column="0"
+						Grid.ColumnSpan="2"
+						Width="100"
+						Margin="10,322,0,0"
+						Padding="0"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Content="Курсоры:"
+						FontSize="14"
+						RenderTransformOrigin="0.666,0.436"
+						TextOptions.TextHintingMode="Fixed" />
+					<Label
+		 Grid.Column="0"
+		 Grid.ColumnSpan="2"
+		 Width="227"
+		 Margin="30,346,0,0"
+		 Padding="0"
+		 HorizontalAlignment="Left"
+		 VerticalAlignment="Top"
+		 Content="Привязка к точкам:"
+		 FontSize="14"
+		 RenderTransformOrigin="0.666,0.436"
+		 TextOptions.TextHintingMode="Fixed" />
+					<CheckBox
+		 x:Name="CoursorsCheckBox"
+		 Grid.Column="1"
+		 Margin="285,350,0,0"
+		 HorizontalAlignment="Left"
+		 VerticalAlignment="Top" />
+				</Grid>
+			</TabItem>
+			<TabItem
                 Width="54"
                 Height="20"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Header="TabItem"
-                Visibility="Collapsed">
-                <Grid Background="#FFE5E5E5" />
-            </TabItem>
-        </TabControl>
-        <Button
+                Header="TabItem" Visibility="Hidden">
+				<Grid Background="#FFE5E5E5" />
+			</TabItem>
+		</TabControl>
+		<Button
             x:Name="PointPerChannelButton"
             Grid.Column="1"
             Width="80"
@@ -410,7 +440,7 @@
             Click="update_Click"
             Content="Применить"
             FontSize="14" />
-        <Button
+		<Button
             x:Name="CloseButton"
             Grid.Column="1"
             Width="80"
@@ -420,7 +450,7 @@
             Click="Close_Click"
             Content="Закрыть"
             FontSize="14" />
-        <Button
+		<Button
             x:Name="OkButton"
             Grid.Column="1"
             Width="80"
@@ -430,5 +460,5 @@
             Click="OK_Click"
             Content="OK"
             FontSize="14" />
-    </Grid>
+	</Grid>
 </Window>

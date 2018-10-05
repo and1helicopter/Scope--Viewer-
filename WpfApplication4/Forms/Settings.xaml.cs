@@ -72,12 +72,17 @@ namespace ScopeViewer
             xmlOut.WriteStartElement("ShowLegend", (Setting.ShowLegend).ToString());
             xmlOut.WriteEndElement();
 
-            // ReSharper disable once SpecifyACultureInStringConversionExplicitly
-            xmlOut.WriteStartElement("SizeLegend", (Setting.SizeLegend).ToString());
+	        xmlOut.WriteStartElement("CoursorBinding", (Setting.CoursorBinding).ToString());
+	        xmlOut.WriteEndElement();
+
+			// ReSharper disable once SpecifyACultureInStringConversionExplicitly
+			xmlOut.WriteStartElement("SizeLegend", (Setting.SizeLegend).ToString());
             xmlOut.WriteEndElement();
 
             xmlOut.WriteStartElement("Position", (Setting.Position).ToString());
             xmlOut.WriteEndElement();
+
+
 
             /////////////////////////////////////////
             xmlOut.WriteEndElement();
@@ -187,9 +192,12 @@ namespace ScopeViewer
 
             xmlOut.WriteStartElement("ShowLegend", (ShowLegendCheckBox.IsChecked).ToString());
             xmlOut.WriteEndElement();
+			
+	        xmlOut.WriteStartElement("CoursorBinding", (CoursorsCheckBox.IsChecked).ToString());
+	        xmlOut.WriteEndElement();
 
-            // ReSharper disable once SpecifyACultureInStringConversionExplicitly
-            xmlOut.WriteStartElement("SizeLegend", Convert.ToInt32(ShowLegendSlider.Value).ToString());
+			// ReSharper disable once SpecifyACultureInStringConversionExplicitly
+			xmlOut.WriteStartElement("SizeLegend", Convert.ToInt32(ShowLegendSlider.Value).ToString());
             xmlOut.WriteEndElement();
 
             {
@@ -258,6 +266,7 @@ namespace ScopeViewer
             LegendChange();
             AxisChange();
             LineInChash();
+	        CoursorChange();
         }
 
         private void LegendChange()
@@ -373,7 +382,17 @@ namespace ScopeViewer
             }
         }
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+	    private void CoursorChange()
+	    {
+		    CoursorsCheckBox.IsChecked = Setting.CoursorBinding;
+
+			foreach (GraphPanel t in MainWindow.GraphPanelList)
+			{
+				t.SetCursorBinding(Setting.CoursorBinding);
+		    }
+		}
+
+		private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {     
             TabControl.SelectedIndex = ((TreeViewItem)e.NewValue).TabIndex;
         }

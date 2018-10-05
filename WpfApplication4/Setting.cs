@@ -21,8 +21,9 @@ namespace ScopeViewer
         public static bool ShowLegend; 
         public static int SizeLegend;
         public static int Position;
+	    public static bool CoursorBinding;
 
-        public static int WindowHeight;
+		public static int WindowHeight;
         public static int WindowWidth;
         public static int WondowState;
 
@@ -81,8 +82,9 @@ namespace ScopeViewer
                 ShowLegend = false;
                 SizeLegend = 5;
                 Position = 0;
+	            CoursorBinding = false;
 
-                WindowHeight = 0;
+				WindowHeight = 0;
                 WindowWidth = 0;
                 WondowState = 0;
 
@@ -102,8 +104,9 @@ namespace ScopeViewer
             LoadNameFromXml("ShowLegend", doc, out ShowLegend);
             LoadNameFromXml("SizeLegend", doc, out SizeLegend);
             LoadNameFromXml("Position", doc, out Position);
+	        LoadNameFromXml("CoursorBinding", doc, out CoursorBinding);
 
-            LoadNameFromXml("WindowHeight", doc, out WindowHeight);
+			LoadNameFromXml("WindowHeight", doc, out WindowHeight);
             LoadNameFromXml("WindowWidth", doc, out WindowWidth);
             LoadNameFromXml("WondowState", doc, out WondowState);
 
