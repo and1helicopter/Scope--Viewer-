@@ -37,10 +37,8 @@
             Margin="0,0,0,0"
             VerticalAlignment="Top">
 			<MenuItem
-                Width="90"
-                VerticalContentAlignment="Center"
                 Click="openButton_Click"
-                Header="Открыть" ToolTip="Открыть осциллограмму ">
+                Header="Открыть" ToolTip="Открыть осциллограмму " Width="100"  Padding="2,2,0,0" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Height="25" >
 				<MenuItem.Icon>
 					<Image
                         Width="16"
@@ -49,14 +47,13 @@
 				</MenuItem.Icon>
 			</MenuItem>
 			<MenuItem
-
                 Click="settings_Click"
-                Header="Настройки" ToolTip="Настройки приложения">
+                Header="Настройки" ToolTip="Настройки приложения" Width="100" Height="25" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" Padding="2,2,0,0" VerticalAlignment="Top">
 				<MenuItem.Icon>
-					<Image Source="Resources/Services-48.png" />
-					<!--Width="16"
-                        Height="16"-->
-
+					<Image
+						Width="16"
+						Height="16"
+						Source="Resources/Services-48.png" />
 				</MenuItem.Icon>
 			</MenuItem>
 		</Menu>

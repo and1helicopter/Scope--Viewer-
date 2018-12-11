@@ -808,8 +808,19 @@ namespace ScopeViewer
 			zedGraph.Invalidate();
 		}
 
-
-		public void ChangeLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine, double scale, double shift)
+		/// <summary>
+		/// Change visual style line
+		/// </summary>
+		/// <param name="numChannel">Number line</param>
+		/// <param name="typeLine">Type line</param>
+		/// <param name="typeStep">Step</param>
+		/// <param name="width">Width</param>
+		/// <param name="show">Visability</param>
+		/// <param name="smooth">Smooth</param>
+		/// <param name="colorLine">Color line</param>
+		/// <param name="scale">Scale</param>
+		/// <param name="shift">Shift</param>
+		public void ChangeVisualLine(int numChannel, int typeLine, int typeStep, bool width, bool show, bool smooth, Color colorLine, double scale, double shift)
 		{
 			Pane.CurveList[numChannel].Color = colorLine;
 			Pane.CurveList[numChannel].IsVisible = show;
@@ -1520,11 +1531,32 @@ namespace ScopeViewer
 		{
 			Pane.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out var nearestObject, out _);
 
+
+
+
 			if (nearestObject == null)
 			{
 				if (PaneDig != null)
 				{
 					PaneDig.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out nearestObject, out _);
+				}
+
+				if (Math.Abs(Cursor1.Line.Width - 3) < 0.01)
+				{
+					Cursor1.Line.Width = 2;
+					if (PaneDig != null)
+					{
+						CursorDig1.Line.Width = 2;
+					}
+				}
+
+				if (Math.Abs(Cursor2.Line.Width - 3) < 0.01)
+				{
+					Cursor2.Line.Width = 2;
+					if (PaneDig != null)
+					{
+						CursorDig2.Line.Width = 2;
+					}
 				}
 			}
 

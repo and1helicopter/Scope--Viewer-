@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +23,7 @@ namespace ScopeViewer
         private readonly List<Label> _nameStatuslLabel = new List<Label>();
         private readonly List<Label> _nameValue1Label = new List<Label>();
         private readonly List<Label> _nameValue2Label = new List<Label>();
+		private readonly List<Label> _nameValueDeltLabel = new List<Label>();
 
         private readonly Label _nameLabelDig = new Label();
         private readonly Border _panelBorderDig = new Border();
@@ -36,7 +38,7 @@ namespace ScopeViewer
         {
             _panelBorder.BorderBrush = Brushes.DarkGray;
             _panelBorder.BorderThickness = new Thickness(1.0);
-            _panelBorder.Margin = new Thickness(-195, 0, 0, 0);
+            _panelBorder.Margin = new Thickness(-225, 0, 0, 0);
 
             LayoutPanel.Add(new DockPanel());
             LayoutPanel[0].Width = 225;
@@ -44,11 +46,11 @@ namespace ScopeViewer
             LayoutPanel[0].Margin = new Thickness(2, 5, 2, 0);
             LayoutPanel[0].MouseDown += click_LayoutPanelCursor;
 
-            _nameLabel.Content = "Курсоры";
+            _nameLabel.Content = $"Курсоры: {MainWindow.OscilList[numOsc].OscilNames}";
             _nameLabel.VerticalAlignment = VerticalAlignment.Top;
             _nameLabel.FontSize = 12;
             _nameLabel.Height = 25;
-            _nameLabel.Width = 180;
+            _nameLabel.Width = 225;
             _nameLabel.TabIndex = 0;
             _nameLabel.ToolTip = "Положения курсоров на осциллограмме:\n" + MainWindow.OscilList[numOsc].OscilNames;
             _nameLabel.Margin = new Thickness(0, 0, 0, 0);
@@ -56,15 +58,15 @@ namespace ScopeViewer
             double positonY = 0;
             {
                 _nameStatuslLabel.Add(new Label());
-                _nameStatuslLabel[0].Content = "Красный                Синий";
+                _nameStatuslLabel[0].Content = "Красный         Синий              \u0394";
                // _nameStatuslLabel[0].Foreground = Brushes.Red;
                 _nameStatuslLabel[0].VerticalAlignment = VerticalAlignment.Top;
                 _nameStatuslLabel[0].FontSize = 12;
                 _nameStatuslLabel[0].Height = 25;
-                _nameStatuslLabel[0].Width = 180;
+                _nameStatuslLabel[0].Width = 225;
                 _nameStatuslLabel[0].ToolTip = "Положние курсоров";
                 positonY += 20;
-                _nameStatuslLabel[0].Margin = new Thickness(-170, positonY, 0, 0);
+                _nameStatuslLabel[0].Margin = new Thickness(-225, positonY, 0, 0);
             }
 
             {
@@ -74,12 +76,12 @@ namespace ScopeViewer
                 _nameStatuslLabel[1].Foreground = Brushes.Red;
                 _nameStatuslLabel[1].FontSize = 12;
                 _nameStatuslLabel[1].Height = 25;
-                _nameStatuslLabel[1].Width = 85;
+                _nameStatuslLabel[1].Width = 75;
                 _nameStatuslLabel[1].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[1].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
                 (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
                 positonY += 20;
-                _nameStatuslLabel[1].Margin = new Thickness(-275, positonY, 0, 0);
+                _nameStatuslLabel[1].Margin = new Thickness(-375, positonY, 0, 0);
             }
 
             {
@@ -89,14 +91,14 @@ namespace ScopeViewer
                 _nameStatuslLabel[2].Foreground = Brushes.Blue;
                 _nameStatuslLabel[2].FontSize = 12;
                 _nameStatuslLabel[2].Height = 25;
-                _nameStatuslLabel[2].Width = 85;
+                _nameStatuslLabel[2].Width = 75;
                 _nameStatuslLabel[2].Content = x.ToString("F6") + " сек";
                 _nameStatuslLabel[2].ToolTip = (int)x + " сек " + (int)((x - (int)x) * 1000) + " мс " +
                 (int)((x * 1000 - (int)(x * 1000)) * 1000) + " мкс " + (int)((x * 1000000 - (int)(x * 1000000)) * 1000) + " нс";
-                _nameStatuslLabel[2].Margin = new Thickness(-80, positonY, 0, 0);
+                _nameStatuslLabel[2].Margin = new Thickness(-225, positonY, 0, 0);
             }
 
-            double positonX = -200;
+            double positonX = -225;
             for (int j = 0; j < MainWindow.GraphPanelList[numOsc].Pane.CurveList.Count; j++)
             {
                 _nameChannelLabel.Add(new Label());
@@ -104,20 +106,21 @@ namespace ScopeViewer
                 _nameChannelLabel[j].VerticalAlignment = VerticalAlignment.Top;
                 _nameChannelLabel[j].FontSize = 12;
                 _nameChannelLabel[j].Height = 25;
-                _nameChannelLabel[j].Width = 180;
+                _nameChannelLabel[j].Width = 225;
                 _nameChannelLabel[j].ToolTip = "Название канала";
                 positonY += 20;
                 _nameChannelLabel[j].Margin = new Thickness(positonX, positonY, 0, 0);
 
-                string str1 = "";
-                string str2 = "";
+                double str1 = 0;
+	            double str2 = 0;
+	            double str3 = 0;
 
                 for (int k = 0; k < MainWindow.GraphPanelList[numOsc].ListTemp[j].Count; k++)
                 {
                     if (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X >
                         MainWindow.GraphPanelList[numOsc].Cursor1.Location.X)
                     {
-                        str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y.ToString("F3");
+                        str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y;
                         break;
                     }
                 }
@@ -126,31 +129,42 @@ namespace ScopeViewer
                     if (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X >
                         MainWindow.GraphPanelList[numOsc].Cursor2.Location.X)
                     {
-                        str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y.ToString("F3");
+                        str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y;
                         break;
                     }
                 }
 
-                positonY += 20;
+	            str3 = Math.Abs(str2 - str1);
+
+				positonY += 20;
 
                 _nameValue1Label.Add(new Label());
-                _nameValue1Label[j].Content = str1;
+                _nameValue1Label[j].Content = str1.ToString("F3");
                 _nameValue1Label[j].VerticalAlignment = VerticalAlignment.Top;
                 _nameValue1Label[j].Foreground = Brushes.Red;
                 _nameValue1Label[j].FontSize = 12;
                 _nameValue1Label[j].Height = 25;
-                _nameValue1Label[j].Width = 85;
-                _nameValue1Label[j].Margin = new Thickness(-280, positonY, 0, 0);
+                _nameValue1Label[j].Width = 75;
+                _nameValue1Label[j].Margin = new Thickness(-375, positonY, 0, 0);
 
                 _nameValue2Label.Add(new Label());
-                _nameValue2Label[j].Content = str2;
+                _nameValue2Label[j].Content = str2.ToString("F3");
                 _nameValue2Label[j].VerticalAlignment = VerticalAlignment.Top;
                 _nameValue2Label[j].Foreground = Brushes.Blue;
                 _nameValue2Label[j].FontSize = 12;
                 _nameValue2Label[j].Height = 25;
-                _nameValue2Label[j].Width = 85;
-                _nameValue2Label[j].Margin = new Thickness(-85, positonY, 0, 0);
-            }
+                _nameValue2Label[j].Width = 75;
+                _nameValue2Label[j].Margin = new Thickness(-225, positonY, 0, 0);
+
+	            _nameValueDeltLabel.Add(new Label());
+	            _nameValueDeltLabel[j].Content = str3.ToString("F3");
+	            _nameValueDeltLabel[j].VerticalAlignment = VerticalAlignment.Top;
+	            _nameValueDeltLabel[j].Foreground = Brushes.Blue;
+	            _nameValueDeltLabel[j].FontSize = 12;
+	            _nameValueDeltLabel[j].Height = 25;
+	            _nameValueDeltLabel[j].Width = 75;
+	            _nameValueDeltLabel[j].Margin = new Thickness(-70, positonY, 0, 0);
+			}
 
             LayoutPanel[0].Children.Add(_nameLabel);
             LayoutPanel[0].Children.Add(_nameStatuslLabel[0]);
@@ -162,9 +176,10 @@ namespace ScopeViewer
                 LayoutPanel[0].Children.Add(_nameChannelLabel[j]);
                 LayoutPanel[0].Children.Add(_nameValue1Label[j]);
                 LayoutPanel[0].Children.Add(_nameValue2Label[j]);
+	            LayoutPanel[0].Children.Add(_nameValueDeltLabel[j]);
             }
 
-            LayoutPanel[0].Children.Add(_panelBorder);
+			LayoutPanel[0].Children.Add(_panelBorder);
 
             UpdateCursor(numOsc, absOrRel);
         }
@@ -182,7 +197,7 @@ namespace ScopeViewer
             LayoutPanel[1].Margin = new Thickness(2, 5, 2, 0);
             LayoutPanel[1].MouseDown += click_LayoutPanelCursorDig;
 
-            _nameLabelDig.Content = "Курсоры цифрового канала";
+            _nameLabelDig.Content = $"Цифровые курсоры: {MainWindow.OscilList[numOsc].OscilNames}";
             _nameLabelDig.VerticalAlignment = VerticalAlignment.Top;
             _nameLabelDig.FontSize = 12;
             _nameLabelDig.Height = 25;
@@ -362,7 +377,16 @@ namespace ScopeViewer
             {
                 LayoutPanel[0].Children.Remove(_nameChannelLabel[j]);
                 LayoutPanel[0].Children.Remove(_nameValue1Label[j]);
-                if(_nameValue2Label.Count != 0) {  LayoutPanel[0].Children.Remove(_nameValue2Label[j]);    }
+
+	            if (_nameValue2Label.Count != 0)
+	            {
+		            LayoutPanel[0].Children.Remove(_nameValue2Label[j]);
+	            }
+
+	            if (_nameValueDeltLabel.Count != 0)
+	            {
+		            LayoutPanel[0].Children.Remove(_nameValueDeltLabel[j]);
+	            }
             }
 
             for (int i = 2; i >= 0; i--)
@@ -380,8 +404,9 @@ namespace ScopeViewer
             _nameChannelLabel.Clear();
             _nameValue1Label.Clear();
             _nameValue2Label.Clear();
+	        _nameValueDeltLabel.Clear();
 
-            LayoutPanel.Clear();
+			LayoutPanel.Clear();
         }
 
         public void AnalysisCursorClearDig()
@@ -400,15 +425,18 @@ namespace ScopeViewer
 
         public void UpdateCursor(int numOsc, bool absOrRel)
         {
-            for (int j = 0; j < MainWindow.GraphPanelList[numOsc].Pane.CurveList.Count; j++)
+			for (int j = 0; j < MainWindow.GraphPanelList[numOsc].Pane.CurveList.Count; j++)
             {
-                for (int k = 0; k < MainWindow.GraphPanelList[numOsc].ListTemp[j].Count; k++)
+	            double str1 = 0;
+	            double str2 = 0;
+
+				for (int k = 0; k < MainWindow.GraphPanelList[numOsc].ListTemp[j].Count; k++)
                 {
                     if (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X >
                         MainWindow.GraphPanelList[numOsc].Cursor1.Location.X)
                     {
-                        var str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y.ToString("F3");
-                        _nameValue1Label[j].Content = str1;
+                        str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y;
+                        _nameValue1Label[j].Content = str1.ToString("F3");
                         break;
                     }
                 }
@@ -417,14 +445,15 @@ namespace ScopeViewer
                     if (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X >
                         MainWindow.GraphPanelList[numOsc].Cursor2.Location.X)
                     {
-                        var str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y.ToString("F3");
-                        _nameValue2Label[j].Content = str2;
+	                    str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y;
+                        _nameValue2Label[j].Content = str2.ToString("F3");
                         break;
                     }
                 }
-            }
+	            _nameValueDeltLabel[j].Content = Math.Abs(str2 - str1).ToString("F3");
+			}
 
-            double x1 = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
+			double x1 = MainWindow.GraphPanelList[numOsc].Cursor1.Location.X;
             double x2 = MainWindow.GraphPanelList[numOsc].Cursor2.Location.X;
 
             if (absOrRel)

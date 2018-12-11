@@ -426,7 +426,7 @@ namespace ScopeViewer
 						}
 					}
 				}
-				ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+				ChangeVisualSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
 			}
 		}
 
@@ -497,7 +497,7 @@ namespace ScopeViewer
 				var brushColorEllipse = new SolidColorBrush(colorColorEllipse);
 				MainWindow.OscilChannelList[l].ColorEllipse[j].Fill = brushColorEllipse;
 				System.Drawing.Color color = System.Drawing.Color.FromArgb(brushColorEllipse.Color.A, brushColorEllipse.Color.R, brushColorEllipse.Color.G, brushColorEllipse.Color.B);
-				ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, color, l);
+				ChangeVisualSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, color, l);
 			}
 		}
 
@@ -518,7 +518,7 @@ namespace ScopeViewer
 				}
 			}
 
-			ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+			ChangeVisualSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
 		}
 
 		private void click_graph(int j)
@@ -528,7 +528,7 @@ namespace ScopeViewer
 				if (MainWindow.OscilChannelList[k] == this)
 				{
 					var l = k;
-					ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+					ChangeVisualSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
 				}
 			}
 		}
@@ -570,16 +570,16 @@ namespace ScopeViewer
 					}
 				}
 			}
-			ChangeSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
+			ChangeVisualSomething(j, TypeComboBox[j].SelectedIndex, StepTypeComboBox[j].SelectedIndex, MainWindow.GraphPanelList[l].Pane.CurveList[j].Color, l);
 		}
 
-		private void ChangeSomething(int num, int line, int typeStep, System.Drawing.Color color, int numGraphPane)
+		private void ChangeVisualSomething(int num, int line, int typeStep, System.Drawing.Color color, int numGraphPane)
 		{
 			bool show = true, smooth = false, width = false;
 			if (VisibleCheckBox[num].IsChecked == false) show = false;
 			if (SmoothCheckBox[num].IsChecked == true) smooth = true;
 			if (WidthCheckBox[num].IsChecked == true) width = true;
-			MainWindow.GraphPanelList[numGraphPane].ChangeLine(num, line, typeStep, width, show, smooth, color, _scale[num], _shift[num]);
+			MainWindow.GraphPanelList[numGraphPane].ChangeVisualLine(num, line, typeStep, width, show, smooth, color, _scale[num], _shift[num]);
 		}
 
 		private void Graph_MouseDown(object sender, MouseEventArgs e)
