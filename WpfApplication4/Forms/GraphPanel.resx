@@ -139,6 +139,21 @@
         RK5CYII=
 </value>
   </data>
+  <metadata name="toolStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
+  <data name="toolStripButtonAutosizing.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFISURBVGhD7ZSxTUVBEMS+RGHUQJkUQGfkkHikC0wye3pc
+        cJacjVaO9nW5XC7n8/7x9fOXTM7GwiOTs7HwyOQ83j6/f/5bUjrs4NOS0mEHn5aUDjv4tKR02MGnJaXD
+        Dj4tKR128GlJmWP/PzKpsfDIZI6FRyY1Fh6ZzLHwyKTGwiOTORYemdRYeGQyx8IjkxoLj0zmWHhkUmPh
+        kckcC49Maiw8Mplj4ZFJjYVHJnMsPDKpsfDIZI6FRyY1Fh6ZzLHwyKTGwiOTORYemdRYeGQyx8IjkxoL
+        j0zmWHhkUmPhkckcC49Maiw8Mplj4ZFJjYVHJnMsfJcWHtcdKR3rod1aeFx3pHSsh3Zr4XHdkdKxHtqt
+        hcd1R0rHemi3Fh7XHSkd66HdWnhcd6R0rId2a+Fx3ZFyHhYemZyNhUcmZ2Phkcnlcrkcy+v1C3vVBJnh
+        9lMGAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>54</value>
   </metadata>

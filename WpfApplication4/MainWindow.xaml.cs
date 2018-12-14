@@ -798,7 +798,7 @@ namespace ScopeViewer
 				GraphObj.GraphStackPanel.Children.Add(oscilGraph.LayoutPanel[i]);
 			}
 
-			GraphPanelList.Add(new GraphPanel());
+			GraphPanelList.Add(new GraphPanel(Setting.CoursorBinding));
 
 			SetSetting();
 

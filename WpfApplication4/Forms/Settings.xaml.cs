@@ -386,9 +386,9 @@ namespace ScopeViewer
 	    {
 		    CoursorsCheckBox.IsChecked = Setting.CoursorBinding;
 
-			foreach (GraphPanel t in MainWindow.GraphPanelList)
+			foreach (GraphPanel graphPanel in MainWindow.GraphPanelList)
 			{
-				t.SetCursorBinding(Setting.CoursorBinding);
+				graphPanel.SetCursorBinding(Setting.CoursorBinding);
 		    }
 		}
 

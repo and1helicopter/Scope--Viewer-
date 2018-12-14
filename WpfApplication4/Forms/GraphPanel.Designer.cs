@@ -29,7 +29,6 @@ namespace ScopeViewer
         {
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphPanel));
-			this.zedGraph = new ZedGraph.ZedGraphControl();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.AddCursor = new System.Windows.Forms.ToolStripButton();
 			this.AddCursorH = new System.Windows.Forms.ToolStripButton();
@@ -66,37 +65,18 @@ namespace ScopeViewer
 			this.tool_EnterLeft_label = new System.Windows.Forms.ToolStripTextBox();
 			this.tool_CursorsLeft_label = new System.Windows.Forms.ToolStripLabel();
 			this.tool_Cursors_label = new System.Windows.Forms.ToolStripLabel();
+			this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+			this.toolStripButtonAutosizing = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator_Bottom1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripLabel_Top = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripTextBox_Top = new System.Windows.Forms.ToolStripTextBox();
+			this.toolStripLabel_Bottom = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripTextBox_Bottom = new System.Windows.Forms.ToolStripTextBox();
+			this.toolStripSeparator_Bottom2 = new System.Windows.Forms.ToolStripSeparator();
+			this.zedGraph = new ZedGraph.ZedGraphControl();
 			this.toolStrip1.SuspendLayout();
+			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// zedGraph
-			// 
-			this.zedGraph.AutoSize = true;
-			this.zedGraph.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.zedGraph.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.zedGraph.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.zedGraph.IsAntiAlias = true;
-			this.zedGraph.IsShowPointValues = true;
-			this.zedGraph.IsSynchronizeXAxes = true;
-			this.zedGraph.IsSynchronizeYAxes = true;
-			this.zedGraph.Location = new System.Drawing.Point(0, 33);
-			this.zedGraph.Margin = new System.Windows.Forms.Padding(0);
-			this.zedGraph.Name = "zedGraph";
-			this.zedGraph.ScrollGrace = 0D;
-			this.zedGraph.ScrollMaxX = 0D;
-			this.zedGraph.ScrollMaxY = 0D;
-			this.zedGraph.ScrollMaxY2 = 0D;
-			this.zedGraph.ScrollMinX = 0D;
-			this.zedGraph.ScrollMinY = 0D;
-			this.zedGraph.ScrollMinY2 = 0D;
-			this.zedGraph.Size = new System.Drawing.Size(1165, 438);
-			this.zedGraph.TabIndex = 0;
-			this.zedGraph.UseExtendedPrintDialog = true;
-			this.zedGraph.SizeChanged += new System.EventHandler(this.zedGraph_SizeChanged);
-			this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
-			this.zedGraph.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseMove);
-			this.zedGraph.Resize += new System.EventHandler(this.zedGraph_Resize_1);
 			// 
 			// toolStrip1
 			// 
@@ -470,6 +450,114 @@ namespace ScopeViewer
 			this.tool_Cursors_label.Text = "Положение курсоров: ";
 			this.tool_Cursors_label.Visible = false;
 			// 
+			// toolStrip2
+			// 
+			this.toolStrip2.AutoSize = false;
+			this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.toolStrip2.GripMargin = new System.Windows.Forms.Padding(0);
+			this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolStrip2.ImageScalingSize = new System.Drawing.Size(30, 30);
+			this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonAutosizing,
+            this.toolStripSeparator_Bottom1,
+            this.toolStripLabel_Top,
+            this.toolStripTextBox_Top,
+            this.toolStripLabel_Bottom,
+            this.toolStripTextBox_Bottom,
+            this.toolStripSeparator_Bottom2});
+			this.toolStrip2.Location = new System.Drawing.Point(0, 439);
+			this.toolStrip2.Name = "toolStrip2";
+			this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
+			this.toolStrip2.Size = new System.Drawing.Size(1165, 32);
+			this.toolStrip2.TabIndex = 2;
+			this.toolStrip2.Text = "toolStrip2";
+			// 
+			// toolStripButtonAutosizing
+			// 
+			this.toolStripButtonAutosizing.AutoSize = false;
+			this.toolStripButtonAutosizing.Checked = true;
+			this.toolStripButtonAutosizing.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.toolStripButtonAutosizing.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonAutosizing.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAutosizing.Image")));
+			this.toolStripButtonAutosizing.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonAutosizing.Margin = new System.Windows.Forms.Padding(2, 0, 0, 0);
+			this.toolStripButtonAutosizing.Name = "toolStripButtonAutosizing";
+			this.toolStripButtonAutosizing.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.toolStripButtonAutosizing.Size = new System.Drawing.Size(30, 30);
+			this.toolStripButtonAutosizing.Text = "Автомаштабирование";
+			this.toolStripButtonAutosizing.Click += new System.EventHandler(this.toolStripButtonAutosizing_Click);
+			// 
+			// toolStripSeparator_Bottom1
+			// 
+			this.toolStripSeparator_Bottom1.Name = "toolStripSeparator_Bottom1";
+			this.toolStripSeparator_Bottom1.Size = new System.Drawing.Size(6, 32);
+			this.toolStripSeparator_Bottom1.Visible = false;
+			// 
+			// toolStripLabel_Top
+			// 
+			this.toolStripLabel_Top.Name = "toolStripLabel_Top";
+			this.toolStripLabel_Top.Size = new System.Drawing.Size(42, 29);
+			this.toolStripLabel_Top.Text = "Y max:";
+			this.toolStripLabel_Top.Visible = false;
+			// 
+			// toolStripTextBox_Top
+			// 
+			this.toolStripTextBox_Top.Name = "toolStripTextBox_Top";
+			this.toolStripTextBox_Top.Size = new System.Drawing.Size(80, 32);
+			this.toolStripTextBox_Top.Visible = false;
+			this.toolStripTextBox_Top.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox_Top_KeyPress);
+			this.toolStripTextBox_Top.TextChanged += new System.EventHandler(this.toolStripTextBox_Top_TextChanged);
+			// 
+			// toolStripLabel_Bottom
+			// 
+			this.toolStripLabel_Bottom.Name = "toolStripLabel_Bottom";
+			this.toolStripLabel_Bottom.Size = new System.Drawing.Size(41, 29);
+			this.toolStripLabel_Bottom.Text = "Y min:";
+			this.toolStripLabel_Bottom.Visible = false;
+			// 
+			// toolStripTextBox_Bottom
+			// 
+			this.toolStripTextBox_Bottom.Name = "toolStripTextBox_Bottom";
+			this.toolStripTextBox_Bottom.Size = new System.Drawing.Size(80, 32);
+			this.toolStripTextBox_Bottom.Visible = false;
+			this.toolStripTextBox_Bottom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox_Bottom_KeyPress);
+			this.toolStripTextBox_Bottom.TextChanged += new System.EventHandler(this.toolStripTextBox_Bottom_TextChanged);
+			// 
+			// toolStripSeparator_Bottom2
+			// 
+			this.toolStripSeparator_Bottom2.Name = "toolStripSeparator_Bottom2";
+			this.toolStripSeparator_Bottom2.Size = new System.Drawing.Size(6, 32);
+			this.toolStripSeparator_Bottom2.Visible = false;
+			// 
+			// zedGraph
+			// 
+			this.zedGraph.AutoSize = true;
+			this.zedGraph.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.zedGraph.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.zedGraph.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.zedGraph.IsAntiAlias = true;
+			this.zedGraph.IsShowPointValues = true;
+			this.zedGraph.IsSynchronizeXAxes = true;
+			this.zedGraph.IsSynchronizeYAxes = true;
+			this.zedGraph.Location = new System.Drawing.Point(0, 33);
+			this.zedGraph.Margin = new System.Windows.Forms.Padding(0);
+			this.zedGraph.Name = "zedGraph";
+			this.zedGraph.ScrollGrace = 0D;
+			this.zedGraph.ScrollMaxX = 0D;
+			this.zedGraph.ScrollMaxY = 0D;
+			this.zedGraph.ScrollMaxY2 = 0D;
+			this.zedGraph.ScrollMinX = 0D;
+			this.zedGraph.ScrollMinY = 0D;
+			this.zedGraph.ScrollMinY2 = 0D;
+			this.zedGraph.Size = new System.Drawing.Size(1165, 406);
+			this.zedGraph.TabIndex = 0;
+			this.zedGraph.UseExtendedPrintDialog = true;
+			this.zedGraph.SizeChanged += new System.EventHandler(this.zedGraph_SizeChanged);
+			this.zedGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseClick);
+			this.zedGraph.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraph_MouseMove);
+			this.zedGraph.Resize += new System.EventHandler(this.zedGraph_Resize_1);
+			// 
 			// GraphPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -477,19 +565,20 @@ namespace ScopeViewer
 			this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
 			this.Controls.Add(this.zedGraph);
 			this.Controls.Add(this.toolStrip1);
+			this.Controls.Add(this.toolStrip2);
 			this.DoubleBuffered = true;
 			this.Name = "GraphPanel";
 			this.Size = new System.Drawing.Size(1165, 471);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
+			this.toolStrip2.ResumeLayout(false);
+			this.toolStrip2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
         }
 
         #endregion
-
-        public ZedGraph.ZedGraphControl zedGraph;
         private ToolStrip toolStrip1;
         private ToolStripButton AddCursor;
         private ToolStripButton StampTrigger;
@@ -526,6 +615,15 @@ namespace ScopeViewer
 		private ToolStripLabel tool_CursorsHorizontalDif;
 		private ToolStripSeparator tool_separator4;
 		private ToolStripSeparator tool_separator3;
+		private ToolStrip toolStrip2;
+		private ToolStripButton toolStripButtonAutosizing;
+		public ZedGraph.ZedGraphControl zedGraph;
+		private ToolStripSeparator toolStripSeparator_Bottom1;
+		private ToolStripLabel toolStripLabel_Top;
+		private ToolStripTextBox toolStripTextBox_Top;
+		private ToolStripLabel toolStripLabel_Bottom;
+		private ToolStripTextBox toolStripTextBox_Bottom;
+		private ToolStripSeparator toolStripSeparator_Bottom2;
 	}
 }
 

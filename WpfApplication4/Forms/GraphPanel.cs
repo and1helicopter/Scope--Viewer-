@@ -22,22 +22,94 @@ namespace ScopeViewer
 		double _minYAxisAuto;
 		bool _scaleY;
 		bool _absOrRel = true;
-		private bool _bind = false;
+		private bool _bind;
 		private bool _init;
+		private bool _autoScaling = true;
 
-		public GraphPanel()
+		public GraphPanel(bool bind)
 		{
 			ListTemp = new List<PointPairList>();
 			InitializeComponent();
+			_bind = bind;
 
 			DoubleBuffered = true;
 
 			zedGraph.ZoomEvent += zedGraph_ZoomEvent;
 			zedGraph.ScrollEvent += zedGraph_ScrollEvent;
 			zedGraph.PointValueEvent += ZedGraph_PointValueEvent;
+			zedGraph.ContextMenuBuilder += zedGraph_ContextMenuBuilder;
 
 			InitDrawGraph();
 		}
+
+		private void zedGraph_ContextMenuBuilder(ZedGraphControl sender,
+			ContextMenuStrip menuStrip,
+			Point mousePt,
+			ZedGraphControl.ContextMenuObjectState objState)
+		{
+			menuStrip.Items.RemoveAt(5);
+			menuStrip.Items.RemoveAt(5);
+			menuStrip.Items.RemoveAt(5);
+
+			ToolStripItem scaleAllMenuItem = new ToolStripMenuItem("Отменить всё масштабирование");
+			scaleAllMenuItem.Click += MenuItemScaleAllOnClick;
+			menuStrip.Items.Add(scaleAllMenuItem);
+
+			//ToolStripItem scaleHorizontalMenuItem = new ToolStripMenuItem("Отменить масштабирование по горизонтали");
+			//scaleHorizontalMenuItem.Click += MenuItemScaleHorizontalOnClick;
+			//menuStrip.Items.Add(scaleHorizontalMenuItem);
+
+			//ToolStripItem scaleVerticalMenuItem = new ToolStripMenuItem("Отменить масштабирование по вертикали");
+			//scaleVerticalMenuItem.Click += MenuItemScaleVerticalOnClick;
+			//menuStrip.Items.Add(scaleVerticalMenuItem);
+		}
+
+		private void MenuItemScaleAllOnClick(object sender, EventArgs eventArgs)
+		{
+			Pane.XAxis.Scale.Min = _minXAxis;
+			Pane.XAxis.Scale.Max = _maxXAxis;
+			Pane.YAxis.Scale.Max = _maxYAxis;
+			Pane.YAxis.Scale.Min = _minYAxis;
+
+			UpdateCursor();
+			UpdateGraph();
+			zedGraph.AxisChange();
+			zedGraph.Invalidate();
+		}
+
+		//private void MenuItemScaleHorizontalOnClick(object sender, EventArgs eventArgs)
+		//{
+		//	Pane.XAxis.Scale.Min = _minXAxis;
+		//	Pane.XAxis.Scale.Max = _maxXAxis;
+
+		//	//UpdateCursor();
+		//	//UpdateGraph();
+
+		//	zedGraph.ScrollMaxY = _maxYAxis;
+		//	zedGraph.ScrollMinY = _minYAxis;
+		//	ScrollUpdate();
+
+		//	//zedGraph.Invalidate();
+		//	//zedGraph.AxisChange();
+
+		//}
+
+		//private void MenuItemScaleVerticalOnClick(object sender, EventArgs eventArgs)
+		//{
+
+		//	Pane.YAxis.Scale.Max = _maxYAxis;
+		//	Pane.YAxis.Scale.Min = _minYAxis;
+
+		//	//UpdateCursor();
+		//	//UpdateGraph();
+
+		//	zedGraph.ScrollMaxX = _maxXAxis;
+		//	zedGraph.ScrollMinX = _minXAxis;
+
+		//	ScrollUpdate();
+		//	//zedGraph.Invalidate();
+		//	//zedGraph.AxisChange();
+		//}
 
 		internal void SetCursorBinding(bool bind)
 		{
@@ -143,9 +215,11 @@ namespace ScopeViewer
 			_lastMinX = Pane.XAxis.Scale.Min;
 			_lastMaxX = Pane.XAxis.Scale.Max;
 
-			Refresh();
+			//Refresh();
 			UpdateCursor();
 			UpdateGraph();
+
+			//zedGraph.AxisChange();
 		}
 
 		private void ChangeScale()
@@ -187,7 +261,7 @@ namespace ScopeViewer
 			if (ListTemp.Count == 0) return;
 			try
 			{
-				//Очишаю точки кривых в кэше
+				//Очищаю точки кривых в кэше
 				foreach (var i in Pane.CurveList)
 				{
 					for (int j = i.NPts - 1; j >= 0; j--) i.RemovePoint(j);
@@ -706,11 +780,15 @@ namespace ScopeViewer
 			if (_maxYAxis < zedGraph.GraphPane.YAxis.Scale.Max)
 			{
 				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
+
+				toolStripTextBox_Top.Text = _maxYAxis.ToString("F");
 			}
 
 			if (_minYAxis > zedGraph.GraphPane.YAxis.Scale.Min)
 			{
 				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
+
+				toolStripTextBox_Bottom.Text = _minYAxis.ToString("F");
 			}
 
 			// ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -718,6 +796,8 @@ namespace ScopeViewer
 			{
 				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
 							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+
+				toolStripTextBox_Top.Text = _maxYAxis.ToString("F");
 			}
 
 			// ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -725,6 +805,8 @@ namespace ScopeViewer
 			{
 				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
 							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+
+				toolStripTextBox_Bottom.Text = _minYAxis.ToString("F");
 			}
 
 			// Обновим график
@@ -827,9 +909,20 @@ namespace ScopeViewer
 			Pane.CurveList[numChannel].Label.IsVisible = show;
 			_myCurve[numChannel].Line.IsSmooth = smooth;
 			_myCurve[numChannel].Line.SmoothTension = 0.5F;
-
 			_myCurve[numChannel].Line.Width = width ? 3 : 1;
 
+			//Курсоры
+			if (_cursorsCreate && Cursor1 != null && Cursor2 != null)
+			{
+				_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
+				if (PaneDig != null)
+				{
+					_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
+				}
+			}
+
+
+			
 			if (typeLine == 0) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
 			if (typeLine == 1) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
 			if (typeLine == 2) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.DashDot;
@@ -851,31 +944,67 @@ namespace ScopeViewer
 			//Обновляем график
 			UpdateGraph();
 
-			//Устанавливаем новую верхнюю и нижнюю границу для оси OY 
-			Pane.YAxis.Scale.MinAuto = true;
-			Pane.YAxis.Scale.MaxAuto = true;
+			if (Pane.CurveList.Count(x=>x.IsVisible) == 0)
+			{
+				UpdateCursor();
+				UpdateGraph();
+				zedGraph.AxisChange();
+				zedGraph.Invalidate();
+				return;
+			}
 
+			if (_autoScaling)
+			{
+				//Устанавливаем новую верхнюю и нижнюю границу для оси OY 
+
+				//Pane.XAxis.Scale.Min = _minXAxis;
+				//Pane.XAxis.Scale.Max = _maxXAxis;
+				Pane.YAxis.Scale.MinAuto = true;
+				Pane.YAxis.Scale.MaxAuto = true;
+
+				Pane.IsBoundedRanges = false;
+
+				zedGraph.AxisChange();
+				zedGraph.Invalidate();
+
+				UpdateCursor();
+				UpdateGraph();
+
+				//zedGraph.
+				//zedGraph.Refresh();
+
+
+			}
+
+			//if (_maxYAxis > Pane.YAxis.Scale.Max) Pane.YAxis.Scale.Max = _maxYAxis;
+			_maxYAxis = Pane.YAxis.Scale.Max;
+
+			////if (_minYAxis < Pane.YAxis.Scale.Min) Pane.YAxis.Scale.Min = _minYAxis;
+			_minYAxis = Pane.YAxis.Scale.Min;
+
+			if (Math.Abs(Pane.YAxis.Scale.Max) < 0.01)
+			{
+				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
+							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+			}
+
+			if (Math.Abs(Pane.YAxis.Scale.Min) < 0.01)
+			{
+				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
+							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+			}
+
+			Pane.YAxis.Scale.Max = _maxYAxis;
+			Pane.YAxis.Scale.Min = _minYAxis;
+
+
+
+			UpdateCursor();
+			UpdateGraph();
 			zedGraph.AxisChange();
 			zedGraph.Invalidate();
 
-			_maxYAxis = Pane.YAxis.Scale.Max;
-			_minYAxis = Pane.YAxis.Scale.Min;
-
-			// ReSharper disable once CompareOfFloatsByEqualityOperator
-			if (Pane.YAxis.Scale.Max == 0)
-			{
-				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
-				            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
-			}
-
-			// ReSharper disable once CompareOfFloatsByEqualityOperator
-			if (Pane.YAxis.Scale.Min == 0)
-			{
-				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
-				            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
-			}
-
-			ScrollUpdate();
+			//ScrollUpdate();
 		}
 
 		public void LegendShow(bool show, int fontSize, int h, int v)
@@ -1190,6 +1319,10 @@ namespace ScopeViewer
 					Pane.GraphObjList.Remove(Pane.GraphObjList[i]);
 				}
 			}
+
+			Cursor1 = null;
+			Cursor2 = null;
+
 			if (PaneDig != null)
 			{
 				for (int i = PaneDig.GraphObjList.Count - 1; i >= 0; i--)
@@ -1197,6 +1330,10 @@ namespace ScopeViewer
 					if (PaneDig.GraphObjList[i].Link.Title == "CursorDig1" || PaneDig.GraphObjList[i].Link.Title == "CursorDig2") { PaneDig.GraphObjList.Remove(PaneDig.GraphObjList[i]); }
 				}
 			}
+
+			CursorDig1 = null;
+			CursorDig2 = null;
+
 			_cursorsCreate = false;
 
 			zedGraph.AxisChange();
@@ -1541,21 +1678,31 @@ namespace ScopeViewer
 					PaneDig.FindNearestObject(new PointF(e.X, e.Y), CreateGraphics(), out nearestObject, out _);
 				}
 
-				if (Math.Abs(Cursor1.Line.Width - 3) < 0.01)
+				if (Cursor1 != null && Cursor2 != null)
 				{
-					Cursor1.Line.Width = 2;
-					if (PaneDig != null)
-					{
-						CursorDig1.Line.Width = 2;
-					}
-				}
 
-				if (Math.Abs(Cursor2.Line.Width - 3) < 0.01)
-				{
-					Cursor2.Line.Width = 2;
+					if (Math.Abs(Cursor1.Line.Width - 3) < 0.01)
+					{
+						Cursor1.Line.Width = 2;
+						if (PaneDig != null)
+						{
+							CursorDig1.Line.Width = 2;
+						}
+					}
+
+					if (Math.Abs(Cursor2.Line.Width - 3) < 0.01)
+					{
+						Cursor2.Line.Width = 2;
+						if (PaneDig != null)
+						{
+							CursorDig2.Line.Width = 2;
+						}
+					}
+
+					_oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel);
 					if (PaneDig != null)
 					{
-						CursorDig2.Line.Width = 2;
+						_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
 					}
 				}
 			}
@@ -2006,7 +2153,6 @@ namespace ScopeViewer
 			}
 			else
 			{
-
 				DelCutBox();
 			}
 
@@ -2551,6 +2697,127 @@ namespace ScopeViewer
 			PositionCursors(Cursor2, tool_EnterRight_label.Text);
 		}
 
+		private void toolStripButtonAutosizing_Click(object sender, EventArgs e)
+		{
+			toolStripButtonAutosizing.Checked = !toolStripButtonAutosizing.Checked;
+			_autoScaling = toolStripButtonAutosizing.Checked;
+
+			toolStripLabel_Top.Visible = !_autoScaling;
+			toolStripLabel_Bottom.Visible = !_autoScaling;
+			toolStripSeparator_Bottom1.Visible = !_autoScaling;
+			toolStripSeparator_Bottom2.Visible = !_autoScaling;
+			toolStripTextBox_Top.Visible = !_autoScaling;
+			toolStripTextBox_Bottom.Visible = !_autoScaling;
+
+			if (_autoScaling)
+			{
+				//Устанавливаем новую верхнюю и нижнюю границу для оси OY 
+				Pane.YAxis.Scale.MinAuto = true;
+				Pane.YAxis.Scale.MaxAuto = true;
+
+				zedGraph.AxisChange();
+				zedGraph.Invalidate();
+
+				_maxYAxis = Pane.YAxis.Scale.Max;
+				_minYAxis = Pane.YAxis.Scale.Min;
+
+				// ReSharper disable once CompareOfFloatsByEqualityOperator
+				if (Pane.YAxis.Scale.Max == 0)
+				{
+					_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
+					            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+				}
+
+				// ReSharper disable once CompareOfFloatsByEqualityOperator
+				if (Pane.YAxis.Scale.Min == 0)
+				{
+					_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
+					            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+				}
+
+				Pane.YAxis.Scale.Max = _maxYAxis;
+				Pane.YAxis.Scale.Min = _minYAxis;
+			}
+			else
+			{
+				toolStripTextBox_Top.Text = _maxYAxis.ToString("F");
+				toolStripTextBox_Bottom.Text = _minYAxis.ToString("F");
+			}
+
+			UpdateCursor();
+			UpdateGraph();
+			zedGraph.AxisChange();
+			zedGraph.Invalidate();
+		}
+
+		private void toolStripTextBox_Top_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-'))
+			{
+				e.Handled = true;
+			}
+		}
+
+		private void toolStripTextBox_Top_TextChanged(object sender, EventArgs e)
+		{
+			var position = toolStripTextBox_Top.Text;
+			Regex regex = new Regex(@"^[-+]?([0-9]+)\,?([0-9]+)?$");
+			var result = regex.IsMatch(position);
+			if (result)
+			{
+				var val = Convert.ToDouble(position);
+				if (val > _minYAxis)
+				{
+					zedGraph.AxisChange();
+					zedGraph.Invalidate();
+
+					Pane.YAxis.Scale.Max = val;
+
+					_maxYAxis = val;
+
+					UpdateCursor();
+					UpdateGraph();
+					zedGraph.AxisChange();
+					zedGraph.Invalidate();
+				} 
+			}
+		}
+
+
+
+		private void toolStripTextBox_Bottom_TextChanged(object sender, EventArgs e)
+		{
+			var position = toolStripTextBox_Bottom.Text;
+			Regex regex = new Regex(@"^[-+]?([0-9]+)\,?([0-9]+)?$");
+			var result = regex.IsMatch(position);
+			if (result)
+			{
+				var val = Convert.ToDouble(position);
+				if (val < _maxYAxis)
+				{
+					zedGraph.AxisChange();
+					zedGraph.Invalidate();
+
+					Pane.YAxis.Scale.Min = val;
+
+					_minYAxis = val;
+
+					UpdateCursor();
+					UpdateGraph();
+					zedGraph.AxisChange();
+					zedGraph.Invalidate();
+				}
+			}
+		}
+
+		private void toolStripTextBox_Bottom_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-'))
+			{
+				e.Handled = true;
+			}
+		}
+
 		private void tool_Horizont1Enter_TextChanged(object sender, EventArgs e)
 		{
 			var position = tool_Horizont1Enter.Text;
@@ -2641,8 +2908,6 @@ namespace ScopeViewer
 				}
 			}
 		}
-
-
 
 		private string Line11(Oscil oscil)
 		{
