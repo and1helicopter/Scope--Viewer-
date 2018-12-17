@@ -71,10 +71,11 @@ namespace ScopeViewer
 			Pane.YAxis.Scale.Max = _maxYAxis;
 			Pane.YAxis.Scale.Min = _minYAxis;
 
-			UpdateCursor();
-			UpdateGraph();
 			zedGraph.AxisChange();
 			zedGraph.Invalidate();
+			UpdateCursor();
+			UpdateGraph();
+
 		}
 
 		//private void MenuItemScaleHorizontalOnClick(object sender, EventArgs eventArgs)
@@ -246,6 +247,7 @@ namespace ScopeViewer
 			zedGraph.AxisChange();
 			zedGraph.Invalidate();
 		}
+
 
 		public void ChangeDigitalList(int i, int j, int status)
 		{
@@ -920,8 +922,6 @@ namespace ScopeViewer
 					_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel);
 				}
 			}
-
-
 			
 			if (typeLine == 0) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Solid;
 			if (typeLine == 1) _myCurve[numChannel].Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -946,22 +946,22 @@ namespace ScopeViewer
 
 			if (Pane.CurveList.Count(x=>x.IsVisible) == 0)
 			{
-				UpdateCursor();
-				UpdateGraph();
+				Pane.YAxis.Scale.MinAuto = true;
+				Pane.YAxis.Scale.MaxAuto = true;
+				Pane.IsBoundedRanges = false;
 				zedGraph.AxisChange();
 				zedGraph.Invalidate();
+				UpdateCursor();
+				UpdateGraph();
 				return;
 			}
 
 			if (_autoScaling)
 			{
 				//Устанавливаем новую верхнюю и нижнюю границу для оси OY 
-
-				//Pane.XAxis.Scale.Min = _minXAxis;
-				//Pane.XAxis.Scale.Max = _maxXAxis;
 				Pane.YAxis.Scale.MinAuto = true;
 				Pane.YAxis.Scale.MaxAuto = true;
-
+				
 				Pane.IsBoundedRanges = false;
 
 				zedGraph.AxisChange();
@@ -970,42 +970,69 @@ namespace ScopeViewer
 				UpdateCursor();
 				UpdateGraph();
 
-				//zedGraph.
-				//zedGraph.Refresh();
+
+				var xMinRange = zedGraph.GraphPane.XAxis.Scale.Min;
+				var xMaxRange = zedGraph.GraphPane.XAxis.Scale.Max;
+				var yMinRange = zedGraph.GraphPane.YAxis.Scale.Min;
+				var yMaxRange = zedGraph.GraphPane.YAxis.Scale.Max;
+
+				zedGraph.GraphPane.XAxis.Scale.Min = _minXAxis;
+				zedGraph.GraphPane.XAxis.Scale.Max = _maxXAxis;
+				zedGraph.GraphPane.YAxis.Scale.Min = _minYAxis;
+				zedGraph.GraphPane.YAxis.Scale.Max = _maxYAxis;
+
+				_myCurve[numChannel].GetRange(out double xMin, out double xMax, out double yMin, out double yMax, true, true, Pane);
+
+				zedGraph.AxisChange();
+				zedGraph.Invalidate();
+
+				UpdateCursor();
+				UpdateGraph();
+
+				Pane.YAxis.Scale.MinAuto = true;
+				Pane.YAxis.Scale.MaxAuto = true;
+
+				Pane.IsBoundedRanges = false;
+
+				zedGraph.AxisChange();
+				zedGraph.Invalidate();
+
+				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max;
+				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min;
+
+				if (Math.Abs(Pane.YAxis.Scale.Max) < 0.01)
+				{
+					_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
+					            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+				}
+
+				if (Math.Abs(Pane.YAxis.Scale.Min) < 0.01)
+				{
+					_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
+					            (zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
+				}
+
+				Pane.YAxis.Scale.Max = _maxYAxis;
+				Pane.YAxis.Scale.Min = _minYAxis;
 
 
+				zedGraph.GraphPane.XAxis.Scale.Min = xMinRange;
+				zedGraph.GraphPane.XAxis.Scale.Max = xMaxRange;
+				zedGraph.GraphPane.YAxis.Scale.Min = yMinRange;
+				zedGraph.GraphPane.YAxis.Scale.Max = yMaxRange;
 			}
-
-			//if (_maxYAxis > Pane.YAxis.Scale.Max) Pane.YAxis.Scale.Max = _maxYAxis;
-			_maxYAxis = Pane.YAxis.Scale.Max;
-
-			////if (_minYAxis < Pane.YAxis.Scale.Min) Pane.YAxis.Scale.Min = _minYAxis;
-			_minYAxis = Pane.YAxis.Scale.Min;
-
-			if (Math.Abs(Pane.YAxis.Scale.Max) < 0.01)
-			{
-				_maxYAxis = zedGraph.GraphPane.YAxis.Scale.Max +
-							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
-			}
-
-			if (Math.Abs(Pane.YAxis.Scale.Min) < 0.01)
-			{
-				_minYAxis = zedGraph.GraphPane.YAxis.Scale.Min -
-							(zedGraph.GraphPane.YAxis.Scale.Max - zedGraph.GraphPane.YAxis.Scale.Min) / 10;
-			}
-
-			Pane.YAxis.Scale.Max = _maxYAxis;
-			Pane.YAxis.Scale.Min = _minYAxis;
-
 
 
 			UpdateCursor();
 			UpdateGraph();
 			zedGraph.AxisChange();
 			zedGraph.Invalidate();
-
-			//ScrollUpdate();
+			zedGraph_ScrollEvent(null, null);
+			zedGraph.AxisChange();
+			zedGraph_ScrollEvent(null, null);
+			zedGraph.Invalidate();
 		}
+
 
 		public void LegendShow(bool show, int fontSize, int h, int v)
 		{
@@ -1586,12 +1613,14 @@ namespace ScopeViewer
 					}
 
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 					Cursor = Cursors.VSplit;
 					if (PaneDig != null)
 					{
 						CursorDig1.Location.X1 = graphX;
 						UpdateCursor();
+						zedGraph.AxisChange();
 						zedGraph.Invalidate();
 					}
 				}
@@ -1607,12 +1636,14 @@ namespace ScopeViewer
 					}
 					
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 					Cursor = Cursors.VSplit;
 					if (PaneDig != null)
 					{
 						CursorDig2.Location.X1 = graphX;
 						UpdateCursor();
+						zedGraph.AxisChange();
 						zedGraph.Invalidate();
 					}
 				}
@@ -1631,6 +1662,7 @@ namespace ScopeViewer
 							_rightLineCut.Location.X1 = graphX;
 						}
 						UpdateCursor();
+						zedGraph.AxisChange();
 						zedGraph.Invalidate();
 						Cursor = Cursors.VSplit;
 					}
@@ -1639,6 +1671,7 @@ namespace ScopeViewer
 					{
 						_leftLineCut.Location.X1 = graphX;
 						UpdateCursor();
+						zedGraph.AxisChange();
 						zedGraph.Invalidate();
 						Cursor = Cursors.VSplit;
 					}
@@ -1649,6 +1682,7 @@ namespace ScopeViewer
 				{
 					CursorHorizontal1.Location.Y1 = graphY;
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 					Cursor = Cursors.HSplit;
 				}
@@ -1658,6 +1692,7 @@ namespace ScopeViewer
 				{
 					CursorHorizontal2.Location.Y1 = graphY;
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 					Cursor = Cursors.HSplit;
 				}
@@ -1806,6 +1841,7 @@ namespace ScopeViewer
 				}
 			}
 
+			zedGraph.AxisChange();
 			zedGraph.Invalidate();
 		}
 
@@ -2829,6 +2865,7 @@ namespace ScopeViewer
 				{
 					CursorHorizontal1.Location.Y = Convert.ToDouble(position);
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 				}
 			}
@@ -2845,6 +2882,7 @@ namespace ScopeViewer
 				{
 					CursorHorizontal2.Location.Y = Convert.ToDouble(position);
 					UpdateCursor();
+					zedGraph.AxisChange();
 					zedGraph.Invalidate();
 				}
 			}
@@ -2883,6 +2921,7 @@ namespace ScopeViewer
 		
 							cursObj.Location.X = Convert.ToDouble(sec);
 							UpdateCursor();
+							zedGraph.AxisChange();
 							zedGraph.Invalidate();
 						}
 					}
@@ -2892,6 +2931,7 @@ namespace ScopeViewer
 						{
 							cursObj.Location.X = Convert.ToDouble(position);
 							UpdateCursor();
+							zedGraph.AxisChange();
 							zedGraph.Invalidate();
 						}
 					}
