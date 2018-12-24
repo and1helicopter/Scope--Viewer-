@@ -472,14 +472,15 @@ namespace ScopeViewer
 						MainWindow.GraphPanelList[numOsc].Cursor1.Location.X)
 					{
 						var index = k != 0 ? k - 1 : 0;
-						if(bind)str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
-						else str1 = (MainWindow.GraphPanelList[numOsc].Cursor1.Location.X -
-						             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) /
-						            (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X -
-						             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) *
-						            (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y -
-						             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y) +
-						            MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
+					    str1 = MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
+                        //if (bind)
+						//else str1 = (MainWindow.GraphPanelList[numOsc].Cursor1.Location.X -
+						//             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) /
+						//            (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X -
+						//             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) *
+						//            (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y -
+						//             MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y) +
+						//            MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
 						_nameValue1Label[j].Content = str1.ToString("F3");
 						break;
 					}
@@ -490,15 +491,15 @@ namespace ScopeViewer
 						MainWindow.GraphPanelList[numOsc].Cursor2.Location.X)
 					{
 						var index = k != 0 ? k - 1 : 0;
-						if (bind) str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
-						else
-							str2 = (MainWindow.GraphPanelList[numOsc].Cursor2.Location.X -
-							        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) /
-							       (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X -
-							        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) *
-							       (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y -
-							        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y) +
-							        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
+					    str2 = MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
+      //                  if (bind) 
+						//else str2 = (MainWindow.GraphPanelList[numOsc].Cursor2.Location.X -
+						//	        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) /
+						//	       (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].X -
+						//	        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].X) *
+						//	       (MainWindow.GraphPanelList[numOsc].ListTemp[j][k].Y -
+						//	        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y) +
+						//	        MainWindow.GraphPanelList[numOsc].ListTemp[j][index].Y;
 						_nameValue2Label[j].Content = str2.ToString("F3");
 						break;
 					}
@@ -563,24 +564,17 @@ namespace ScopeViewer
 						if (j == 2)
 						{
 							var index = k != 0 ? k - 1 : 0;
-							var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString(CultureInfo.InvariantCulture);
-							if (bind)
-							{
-								str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y.ToString(CultureInfo.InvariantCulture);
-							}
+							var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y.ToString(CultureInfo.InvariantCulture);
 							_nameValue1LabelDig[j - 2].Content = str1;
 						}
 						else
 						{
-							var index = k != 0 && k != 1 ? k - 2 : 0;
-
-							var str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index+1].Y + 0.2) % 1) < 0.01 ? "1" : "0";
-							//var str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y + 0.2) % 1) < 0.01 ? "1" : "0";
-							if (bind)
+							var index = k != 0 ? k - 1 : 0;
+							var str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y + 0.2) % 1) < 0.01 ? "1" : "0";
+    						if (bind)
 							{
 								str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y + 0.2) % 1) < 0.01 ? "1" : "0";
-								//str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y + 0.2) % 1) < 0.01 ? "1" : "0";
-							}
+    						}
 							_nameValue1LabelDig[j - 2].Content = str;
 						}
 						break;
@@ -623,23 +617,19 @@ namespace ScopeViewer
 						if (j == 2)
 						{
 							var index = k != 0 ? k - 1 : 0;
-							var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y.ToString(CultureInfo.InvariantCulture);
-							if (bind)
-							{
-								str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y.ToString(CultureInfo.InvariantCulture);
-							}
-							_nameValue2LabelDig[j - 2].Content = str1;
+						    var str1 = MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y.ToString(CultureInfo.InvariantCulture);
+                            _nameValue2LabelDig[j - 2].Content = str1;
 						}
 						else
 						{
-							var index = k != 0 && k != 1 ? k - 2 : 0;
+							var index = k != 0 ? k - 1 : 0;
 
-							var str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index+1].Y + 0.2) % 1) < 0.01 ? "1" : "0";
+						    var str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[k].Y + 0.2) % 1) < 0.01 ? "1" : "0";
 							if (bind)
 							{
-								str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y + 0.2) % 1) < 0.01 ? "1" : "0";
+							    str = Math.Abs((MainWindow.GraphPanelList[numOsc].PaneDig.CurveList[j].Points[index].Y + 0.2) % 1) < 0.01 ? "1" : "0";
 							}
-							_nameValue2LabelDig[j - 2].Content = str;
+                            _nameValue2LabelDig[j - 2].Content = str;
 						}
 						break;
 					}

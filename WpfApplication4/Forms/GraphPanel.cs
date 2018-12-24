@@ -660,7 +660,7 @@ namespace ScopeViewer
 					if (MainWindow.OscilList[numOsc].OscilData[i][numCh] !=
 					   MainWindow.OscilList[numOsc].OscilData[i - 1][numCh])
 					{
-						list.Add(((double)(i + i - 2) / 2) / MainWindow.OscilList[numOsc].OscilSampleRate, line);
+						list.Add( i/ MainWindow.OscilList[numOsc].OscilSampleRate, line);
 						if ((Convert.ToInt32(MainWindow.OscilList[numOsc].OscilData[i][numCh]) & 1 << l) == 1 << l)
 						{
 							line = -0.2 - 1 - l;
@@ -669,11 +669,11 @@ namespace ScopeViewer
 						{
 							line = -0.8 - 1 - l;
 						}
-						list.Add(((double)(i + i - 2) / 2) / MainWindow.OscilList[numOsc].OscilSampleRate, line);
+						list.Add( i / MainWindow.OscilList[numOsc].OscilSampleRate, line);
 					}
 					if (i == MainWindow.OscilList[numOsc].OscilEndSample - 1)
 					{
-						list.Add(((double)(i + i) / 2) / MainWindow.OscilList[numOsc].OscilSampleRate, line);
+						list.Add( i / MainWindow.OscilList[numOsc].OscilSampleRate, line);
 					}
 				}
 
@@ -745,7 +745,7 @@ namespace ScopeViewer
 				Pane.Chart.Rect.Height - 15);
 
 			_posTabHoriz = true;
-			posTab_StripButton.Visible = true;
+			//posTab_StripButton.Visible = true;
 			delateDig_toolStripButton.Visible = true;
 			toolStripSeparator2.Visible = false;
 			Mask1_label.Visible = true;
@@ -1254,12 +1254,16 @@ namespace ScopeViewer
 			return j;
 		}
 
+	    private bool cursorInit = false;
+
 		private void CursorAdd()
 		{
+			//var countLeft = (int)(Cursor1.Location.X / _smallX);
+			//Cursor1.Location.X = countLeft * _smallX;
 			Cursor1 = new LineObj(
-				(Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min,
+				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min) / _smallX)) * _smallX,
 				Pane.YAxis.Scale.Min,
-				(Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min,
+				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min) / _smallX)) * _smallX,
 				Pane.YAxis.Scale.Max)
 			{
 				Line =
@@ -1273,9 +1277,9 @@ namespace ScopeViewer
 			};
 
 			Cursor2 = new LineObj(
-				(Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min,
+				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min) / _smallX)) *_smallX,
 				Pane.YAxis.Scale.Min,
-				(Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min,
+				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) * 3 / 4 + Pane.XAxis.Scale.Min) / _smallX)) *_smallX,
 				Pane.YAxis.Scale.Max)
 			{
 				Line =
@@ -1291,6 +1295,7 @@ namespace ScopeViewer
 			// Добавим линию в список отображаемых объектов
 			Pane.GraphObjList.Add(Cursor1);
 			Pane.GraphObjList.Add(Cursor2);
+
 
 			if (PaneDig != null)
 			{
@@ -1349,9 +1354,11 @@ namespace ScopeViewer
 
 			_cursorsCreate = true;
 
-			// Обновляем график
-			zedGraph.AxisChange();
-			zedGraph.Invalidate();
+            //            UpdateCursor();
+
+            // Обновляем график
+            //zedGraph.AxisChange();
+            //zedGraph.Invalidate();
 		}
 
 		private void CursorHorizontalAdd()
@@ -1933,14 +1940,23 @@ namespace ScopeViewer
 
 		private void AddCoursorVertical_MouseDown(object sender, MouseEventArgs e)
 		{
-			AddCoursorVerticalEvent();
+            if(cursorInit) AddCoursorVerticalEvent();
+            else
+            {
+                AddCoursorVerticalEvent();
+                AddCoursorVerticalEvent();
+                AddCoursorVerticalEvent();
+                cursorInit = true;
+            }
 		}
 
-		private void AddCoursorVerticalEvent()
+        private void AddCoursorVerticalEvent()
 		{
-			if (_cursorsCreate == false)
+		   
+
+            if (_cursorsCreate == false)
 			{
-				CursorClear();
+                CursorClear();
 				CursorAdd();
 				_oscilCursor.AnalysisCursorAdd(NumGraphPanel(), _absOrRel, _bind);
 				MainWindow.AnalysisObj.AnalysisStackPanel.Children.Add(_oscilCursor.LayoutPanel[0]);
@@ -1958,19 +1974,29 @@ namespace ScopeViewer
 				tool_CursorsDif.Visible = true;
 				tool_separator.Visible = true;
 				tool_separator2.Visible = true;
-				var x1 = Cursor1.Location.X;
-				tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
-				var x2 = Cursor2.Location.X;
 
-				if (PaneDig != null)
+
+                _oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel, _bind);
+
+			    var x1 = Cursor1.Location.X;
+			    tool_EnterLeft_label.Text = TextPosition(x1, NumGraphPanel(), _absOrRel);
+			    var x2 = Cursor2.Location.X;
+			    tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
+
+                if (PaneDig != null)
 				{
 					CursorDig1.Location.X = Cursor1.Location.X;
 					CursorDig2.Location.X = Cursor2.Location.X;
+					_oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel, _bind);
 				}
-				tool_EnterRight_label.Text = TextPosition(x2, NumGraphPanel(), _absOrRel);
-				tool_CursorsDif.Text = $@"Δ:{Math.Abs(x2 - x1):F6}";
+
+                tool_CursorsDif.Text = $@"Δ:{Math.Abs(x2 - x1):F6}";
 				tool_CursorsDif.ToolTipText = @"Приращение времени";
-			}
+
+                UpdateCursor();
+			    _oscilCursor.UpdateCursor(NumGraphPanel(), _absOrRel, _bind);
+                if (PaneDig != null) _oscilCursor.UpdateCursorDig(NumGraphPanel(), _absOrRel, _bind);
+            }
 			else
 			{
 				CursorClear();
@@ -2004,7 +2030,9 @@ namespace ScopeViewer
 
 			zedGraph_ScrollEvent(null, null);
 			zedGraph.Invalidate();
-		}
+
+		    
+        }
 
 		private string TextPosition(double x, int numOsc, bool absOrRel)
 		{

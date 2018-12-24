@@ -268,6 +268,7 @@ namespace ScopeViewer
 			this.posTab_StripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.posTab_StripButton.Size = new System.Drawing.Size(30, 30);
 			this.posTab_StripButton.Text = "Расположение ";
+			this.posTab_StripButton.Visible = false;
 			this.posTab_StripButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.posTab_StripButton_MouseDown);
 			// 
 			// delateDig_toolStripButton
