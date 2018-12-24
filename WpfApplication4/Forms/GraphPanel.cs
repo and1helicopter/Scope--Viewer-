@@ -2183,20 +2183,23 @@ namespace ScopeViewer
 		{
 			if (MaskMin_textBox.Text != "")
 			{
-				if (Convert.ToInt32(MaskMin_textBox.Text) == 0)
-				{
-					_minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
-				}
-				else
-				{
-					_minYAxisAuto = -2 + -1 * Convert.ToInt32(MaskMin_textBox.Text);
-				}
+			    if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
+			    {
+			        if (Convert.ToInt32(MaskMin_textBox.Text) == 0)
+			        {
+			            _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+			        }
+			        else
+			        {
+			            _minYAxisAuto = -2 + -1 * Convert.ToInt32(MaskMin_textBox.Text);
+			        }
 
-				ScrollEvent();
+			        ScrollEvent();
 
-				zedGraph.AxisChange();
-				zedGraph_ScrollEvent(null, null);
-				zedGraph.Invalidate();
+			        zedGraph.AxisChange();
+			        zedGraph_ScrollEvent(null, null);
+			        zedGraph.Invalidate();
+                }
 			}
 		}
 
@@ -2204,20 +2207,23 @@ namespace ScopeViewer
 		{
 			if (MaskMax_textBox.Text != "")
 			{
-				if (Convert.ToInt32(MaskMax_textBox.Text) == 0)
-				{
-					_maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
-				}
-				else
-				{
-					_maxYAxisAuto = -1 + -1 * Convert.ToInt32(MaskMax_textBox.Text);
-				}
+			    if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
+			    {
+			        if (Convert.ToInt32(MaskMax_textBox.Text) == 0)
+			        {
+			            _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+			        }
+			        else
+			        {
+			            _maxYAxisAuto = -1 + -1 * Convert.ToInt32(MaskMax_textBox.Text);
+			        }
 
-				ScrollEvent();
+			        ScrollEvent();
 
-				zedGraph.AxisChange();
-				zedGraph_ScrollEvent(null, null);
-				zedGraph.Invalidate();
+			        zedGraph.AxisChange();
+			        zedGraph_ScrollEvent(null, null);
+			        zedGraph.Invalidate();
+                }
 			}
 		}
 
