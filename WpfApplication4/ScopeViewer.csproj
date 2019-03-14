@@ -138,6 +138,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BinaryFormatReader.cs" />
+    <Compile Include="Format\FormatConverter.cs" />
     <Compile Include="Forms\BinaryMask.cs">
       <SubType>Form</SubType>
     </Compile>

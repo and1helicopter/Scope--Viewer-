@@ -2183,48 +2183,65 @@ namespace ScopeViewer
 		{
 			if (MaskMin_textBox.Text != "")
 			{
-			    if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
+			    try
 			    {
-			        if (Convert.ToInt32(MaskMin_textBox.Text) == 0)
+			        if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
 			        {
-			            _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
-			        }
-			        else
-			        {
-			            _minYAxisAuto = -2 + -1 * Convert.ToInt32(MaskMin_textBox.Text);
-			        }
+			            if (Convert.ToInt32(MaskMin_textBox.Text) == 0)
+			            {
+			                _minYAxisAuto = -1 * Convert.ToInt32(MaskMin_textBox.Text);
+			            }
+			            else
+			            {
+			                _minYAxisAuto = -2 + -1 * Convert.ToInt32(MaskMin_textBox.Text);
+			            }
 
-			        ScrollEvent();
+			            ScrollEvent();
 
-			        zedGraph.AxisChange();
-			        zedGraph_ScrollEvent(null, null);
-			        zedGraph.Invalidate();
-                }
+			            zedGraph.AxisChange();
+			            zedGraph_ScrollEvent(null, null);
+			            zedGraph.Invalidate();
+			        }
+			    }
+			    catch
+			    {
+			        MaskMin_textBox.Text = "";
+			    }
+
 			}
 		}
 
 		private void MaskMax_textBox_TextChanged(object sender, EventArgs e)
 		{
-			if (MaskMax_textBox.Text != "")
-			{
-			    if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
-			    {
-			        if (Convert.ToInt32(MaskMax_textBox.Text) == 0)
-			        {
-			            _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
-			        }
-			        else
-			        {
-			            _maxYAxisAuto = -1 + -1 * Convert.ToInt32(MaskMax_textBox.Text);
-			        }
+		    try
+		    {
+		        if (MaskMax_textBox.Text != "")
+		        {
+		            if (Convert.ToInt32(MaskMin_textBox.Text) >= 0 && Convert.ToInt32(MaskMin_textBox.Text) <= 31)
+		            {
+		                if (Convert.ToInt32(MaskMax_textBox.Text) == 0)
+		                {
+		                    _maxYAxisAuto = -1 * Convert.ToInt32(MaskMax_textBox.Text);
+		                }
+		                else
+		                {
+		                    _maxYAxisAuto = -1 + -1 * Convert.ToInt32(MaskMax_textBox.Text);
+		                }
 
-			        ScrollEvent();
+		                ScrollEvent();
 
-			        zedGraph.AxisChange();
-			        zedGraph_ScrollEvent(null, null);
-			        zedGraph.Invalidate();
-                }
-			}
+		                zedGraph.AxisChange();
+		                zedGraph_ScrollEvent(null, null);
+		                zedGraph.Invalidate();
+		            }
+		        }
+            }
+		    catch
+		    {
+		        MaskMax_textBox.Text = "";
+
+		    }
+
 		}
 
 		bool _posTabHoriz = true;

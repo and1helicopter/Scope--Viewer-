@@ -14,9 +14,12 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using Xceed.Wpf.AvalonDock.Layout;
+// using ScopeViewer.BinaryFormatReader;
+
 using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+
 
 namespace ScopeViewer
 {
@@ -244,6 +247,10 @@ namespace ScopeViewer
 			{
 				ofd.FilterIndex = 2;
 			}
+            else if(strP == "osc")
+            {
+                ofd.FilterIndex = 3;
+            }
 			OpenFile(ofd);
 		}
 
@@ -258,7 +265,7 @@ namespace ScopeViewer
 			OpenFileDialog ofd = new OpenFileDialog
 			{
 				DefaultExt = ".txt",
-				Filter = "Текстовый файл|*.txt|Comtrade|*.cfg|All files (*.*)|*.*"
+				Filter = "Текстовый файл|*.txt|Comtrade|*.cfg|BinaryFormat|*.osc|All files (*.*)|*.*"
 			};
 
 			if (ofd.ShowDialog() == true)
@@ -772,6 +779,29 @@ namespace ScopeViewer
 					return;
 				}
 			}
+
+            //Binary reading
+            if(ofd.FilterIndex == 3)
+            {
+                try
+                {
+                    using (var fs = File.OpenRead(ofd.FileName))
+                    {
+                        using (var binaryReader = new BinaryReader(fs))
+                        {
+                            _oscil = BinaryFormatReader.ReadHeader(binaryReader);
+                            if (_oscil == null) throw new Exception();
+                            _oscil.OscilNames = Path.GetFileNameWithoutExtension(ofd.FileName);
+                        }
+                    }
+                    //BinaryReader.
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Не удалось открыть файл!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
 
 			OscilList.Add(_oscil);
 
