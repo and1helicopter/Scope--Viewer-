@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -48,24 +49,144 @@ namespace ScopeViewer
 			Point mousePt,
 			ZedGraphControl.ContextMenuObjectState objState)
 		{
-			menuStrip.Items.RemoveAt(5);
-			menuStrip.Items.RemoveAt(5);
-			menuStrip.Items.RemoveAt(5);
+            menuStrip.Items.RemoveAt(1);
+            menuStrip.Items.RemoveAt(4);
+			menuStrip.Items.RemoveAt(4);
+			menuStrip.Items.RemoveAt(4);
 
-			ToolStripItem scaleAllMenuItem = new ToolStripMenuItem("Отменить всё масштабирование");
+            ToolStripItem saveMenuItem = new ToolStripMenuItem("Сохранить рисунок как...");
+            saveMenuItem.Click += MenuItemSaveImage;
+            menuStrip.Items.Add(saveMenuItem);
+
+            ToolStripItem scaleAllMenuItem = new ToolStripMenuItem("Отменить всё масштабирование");
 			scaleAllMenuItem.Click += MenuItemScaleAllOnClick;
 			menuStrip.Items.Add(scaleAllMenuItem);
-
-			//ToolStripItem scaleHorizontalMenuItem = new ToolStripMenuItem("Отменить масштабирование по горизонтали");
-			//scaleHorizontalMenuItem.Click += MenuItemScaleHorizontalOnClick;
-			//menuStrip.Items.Add(scaleHorizontalMenuItem);
-
-			//ToolStripItem scaleVerticalMenuItem = new ToolStripMenuItem("Отменить масштабирование по вертикали");
-			//scaleVerticalMenuItem.Click += MenuItemScaleVerticalOnClick;
-			//menuStrip.Items.Add(scaleVerticalMenuItem);
 		}
 
-		private void MenuItemScaleAllOnClick(object sender, EventArgs eventArgs)
+        private void MenuItemSaveImage(object sender, EventArgs e)
+        {
+            // ДИалог выбора имени файла создаем вручную
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "*.png|*.png|*.jpg; *.jpeg|*.jpg;*.jpeg|*.bmp|*.bmp|Все файлы|*.*";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                TextObj cursor1Text = null;
+                TextObj cursor2Text = null;
+                TextObj stampTimeText = null;
+                TextObj diffCursorText = null;
+
+                //old position legend
+                var legendLocationH = Pane.Legend.Location.AlignH;
+                var legendLocationV = Pane.Legend.Location.AlignV;
+                var legendPosition = Pane.Legend.Position;
+                var legendCoordinateFrame = Pane.Legend.Location.CoordinateFrame;
+                var legendIsVisibale = Pane.Legend.IsVisible;
+                var legendFontSpecSize = Pane.Legend.FontSpec.Size;
+
+
+                Pane.Legend.IsVisible = true;
+                Pane.Legend.Position = LegendPos.BottomCenter;
+                Pane.Legend.Location.CoordinateFrame = CoordType.PaneFraction;
+                Pane.Legend.FontSpec.Size = 12;
+
+                //var y = zedGraph.ScrollMinY + 1.00 * (zedGraph.ScrollMaxY - zedGraph.ScrollMinY);
+
+                if (Cursor1 != null)
+                {
+                    var x = Cursor1.Location.X;
+                    cursor1Text = new TextObj(PositionText(Cursor1), x, zedGraph.ScrollMaxY);
+                    Pane.GraphObjList.Add(cursor1Text);
+                    zedGraph.Invalidate();
+                }
+                if (Cursor2 != null)
+                {
+                    var x = Cursor2.Location.X;
+                    cursor2Text = new TextObj(PositionText(Cursor2), x, zedGraph.ScrollMaxY);
+                    Pane.GraphObjList.Add(cursor2Text);
+                    zedGraph.Invalidate();
+                }
+                if (_stampTrigger != null)
+                {
+                    var x = _stampTrigger.Location.X;
+                    stampTimeText = new TextObj(PositionText(_stampTrigger), x, zedGraph.ScrollMinY);
+                    Pane.GraphObjList.Add(stampTimeText);
+                    zedGraph.Invalidate();
+                }
+                if (Cursor1 != null && Cursor2 != null)
+                {
+                    var x1 = Cursor1.Location.X;
+                    var x2 = Cursor2.Location.X;
+                    diffCursorText = new TextObj($"Δ:{Math.Abs(x2 - x1):F6}", x2, zedGraph.ScrollMinY);
+                    Pane.GraphObjList.Add(diffCursorText);
+                    zedGraph.Invalidate();
+                }
+                
+                // Получаем картинку, соответствующую панели
+                Bitmap bmp = zedGraph.MasterPane.GetImage();
+
+                // Сохраняем картинку средствами класса Bitmap
+                // Формат картинки выбирается исходя из имени выбранного файла
+                
+                if (dlg.FileName.EndsWith(".png"))
+                {
+                    bmp.Save(dlg.FileName, ImageFormat.Png);
+                }
+                else if (dlg.FileName.EndsWith(".jpg") || dlg.FileName.EndsWith(".jpeg"))
+                {
+                    bmp.Save(dlg.FileName, ImageFormat.Jpeg);
+                }
+                else if (dlg.FileName.EndsWith(".bmp"))
+                {
+                    bmp.Save(dlg.FileName, ImageFormat.Bmp);
+                }
+                else
+                {
+                    bmp.Save(dlg.FileName);
+                }
+
+                if (cursor1Text != null) Pane.GraphObjList.Remove(cursor1Text);
+                if (cursor2Text != null) Pane.GraphObjList.Remove(cursor2Text);
+                if (stampTimeText != null) Pane.GraphObjList.Remove(stampTimeText);
+                if (diffCursorText != null) Pane.GraphObjList.Remove(diffCursorText);                
+
+                Pane.Legend.Location.AlignH = legendLocationH;
+                Pane.Legend.Location.AlignV = legendLocationV;
+                Pane.Legend.Position = legendPosition;
+                Pane.Legend.Location.CoordinateFrame = legendCoordinateFrame;
+                Pane.Legend.IsVisible = legendIsVisibale;
+            }
+
+            string PositionText(LineObj obj)
+            {
+                double x = obj.Location.X;
+
+                return Text(x);
+            }
+
+            string Text(double val)
+            {
+                if (_absOrRel)
+                {
+                    //Abs time
+                    var value =
+                        MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Hour.ToString("D2") + ":" +
+                        MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Minute.ToString("D2") + ":" +
+                        MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Second.ToString("D2") + "." +
+                        MainWindow.OscilList[NumGraphPanel()].OscilStampDateStart.AddMilliseconds(val * 1000).Millisecond.ToString("D3");
+                    return value;
+                }
+                else
+                {
+                    //Relativ time
+                    var value = (int)val + " сек " + (int)((val - (int)val) * 1000) + " мс " +
+                                (int)((val * 1000 - (int)(val * 1000)) * 1000) + " мкс ";
+                    return value;
+                }
+            }
+        }
+
+        private void MenuItemScaleAllOnClick(object sender, EventArgs eventArgs)
 		{
 			Pane.XAxis.Scale.Min = _minXAxis;
 			Pane.XAxis.Scale.Max = _maxXAxis;
@@ -1092,8 +1213,10 @@ namespace ScopeViewer
 
 			Pane.Legend.Position = LegendPos.Float;
 
-			// Координаты будут отсчитываться в системе координат окна графика
-			Pane.Legend.Location.CoordinateFrame = CoordType.ChartFraction;
+            
+
+            // Координаты будут отсчитываться в системе координат окна графика
+            Pane.Legend.Location.CoordinateFrame = CoordType.ChartFraction;
 			if (h == 1)
 			{
 				if (v == 1)
@@ -1258,9 +1381,9 @@ namespace ScopeViewer
 
 		private void CursorAdd()
 		{
-			//var countLeft = (int)(Cursor1.Location.X / _smallX);
-			//Cursor1.Location.X = countLeft * _smallX;
-			Cursor1 = new LineObj(
+            //var countLeft = (int)(Cursor1.Location.X / _smallX);
+            //Cursor1.Location.X = countLeft * _smallX;
+            Cursor1 = new LineObj(
 				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min) / _smallX)) * _smallX,
 				Pane.YAxis.Scale.Min,
 				((int)(((Pane.XAxis.Scale.Max - Pane.XAxis.Scale.Min) / 4 + Pane.XAxis.Scale.Min) / _smallX)) * _smallX,
@@ -1273,7 +1396,7 @@ namespace ScopeViewer
 					Width = 2
 				},
 				Link = { Title = "Cursor1" },
-				ZOrder = ZOrder.B_BehindLegend
+				ZOrder = ZOrder.B_BehindLegend,
 			};
 
 			Cursor2 = new LineObj(
@@ -1299,7 +1422,8 @@ namespace ScopeViewer
 
 			if (PaneDig != null)
 			{
-				CursorDig1 = new LineObj(
+
+                CursorDig1 = new LineObj(
 					(PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 4 + PaneDig.XAxis.Scale.Min,
 					PaneDig.YAxis.Scale.Min,
 					(PaneDig.XAxis.Scale.Max - PaneDig.XAxis.Scale.Min) / 4 + PaneDig.XAxis.Scale.Min,

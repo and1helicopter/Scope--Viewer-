@@ -253,53 +253,54 @@ namespace ScopeViewer.Format
 			try
 			{
 				doc = XDocument.Load(filePath);
-			}
+                var xElement = doc.Element("Formats");
+                if (xElement != null)
+                {
+                    var formatList = xElement.Elements("Format").ToList();
+
+                    foreach (var itemFormat in formatList)
+                    {
+                        if (itemFormat.Attribute("name") != null)
+                        {
+                            if (!(from x in FormatList
+                                  where x.Name == itemFormat.Attribute("name")?.Value
+                                  select x).ToList().Any())
+                            {
+                                FormatList.Add(new Format(
+                                    itemFormat.Attribute("name")?.Value,
+                                    itemFormat.Attribute("bitDepth")?.Value,
+                                    itemFormat.Attribute("A")?.Value,
+                                    itemFormat.Attribute("B")?.Value,
+                                    Convert.ToUInt32(itemFormat.Attribute("Smaller")?.Value)));
+                            }
+                            else
+                            {
+                                var item = (from x in FormatList
+                                            where x.Name == itemFormat.Attribute("name")?.Value
+                                            select x).ToList().First();
+
+                                item.AChange(itemFormat.Attribute("A")?.Value);
+                                item.BChange(itemFormat.Attribute("B")?.Value);
+                                item.Smaller = Convert.ToUInt32(itemFormat.Attribute("Smaller")?.Value);
+                                item.BitDepth = new BitDepth(itemFormat.Attribute("bitDepth")?.Value);
+                            }
+                        }
+                    }
+                }
+            }
 			catch
 			{
 				OldFormat = true;
-				return;
+                return;
 			}
+            //Selected 
+            SelectFormat sf = new SelectFormat();
+            var sd = sf.ShowDialog();
 
-			//читаем данные из файла
-			var xElement = doc.Element("Formats");
-			if (xElement != null)
-			{
-				var formatList = xElement.Elements("Format").ToList();
+            OldFormat = sd == System.Windows.Forms.DialogResult.OK ? true : false;
+        }
 
-				foreach (var itemFormat in formatList)
-				{
-					if (itemFormat.Attribute("name") != null)
-					{
-						if (!(from x in FormatList
-							  where x.Name == itemFormat.Attribute("name")?.Value
-							  select x).ToList().Any())
-						{
-							FormatList.Add(new Format(
-								itemFormat.Attribute("name")?.Value,
-								itemFormat.Attribute("bitDepth")?.Value,
-								itemFormat.Attribute("A")?.Value,
-								itemFormat.Attribute("B")?.Value,
-								Convert.ToUInt32(itemFormat.Attribute("Smaller")?.Value)));
-						}
-						else
-						{
-							var item = (from x in FormatList
-										where x.Name == itemFormat.Attribute("name")?.Value
-										select x).ToList().First();
-
-							item.AChange(itemFormat.Attribute("A")?.Value);
-							item.BChange(itemFormat.Attribute("B")?.Value);
-							item.Smaller = Convert.ToUInt32(itemFormat.Attribute("Smaller")?.Value);
-							item.BitDepth = new BitDepth(itemFormat.Attribute("bitDepth")?.Value);
-						}
-					}
-				}
-			}
-
-			OldFormat = false;
-		}
-
-		public static void SaveFormats(string savePath)
+        public static void SaveFormats(string savePath)
 		{
 			if(savePath == null) savePath = "Formats.xml";
 

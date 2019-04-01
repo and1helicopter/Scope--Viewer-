@@ -111,7 +111,10 @@ namespace ScopeViewer
                 ///
                 /// Convert format
                 ///
-                FormatConverter.OldFormat = true;
+                FormatConverter.ReadFormats(null);
+
+
+
                 // Value Channel
                 for (var j = 0; j < paramsSortLines.Count; j++)
                 {
